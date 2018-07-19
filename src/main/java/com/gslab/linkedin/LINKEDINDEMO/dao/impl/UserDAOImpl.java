@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.gslab.linkedin.LINKEDINDEMO.dao.UserDAO;
 import com.gslab.linkedin.LINKEDINDEMO.model.UserAccount;
 import com.gslab.linkedin.LINKEDINDEMO.model.UserProfileInfo;
-import com.gslab.linkedin.LINKEDINDEMO.model.UserVO;
+import com.gslab.linkedin.LINKEDINDEMO.model.vo.UserVO;
 
 public class UserDAOImpl implements UserDAO {
 

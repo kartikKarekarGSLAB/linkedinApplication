@@ -2,7 +2,7 @@ package com.gslab.linkedin.LINKEDINDEMO.dao;
 
 import java.util.List;
 
-import com.gslab.linkedin.LINKEDINDEMO.model.UserVO;
+import com.gslab.linkedin.LINKEDINDEMO.model.vo.UserVO;
 
 public interface UserDAO {
 	public Integer create(UserVO userVO);

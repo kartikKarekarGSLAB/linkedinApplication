@@ -1,20 +1,18 @@
 package com.gslab.linkedin.LINKEDINDEMO.service.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gslab.linkedin.LINKEDINDEMO.dao.UserAccountDAO;
-import com.gslab.linkedin.LINKEDINDEMO.dao.UserDAO;
 import com.gslab.linkedin.LINKEDINDEMO.dao.UserProfileInfoDAO;
-import com.gslab.linkedin.LINKEDINDEMO.dao.impl.UserDAOImpl;
 import com.gslab.linkedin.LINKEDINDEMO.exception.InvalidUserInputException;
 import com.gslab.linkedin.LINKEDINDEMO.model.UserAccount;
 import com.gslab.linkedin.LINKEDINDEMO.model.UserProfileInfo;
-import com.gslab.linkedin.LINKEDINDEMO.model.UserVO;
+import com.gslab.linkedin.LINKEDINDEMO.model.vo.UserVO;
 import com.gslab.linkedin.LINKEDINDEMO.service.UserService;
+import com.gslab.linkedin.LINKEDINDEMO.util.Response;
 import com.gslab.linkedin.LINKEDINDEMO.validator.UserValidator;
 
 public class UserServiceImpl implements UserService{
@@ -24,47 +22,101 @@ public class UserServiceImpl implements UserService{
 	@Autowired
 	private UserProfileInfoDAO userProfileInfoDAO;
 	@Override
-	public Integer create(UserVO userVO) {
+	public Response create(UserVO userVO) {
 		// TODO Auto-generated method stub
-		return null;
+		Response response = new Response();
+		try {
+			if(UserValidator.validateUserName(userVO.getUsername())) {
+				if (UserValidator.validatePassword(userVO.getPassword())) {
+						UserAccount userAccount = new UserAccount();
+						userAccount.setUsername(userVO.getUsername());
+						userAccount.setPassword(userVO.getPassword());
+						
+						UserProfileInfo userProfileInfo = new UserProfileInfo();
+						userProfileInfo.setProfilePicture(userVO.getProfilePictureUrl());
+						userProfileInfo.setEmail(userVO.getEmail());
+						userProfileInfo.setCompanyName(userVO.getCompanyName());
+						userProfileInfo.setDesignation(userVO.getDesignation());
+						userProfileInfo.setUserAccount(userAccount);		
+						int newUserId = userProfileInfoDAO.create(userProfileInfo);
+						response.setStatusCode(200);
+						response.setErrorKey("");
+						response.setErrorMessage("");
+						response.setPayload("New user created with id : "+newUserId);						
+				} else {
+					throw new InvalidUserInputException("Invalid password");
+				}
+			} else {
+				throw new InvalidUserInputException("Invalid username");
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			response.setStatusCode(500);
+			response.setErrorKey(e.toString());
+			response.setErrorMessage(e.getMessage());
+			response.setPayload(null);
+			e.printStackTrace();
+		}
+		return response;
 	}
 
 	@Override
 	public List<UserVO> findAll() {
 		// TODO Auto-generated method stub
-		System.out.println(userAccountDAO.findAll());
-		System.out.println(userProfileInfoDAO.findAll());
-		UserAccount[] userAccountList = (UserAccount[]) userAccountDAO.findAll().toArray();
-		UserProfileInfo[] userProfileInfoList = (UserProfileInfo[]) userProfileInfoDAO.findAll().toArray();
-		UserVO[] userVOlist = new UserVO[userAccountList.length];
-		for (int i = 0; i < userProfileInfoList.length; i++) {
-			userVOlist[i] = new UserVO();
-			userVOlist[i].setUsername(userAccountList[i].getUsername());
-			userVOlist[i].setPassword(userAccountList[i].getPassword());
-			userVOlist[i].setProfilePictureUrl(userProfileInfoList[i].getProfilePicture());
-			userVOlist[i].setEmail(userProfileInfoList[i].getEmail());
-			userVOlist[i].setCompanyName(userProfileInfoList[i].getCompanyName());
-			userVOlist[i].setDesignation(userProfileInfoList[i].getDesignation());
+		List<UserAccount> userAccountList = userAccountDAO.findAll();
+		List<UserProfileInfo> userProfileInfoList = userProfileInfoDAO.findAll();
+		List<UserVO> userVOlist = new ArrayList<UserVO>();
+		int index =0;
+		for (UserProfileInfo userProfile : userProfileInfoList) {
+			System.out.println(userProfile.getEmail());
+			UserVO uservo = new UserVO();
+     		uservo.setUsername(userAccountList.get(index).getUsername());
+			uservo.setProfilePictureUrl(userProfile.getProfilePicture());
+			uservo.setEmail(userProfile.getEmail());
+			uservo.setCompanyName(userProfile.getCompanyName());
+			uservo.setDesignation(userProfile.getDesignation());
+			userVOlist.add(uservo);
+			index++;
 		}
-		
-		return new ArrayList<UserVO>(Arrays.asList(userVOlist));
+		return userVOlist;
 	}
 
 	@Override
-	public UserVO finaById(Integer userId) {
+	public UserVO findById(Integer userId) {
 		// TODO Auto-generated method stub
-		return null;
+		UserAccount userAccount = userAccountDAO.findById(userId);
+		UserProfileInfo userProfile = userProfileInfoDAO.findById(userId);
+		UserVO uservo = new UserVO();
+		uservo.setUsername(userAccount.getUsername());
+		uservo.setPassword("***********");
+ 		uservo.setProfilePictureUrl(userProfile.getProfilePicture());
+		uservo.setEmail(userProfile.getEmail());
+		uservo.setCompanyName(userProfile.getCompanyName());
+		uservo.setDesignation(userProfile.getDesignation());		
+		return uservo;
 	}
 
 	@Override
-	public UserVO update(UserVO userVO) {
+	public String update(Integer userId,UserVO userVO) {
 		// TODO Auto-generated method stub
-		return null;
+		String result = "User updated status : "+false;
+		UserProfileInfo userProfileInfo =  new UserProfileInfo();
+		userProfileInfo.setProfilePicture(userVO.getProfilePictureUrl());
+		userProfileInfo.setEmail(userVO.getEmail());
+		userProfileInfo.setCompanyName(userVO.getCompanyName());
+		userProfileInfo.setDesignation(userVO.getDesignation());
+		UserAccount userAccount =  new UserAccount();
+		userAccount.setUsername(userVO.getUsername());
+		userAccount.setPassword(userVO.getPassword());
+		if( userAccountDAO.update(userId, userAccount) ) {
+			result = "User updated status : "+userProfileInfoDAO.update(userId, userProfileInfo);			
+		}
+		return result;
 	}
 
 	@Override
 	public String delete(Integer userId) {
 		// TODO Auto-generated method stub
-		return null;
+		return "User deleted : "+userProfileInfoDAO.delete(userId);
 	}
 }

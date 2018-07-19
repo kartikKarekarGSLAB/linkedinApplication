@@ -6,8 +6,19 @@
     http://www.springframework.org/schema/context
     http://www.springframework.org/schema/context/spring-context.xsd">
     <context:annotation-config></context:annotation-config>
+    
+    <!-- Start of Beans for Service -->
     <bean id="userService" class="com.gslab.linkedin.LINKEDINDEMO.service.impl.UserServiceImpl"></bean>
+    <bean id="userPostService" class="com.gslab.linkedin.LINKEDINDEMO.service.impl.UserPostServiceImpl" > </bean>
+    <bean id="userPostLikeService" class="com.gslab.linkedin.LINKEDINDEMO.service.impl.UserPostLikeServiceImpl" > </bean>
+    <!-- End of Beans for Service -->
+    
+    
+    <!-- Start Beans for DAO -->
     <bean id="userDAO" class="com.gslab.linkedin.LINKEDINDEMO.dao.impl.UserDAOImpl"></bean>
     <bean id="userAccountDAO" class="com.gslab.linkedin.LINKEDINDEMO.dao.impl.UserAccountDAOImpl"></bean>
+    <bean id="userPostDAO" class="com.gslab.linkedin.LINKEDINDEMO.dao.impl.UserPostDAOImpl"></bean>
     <bean id="userProfileInfoDAO" class="com.gslab.linkedin.LINKEDINDEMO.dao.impl.UserProfileInfoDAOImpl"></bean>
+    <bean id="userPostLikeDAO" class="com.gslab.linkedin.LINKEDINDEMO.dao.impl.UserPostLikeDAOImpl"></bean>
+    <!-- End Beans for DAO -->
 </beans>  

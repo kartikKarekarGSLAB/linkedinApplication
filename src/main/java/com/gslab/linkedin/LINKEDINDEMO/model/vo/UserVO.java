@@ -1,4 +1,4 @@
-package com.gslab.linkedin.LINKEDINDEMO.model;
+package com.gslab.linkedin.LINKEDINDEMO.model.vo;
 
 public class UserVO {
 	private String username;

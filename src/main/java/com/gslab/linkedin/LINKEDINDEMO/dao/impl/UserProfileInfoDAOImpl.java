@@ -115,7 +115,7 @@ public class UserProfileInfoDAOImpl implements UserProfileInfoDAO {
 		// TODO Auto-generated method stub
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
-		Query query = session.createQuery("from UserAccount");
+		Query query = session.createQuery("from UserProfileInfo");
 		List<UserProfileInfo> userProfileInfoList = query.list();
 		tr.commit();
 		session.close();

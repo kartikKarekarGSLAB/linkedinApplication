@@ -1,9 +1,13 @@
 package com.gslab.linkedin.LINKEDINDEMO.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -13,21 +17,18 @@ import org.hibernate.annotations.Parameter;
 @Table(name="user_profile_info")
 public class UserProfileInfo {
 	
-	@GenericGenerator(
-            name = "userProfileSequenceGenerator",
-            strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
-            parameters = {
-                    @Parameter(name = "sequence_name", value = "userProfileSequence"),
-                    @Parameter(name = "initial_value", value = "20001"),
-                    @Parameter(name = "increment_size", value = "1")
-            }
-    )	
 	@Id
-	@Column(name="id")
-	@GeneratedValue(generator="userProfileSequenceGenerator")
-	private int id;
 	@Column(name="user_account_id")
+	@GeneratedValue(generator="gen")
+	@GenericGenerator(name = "gen", strategy = "foreign", 
+	parameters = { @Parameter(name = "property", value = "userAccount") })	
 	private int userAccountId;
+	public UserAccount getUserAccount() {
+		return userAccount;
+	}
+	public void setUserAccount(UserAccount userAccount) {
+		this.userAccount = userAccount;
+	}
 	@Column(name="profile_picture")
 	private String profilePicture;
 	@Column(name="email",length=40)
@@ -36,6 +37,9 @@ public class UserProfileInfo {
 	private String companyName;
 	@Column(name="designation",length=25)
 	private String designation;
+	@OneToOne(cascade=CascadeType.ALL)
+	@JoinColumn(name= "user_account_id")
+	private UserAccount userAccount;
 	public int getUserAccountId() {
 		return userAccountId;
 	}
@@ -68,7 +72,7 @@ public class UserProfileInfo {
 	}
 	@Override
 	public String toString() {
-		return "UserProfileInfo [id=" + id + ", userAccountId=" + userAccountId + ", profilePicture=" + profilePicture
+		return "UserProfileInfo [ userAccountId=" + userAccountId + ", profilePicture=" + profilePicture
 				+ ", email=" + email + ", companyName=" + companyName + ", designation=" + designation + "]";
 	}
 }

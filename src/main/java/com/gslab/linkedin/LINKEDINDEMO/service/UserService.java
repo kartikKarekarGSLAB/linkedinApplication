@@ -2,13 +2,14 @@ package com.gslab.linkedin.LINKEDINDEMO.service;
 
 import java.util.List;
 
-import com.gslab.linkedin.LINKEDINDEMO.model.UserVO;
+import com.gslab.linkedin.LINKEDINDEMO.model.vo.UserVO;
+import com.gslab.linkedin.LINKEDINDEMO.util.Response;
 
 public interface UserService {
-	public Integer create(UserVO userVO);
+	public Response create(UserVO userVO);
 	public List<UserVO> findAll();
-	public UserVO finaById(Integer userId);
-	public UserVO update(UserVO userVO);
+	public UserVO findById(Integer userId);
+	public String update(Integer userId,UserVO userVO);
 	public String delete(Integer userId);
 	
 }
