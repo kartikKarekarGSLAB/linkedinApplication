@@ -1,4 +1,4 @@
-package com.gslab.linkedin.LINKEDINDEMO.dao.impl;
+package com.gslab.linkedin.linkedindemo.dao.impl;
 
 import java.util.List;
 
@@ -8,9 +8,9 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.gslab.linkedin.LINKEDINDEMO.dao.UserAccountDAO;
-import com.gslab.linkedin.LINKEDINDEMO.exception.InvalidUserInputException;
-import com.gslab.linkedin.LINKEDINDEMO.model.UserAccount;
+import com.gslab.linkedin.linkedindemo.dao.UserAccountDAO;
+import com.gslab.linkedin.linkedindemo.exception.InvalidUserInputException;
+import com.gslab.linkedin.linkedindemo.model.UserAccount;
 
 public class UserAccountDAOImpl implements UserAccountDAO {
 

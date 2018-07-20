@@ -1,8 +1,8 @@
-package com.gslab.linkedin.LINKEDINDEMO.dao;
+package com.gslab.linkedin.linkedindemo.dao;
 
 import java.util.List;
 
-import com.gslab.linkedin.LINKEDINDEMO.model.vo.UserVO;
+import com.gslab.linkedin.linkedindemo.model.vo.UserVO;
 
 public interface UserDAO {
 	public Integer create(UserVO userVO);

@@ -1,19 +1,19 @@
-package com.gslab.linkedin.LINKEDINDEMO.service.impl;
+package com.gslab.linkedin.linkedindemo.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.gslab.linkedin.LINKEDINDEMO.dao.UserAccountDAO;
-import com.gslab.linkedin.LINKEDINDEMO.dao.UserProfileInfoDAO;
-import com.gslab.linkedin.LINKEDINDEMO.exception.InvalidUserInputException;
-import com.gslab.linkedin.LINKEDINDEMO.model.UserAccount;
-import com.gslab.linkedin.LINKEDINDEMO.model.UserProfileInfo;
-import com.gslab.linkedin.LINKEDINDEMO.model.vo.UserVO;
-import com.gslab.linkedin.LINKEDINDEMO.service.UserService;
-import com.gslab.linkedin.LINKEDINDEMO.util.Response;
-import com.gslab.linkedin.LINKEDINDEMO.validator.UserValidator;
+import com.gslab.linkedin.linkedindemo.dao.UserAccountDAO;
+import com.gslab.linkedin.linkedindemo.dao.UserProfileInfoDAO;
+import com.gslab.linkedin.linkedindemo.exception.InvalidUserInputException;
+import com.gslab.linkedin.linkedindemo.model.UserAccount;
+import com.gslab.linkedin.linkedindemo.model.UserProfileInfo;
+import com.gslab.linkedin.linkedindemo.model.vo.UserVO;
+import com.gslab.linkedin.linkedindemo.service.UserService;
+import com.gslab.linkedin.linkedindemo.util.Response;
+import com.gslab.linkedin.linkedindemo.validator.UserValidator;
 
 public class UserServiceImpl implements UserService{
 

@@ -1,17 +1,19 @@
-package com.gslab.linkedin.LINKEDINDEMO.service.impl;
+package com.gslab.linkedin.linkedindemo.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.gslab.linkedin.LINKEDINDEMO.dao.UserAccountDAO;
-import com.gslab.linkedin.LINKEDINDEMO.dao.UserPostDAO;
-import com.gslab.linkedin.LINKEDINDEMO.exception.InvalidUserInputException;
-import com.gslab.linkedin.LINKEDINDEMO.model.UserAccount;
-import com.gslab.linkedin.LINKEDINDEMO.model.UserPost;
-import com.gslab.linkedin.LINKEDINDEMO.model.vo.UserPostVO;
-import com.gslab.linkedin.LINKEDINDEMO.service.UserPostService;
+import com.gslab.linkedin.linkedindemo.dao.UserAccountDAO;
+import com.gslab.linkedin.linkedindemo.dao.UserPostDAO;
+import com.gslab.linkedin.linkedindemo.exception.InvalidUserInputException;
+import com.gslab.linkedin.linkedindemo.model.UserAccount;
+import com.gslab.linkedin.linkedindemo.model.UserPost;
+import com.gslab.linkedin.linkedindemo.model.vo.UserPostVO;
+import com.gslab.linkedin.linkedindemo.service.UserPostService;
 
 public class UserPostServiceImpl implements UserPostService{
 
@@ -21,6 +23,9 @@ public class UserPostServiceImpl implements UserPostService{
 	private UserPostDAO userPostDAO;
 	@Override
 	public Integer create(Integer userAccountId, UserPostVO userPostVO) {
+
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		Date date = new Date();		
 		try {
 			UserAccount userAccount = userAccountDAO.findById(userAccountId);
 			if (userAccount != null) {
@@ -29,6 +34,8 @@ public class UserPostServiceImpl implements UserPostService{
 					userPost.setDescription(userPostVO.getDescription());
 					userPost.setImageAttachment(userPostVO.getImageAttachment());
 					userPost.setUserAccount(userAccount);
+					userPost.setCreatedOn(date);
+					userPost.setUpdatedOn(date);
 					return userPostDAO.create(userPost);
 				} else {
 					throw new InvalidUserInputException("Please enter some text in post. empyt post is not accepted.");
@@ -68,6 +75,8 @@ public class UserPostServiceImpl implements UserPostService{
 	@Override
 	public boolean update(Integer userAccountId,Integer postId, UserPostVO userPostVO) {
 		// TODO Auto-generated method stub
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		Date date = new Date();		
 		try {
 			UserAccount userAccount = userAccountDAO.findById(userAccountId);
 			if (userAccount != null) {
@@ -75,6 +84,7 @@ public class UserPostServiceImpl implements UserPostService{
 					UserPost userPost = new UserPost();
 					userPost.setDescription(userPostVO.getDescription());
 					userPost.setImageAttachment(userPostVO.getImageAttachment());
+					userPost.setUpdatedOn(date);
 					return userPostDAO.update(userAccountId,postId, userPost);
 				} else {
 					throw new InvalidUserInputException("Empty description for update post operation.");
@@ -127,5 +137,14 @@ public class UserPostServiceImpl implements UserPostService{
 			e.printStackTrace();
 		}
 		return null;
+	}
+	@Override
+	public UserPostVO find(Integer postId) {
+		// TODO Auto-generated method stub
+		UserPost userPost = userPostDAO.find(postId);
+		UserPostVO userPostVO = new UserPostVO();
+		userPostVO.setDescription(userPost.getDescription());
+		userPostVO.setImageAttachment(userPost.getImageAttachment());		
+		return userPostVO;
 	}
 }

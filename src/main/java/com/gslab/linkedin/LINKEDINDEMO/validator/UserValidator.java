@@ -1,4 +1,4 @@
-package com.gslab.linkedin.LINKEDINDEMO.validator;
+package com.gslab.linkedin.linkedindemo.validator;
 
 import java.util.regex.Pattern;
 

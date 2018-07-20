@@ -1,4 +1,4 @@
-package com.gslab.linkedin.LINKEDINDEMO.exception;
+package com.gslab.linkedin.linkedindemo.exception;
 
 public class InvalidUserInputException extends Exception {
 	public InvalidUserInputException(String message) {

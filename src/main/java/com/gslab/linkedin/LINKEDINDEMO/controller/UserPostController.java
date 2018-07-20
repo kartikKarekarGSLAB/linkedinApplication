@@ -1,4 +1,4 @@
-package com.gslab.linkedin.LINKEDINDEMO.controller;
+package com.gslab.linkedin.linkedindemo.controller;
 
 import java.util.List;
 
@@ -9,8 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gslab.linkedin.LINKEDINDEMO.model.vo.UserPostVO;
-import com.gslab.linkedin.LINKEDINDEMO.service.UserPostService;
+import com.gslab.linkedin.linkedindemo.model.vo.ResponseBase;
+import com.gslab.linkedin.linkedindemo.model.vo.UserPostVO;
+import com.gslab.linkedin.linkedindemo.service.UserPostService;
 
 @RestController
 @RequestMapping(value="/post")
@@ -24,7 +25,7 @@ public class UserPostController {
 	public List<UserPostVO> findAll(@PathVariable(name="id") Integer userAccountId) {
 		return userPostService.findAll(userAccountId);
 	}
-//	List all post of user
+//	List post of user by Id
 	@RequestMapping(value="/{id}/{postid}",method = RequestMethod.GET)
 	public UserPostVO findById(@PathVariable(name="id") Integer userAccountId,
 									 @PathVariable(name="postid") Integer userPostId) {

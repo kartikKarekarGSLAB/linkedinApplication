@@ -1,4 +1,4 @@
-package com.gslab.linkedin.LINKEDINDEMO;
+package com.gslab.linkedin.linkedindemo;
 
 import javax.persistence.EntityManagerFactory;
 
@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class LinkedindemoApplicationConfig {
+public class LinkedInDemoApplicationConfig {
 	
 	@Autowired
 	private EntityManagerFactory entityManagerFactory;

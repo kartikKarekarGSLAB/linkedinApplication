@@ -1,6 +1,12 @@
-package com.gslab.linkedin.LINKEDINDEMO.model.vo;
+package com.gslab.linkedin.linkedindemo.model.vo;
 
-public class UserVO {
+public class UserVO extends BeanBase {
+	
+	
+	/**
+	 * serialVersionUID for UserVO
+	 */
+	private static final long serialVersionUID = 7489083255526010122L;
 	private String username;
 	private String password;
 	private String profilePictureUrl;

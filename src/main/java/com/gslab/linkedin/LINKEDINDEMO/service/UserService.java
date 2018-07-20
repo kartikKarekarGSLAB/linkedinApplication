@@ -1,9 +1,9 @@
-package com.gslab.linkedin.LINKEDINDEMO.service;
+package com.gslab.linkedin.linkedindemo.service;
 
 import java.util.List;
 
-import com.gslab.linkedin.LINKEDINDEMO.model.vo.UserVO;
-import com.gslab.linkedin.LINKEDINDEMO.util.Response;
+import com.gslab.linkedin.linkedindemo.model.vo.UserVO;
+import com.gslab.linkedin.linkedindemo.util.Response;
 
 public interface UserService {
 	public Response create(UserVO userVO);

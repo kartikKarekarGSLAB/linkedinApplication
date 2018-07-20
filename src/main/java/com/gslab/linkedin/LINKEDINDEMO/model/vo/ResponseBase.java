@@ -1,10 +1,15 @@
-package com.gslab.linkedin.linkedindemo.util;
+package com.gslab.linkedin.linkedindemo.model.vo;
 
-public class Response {
+import java.util.List;
+
+public class ResponseBase {
+	
 	private int statusCode;
 	private String errorMessage;
 	private String errorKey;
-	private Object payload;
+	private BeanBase payLoad;
+	private List<BeanBase> payLoadList;
+	
 	public int getStatusCode() {
 		return statusCode;
 	}
@@ -23,23 +28,16 @@ public class Response {
 	public void setErrorKey(String errorKey) {
 		this.errorKey = errorKey;
 	}
-	public Object getPayload() {
-		return payload;
+	public BeanBase getPayLoad() {
+		return payLoad;
 	}
-	public void setPayload(Object payload) {
-		this.payload = payload;
+	public void setPayLoad(BeanBase payLoad) {
+		this.payLoad = payLoad;
 	}
-	public Response(int statusCode, String errorMessage, String errorKey, Object payload) {
-		super();
-		this.statusCode = statusCode;
-		this.errorMessage = errorMessage;
-		this.errorKey = errorKey;
-		this.payload = payload;
+	public List<BeanBase> getPayLoadList() {
+		return payLoadList;
 	}
-	public Response() {
+	public void setPayLoadList(List<BeanBase> payLoadList) {
+		this.payLoadList = payLoadList;
 	}
-	public Response getResponseStat() {
-		return this;
-	}
-	
 }

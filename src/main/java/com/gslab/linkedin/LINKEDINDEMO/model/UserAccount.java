@@ -1,5 +1,7 @@
-package com.gslab.linkedin.LINKEDINDEMO.model;
+package com.gslab.linkedin.linkedindemo.model;
 
+
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -8,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -40,18 +44,29 @@ public class UserAccount {
 	@OneToMany(cascade = CascadeType.ALL,mappedBy="userAccount")
 	private Set<UserPost> userPost;
 
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "id")	
-	private UserPostLike userPostLike;
+	@OneToMany(cascade = CascadeType.ALL,mappedBy="userAccount")
+	private Set<UserComment> userComment;	
 	
-	public UserPostLike getUserPostLike() {
-		return userPostLike;
+	
+	@ManyToMany(cascade=CascadeType.ALL)
+	private Set<Message> message = new HashSet<Message>(0); 
+	
+	public Set<Message> getMessage() {
+		return message;
 	}
 
-	public void setUserPostLike(UserPostLike userPostLike) {
-		this.userPostLike = userPostLike;
+	public void setMessage(Set<Message> message) {
+		this.message = message;
 	}
 
+	public Set<UserComment> getUserComment() {
+		return userComment;
+	}
+	
+	public void setUserComment(Set<UserComment> userComment) {
+		this.userComment = userComment;
+	}
+	
 	public Set<UserPost> getUserPost() {
 		return userPost;
 	}

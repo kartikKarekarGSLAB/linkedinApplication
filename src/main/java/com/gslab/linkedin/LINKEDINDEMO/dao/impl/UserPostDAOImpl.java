@@ -1,4 +1,4 @@
-package com.gslab.linkedin.LINKEDINDEMO.dao.impl;
+package com.gslab.linkedin.linkedindemo.dao.impl;
 
 import java.util.List;
 
@@ -8,9 +8,10 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.gslab.linkedin.LINKEDINDEMO.dao.UserPostDAO;
-import com.gslab.linkedin.LINKEDINDEMO.exception.InvalidUserInputException;
-import com.gslab.linkedin.LINKEDINDEMO.model.UserPost;
+import com.gslab.linkedin.linkedindemo.dao.UserPostDAO;
+import com.gslab.linkedin.linkedindemo.exception.InvalidUserInputException;
+import com.gslab.linkedin.linkedindemo.model.UserPost;
+import com.gslab.linkedin.linkedindemo.model.vo.UserPostVO;
 
 public class UserPostDAOImpl implements UserPostDAO {
 
@@ -33,7 +34,7 @@ public class UserPostDAOImpl implements UserPostDAO {
 		// TODO Auto-generated method stub
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
-		Query query = session.createQuery("from UserPost where user_account_id = :user_account_id");
+		Query query = session.createQuery("from UserPost where user_account_id = :user_account_id order by updated_on desc");
 		query.setInteger("user_account_id", userAccountId);
 		List<UserPost> userPostList = query.list();
 		tr.commit();
@@ -54,7 +55,7 @@ public class UserPostDAOImpl implements UserPostDAO {
 			UserPost result = (UserPost) query.uniqueResult();			
 			if (result != null) {
 				query = session.createQuery(
-						"update UserPost set description= :description,image_attachment= :image_attachment where id= :postId");
+						"update UserPost set description= :description,image_attachment= :image_attachment,updated_on= :updatedOn where id= :postId");
 
 				// update user post description.
 				if (userPost.getDescription() != null) {
@@ -63,11 +64,12 @@ public class UserPostDAOImpl implements UserPostDAO {
 					query.setString("description", result.getDescription());
 				}
 				// update user image attachment.
-				if (userPost.getDescription() != null) {
+				if (userPost.getImageAttachment() != null) {
 					query.setString("image_attachment", userPost.getImageAttachment());
 				} else {
 					query.setString("image_attachment", result.getImageAttachment());
 				}
+				query.setTimestamp("updatedOn", userPost.getUpdatedOn());
 				query.setInteger("postId", postId);
 				updatedRowCounter = query.executeUpdate();
 				tr.commit();
@@ -128,9 +130,31 @@ public class UserPostDAOImpl implements UserPostDAO {
 			query.setInteger("id", postId);
 			query.setInteger("user_account_id", userAccountId);
 			UserPost result = (UserPost) query.uniqueResult();			
-			System.out.println("**************************************************************************");
-			System.out.println(query.getQueryString());
-			System.out.println("**************************************************************************");
+			if (result != null) {
+				return result;
+			} else {
+				throw new InvalidUserInputException("Trying to read invalid post.(wrong user / wrong post id)");
+			}
+		} catch (InvalidUserInputException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			tr.commit();
+			session.close();
+			
+		}
+		return null;
+	}
+
+	@Override
+	public UserPost find(Integer postId) {
+		// TODO Auto-generated method stub
+		Session session = sessionFactory.openSession();
+		Transaction tr = session.beginTransaction();
+		try {
+			Query query = session.createQuery("from UserPost where id= :id");
+			query.setInteger("id", postId);
+			UserPost result = (UserPost) query.uniqueResult();			
 			if (result != null) {
 				return result;
 			} else {

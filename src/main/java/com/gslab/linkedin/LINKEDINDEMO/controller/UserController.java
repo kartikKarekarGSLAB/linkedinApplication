@@ -1,4 +1,4 @@
-package com.gslab.linkedin.LINKEDINDEMO.controller;
+package com.gslab.linkedin.linkedindemo.controller;
 
 import java.util.List;
 
@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gslab.linkedin.LINKEDINDEMO.dao.impl.UserAccountDAOImpl;
-import com.gslab.linkedin.LINKEDINDEMO.model.vo.UserVO;
-import com.gslab.linkedin.LINKEDINDEMO.service.UserService;
-import com.gslab.linkedin.LINKEDINDEMO.util.Response;
+import com.gslab.linkedin.linkedindemo.dao.impl.UserAccountDAOImpl;
+import com.gslab.linkedin.linkedindemo.model.vo.UserVO;
+import com.gslab.linkedin.linkedindemo.service.UserService;
+import com.gslab.linkedin.linkedindemo.util.Response;
 
 @RestController
 @RequestMapping(value = "/user")

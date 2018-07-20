@@ -1,4 +1,4 @@
-package com.gslab.linkedin.LINKEDINDEMO.model;
+package com.gslab.linkedin.linkedindemo.model;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
