@@ -14,12 +14,10 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-
 @Entity
 @Table(name = "user_comment")
 public class UserComment {
-	
-	
+
 	@GenericGenerator(name = "userCommentSequenceGenerator", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
 			@Parameter(name = "sequence_name", value = "userCommentSequence"),
 			@Parameter(name = "initial_value", value = "2000"), @Parameter(name = "increment_size", value = "1") })
@@ -27,28 +25,28 @@ public class UserComment {
 	@Column(name = "id")
 	@GeneratedValue(generator = "userCommentSequenceGenerator")
 	private int id;
-	
-	@Column(name="message")
+
+	@Column(name = "message")
 	private String message;
-		
-	@Column(name="created_on")
+
+	@Column(name = "created_on")
 	private Date createdOn;
-	
-	@Column(name="updated_on")
-	private Date updatedOn;	
-	
-	@ManyToOne(cascade=CascadeType.ALL)
-	@JoinColumn(name="user_account_id")
+
+	@Column(name = "updated_on")
+	private Date updatedOn;
+
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "user_account_id")
 	private UserAccount userAccount;
-	
-	@ManyToOne(cascade=CascadeType.ALL)
-	@JoinColumn(name="user_post_id")
+
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "user_post_id")
 	private UserPost userPost;
 
 	public Date getUpdatedOn() {
 		return updatedOn;
 	}
-	
+
 	public void setUpdatedOn(Date updatedOn) {
 		this.updatedOn = updatedOn;
 	}
@@ -60,7 +58,6 @@ public class UserComment {
 	public void setCreatedOn(Date createdOn) {
 		this.createdOn = createdOn;
 	}
-
 
 	public int getId() {
 		return id;
@@ -93,6 +90,5 @@ public class UserComment {
 	public void setUserPost(UserPost userPost) {
 		this.userPost = userPost;
 	}
-	
-	
+
 }

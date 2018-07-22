@@ -1,6 +1,6 @@
 package com.gslab.linkedin.linkedindemo.model.vo;
 
-public class UserCommentVO extends BeanBase{
+public class UserCommentVO extends BeanBase {
 	/**
 	 * Serialization ID UserCommnetVO.
 	 */
@@ -14,5 +14,5 @@ public class UserCommentVO extends BeanBase{
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	
+
 }

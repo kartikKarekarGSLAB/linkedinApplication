@@ -12,11 +12,11 @@ import com.gslab.linkedin.linkedindemo.dao.UserCommentDAO;
 import com.gslab.linkedin.linkedindemo.exception.InvalidUserInputException;
 import com.gslab.linkedin.linkedindemo.model.UserComment;
 
-public class UserCommentDAOImpl implements UserCommentDAO{
+public class UserCommentDAOImpl implements UserCommentDAO {
 
 	@Autowired
 	private SessionFactory sessionFactory;
-	
+
 	@Override
 	public Integer create(UserComment userComment) {
 		// TODO Auto-generated method stub
@@ -24,7 +24,7 @@ public class UserCommentDAOImpl implements UserCommentDAO{
 		Transaction tr = session.beginTransaction();
 		int newCommentId = (int) session.save(userComment);
 		tr.commit();
-		session.close();		
+		session.close();
 		return newCommentId;
 	}
 
@@ -36,32 +36,33 @@ public class UserCommentDAOImpl implements UserCommentDAO{
 		Query query = session.createQuery("from UserComment order by created_on desc");
 		List<UserComment> userCommentList = query.list();
 		tr.commit();
-		session.close();		
-		return userCommentList;		
+		session.close();
+		return userCommentList;
 	}
 
 	@Override
-	public boolean update(Integer userAccountId,Integer commentId, UserComment userComment) {
+	public boolean update(Integer userAccountId, Integer commentId, UserComment userComment) {
 		// TODO Auto-generated method stub
 		int updatedRowCounter = 0;
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
 		Query query = session.createQuery("from UserComment where id= :id");
 		query.setInteger("id", commentId);
-		UserComment result = (UserComment) query.uniqueResult();		
+		UserComment result = (UserComment) query.uniqueResult();
 		try {
 			if (result != null) {
-				query = session.createQuery("update UserComment set message= :message , updated_on = :updated_on where id= :id and user_account_id = :user_account_id");
-				
-				//update useremail
+				query = session.createQuery(
+						"update UserComment set message= :message , updated_on = :updated_on where id= :id and user_account_id = :user_account_id");
+
+				// update useremail
 				if (userComment.getMessage() != null) {
 					query.setString("message", userComment.getMessage());
 					query.setTimestamp("updated_on", userComment.getUpdatedOn());
 				}
 				query.setInteger("id", commentId);
-				query.setInteger("user_account_id",userAccountId);
+				query.setInteger("user_account_id", userAccountId);
 				updatedRowCounter = query.executeUpdate();
-				
+
 			} else {
 				throw new InvalidUserInputException("invalid userid or commentid pass for update");
 			}
@@ -71,7 +72,7 @@ public class UserCommentDAOImpl implements UserCommentDAO{
 		}
 		tr.commit();
 		session.close();
-		if(updatedRowCounter == 1)
+		if (updatedRowCounter == 1)
 			return true;
 		else
 			return false;
@@ -83,13 +84,14 @@ public class UserCommentDAOImpl implements UserCommentDAO{
 		int updatedRowCounter = 0;
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
-		Query query = session.createQuery("delete from UserComment where id = :id and user_account_id = :user_account_id");
+		Query query = session
+				.createQuery("delete from UserComment where id = :id and user_account_id = :user_account_id");
 		query.setInteger("id", commentId);
-		query.setInteger("user_account_id",userAccountId);
+		query.setInteger("user_account_id", userAccountId);
 		updatedRowCounter = query.executeUpdate();
 		tr.commit();
 		session.close();
-		if(updatedRowCounter == 1)
+		if (updatedRowCounter == 1)
 			return true;
 		else
 			return false;

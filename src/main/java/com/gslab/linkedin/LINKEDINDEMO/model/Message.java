@@ -18,9 +18,9 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 @Entity
-@Table(name="message")
+@Table(name = "message")
 public class Message {
-	
+
 	@GenericGenerator(name = "userMessageSequenceGenerator", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
 			@Parameter(name = "sequence_name", value = "userMessageSequence"),
 			@Parameter(name = "initial_value", value = "6000"), @Parameter(name = "increment_size", value = "1") })
@@ -28,19 +28,19 @@ public class Message {
 	@Column(name = "id")
 	@GeneratedValue(generator = "userMessageSequenceGenerator")
 	private int id;
-	
-	@Column(name="message")
+
+	@Column(name = "message")
 	private String message;
-	
-	@Column(name="type")
+
+	@Column(name = "type")
 	private String type;
-	
-	@Column(name="created_on")
+
+	@Column(name = "created_on")
 	private Date createdOn;
 
-	@ManyToMany(cascade=CascadeType.ALL)
+	@ManyToMany(cascade = CascadeType.ALL)
 	private Set<UserAccount> userAccount = new HashSet<UserAccount>(0);
-	
+
 	public Set<UserAccount> getUserAccount() {
 		return userAccount;
 	}
@@ -80,5 +80,5 @@ public class Message {
 	public void setCreatedOn(Date createdOn) {
 		this.createdOn = createdOn;
 	}
-	
+
 }

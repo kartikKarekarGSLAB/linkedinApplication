@@ -1,26 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
     http://www.springframework.org/schema/beans/spring-beans.xsd
     http://www.springframework.org/schema/context
     http://www.springframework.org/schema/context/spring-context.xsd">
-    <context:annotation-config></context:annotation-config>
-    
-    <!-- Start of Beans for Service -->
-    <bean id="userService" class="com.gslab.linkedin.linkedindemo.service.impl.UserServiceImpl"></bean>
-    <bean id="userPostService" class="com.gslab.linkedin.linkedindemo.service.impl.UserPostServiceImpl" > </bean>
-    <bean id="userCommentService" class="com.gslab.linkedin.linkedindemo.service.impl.UserCommentServiceImpl" > </bean>
-    <bean id="messageService" class="com.gslab.linkedin.linkedindemo.service.impl.MessageServiceImpl" > </bean>
-    <!-- End of Beans for Service -->
-    
-    
-    <!-- Start Beans for DAO -->
-    <bean id="userDAO" class="com.gslab.linkedin.linkedindemo.dao.impl.UserDAOImpl"></bean>
-    <bean id="userAccountDAO" class="com.gslab.linkedin.linkedindemo.dao.impl.UserAccountDAOImpl"></bean>
-    <bean id="userPostDAO" class="com.gslab.linkedin.linkedindemo.dao.impl.UserPostDAOImpl"></bean>
-    <bean id="userProfileInfoDAO" class="com.gslab.linkedin.linkedindemo.dao.impl.UserProfileInfoDAOImpl"></bean>
-    <bean id="userCommentDAO" class="com.gslab.linkedin.linkedindemo.dao.impl.UserCommentDAOImpl"></bean>
-    <bean id="messageDAO" class="com.gslab.linkedin.linkedindemo.dao.impl.MessageDAOImpl"></bean>
-    <!-- End Beans for DAO -->
+	<context:annotation-config></context:annotation-config>
+
+	<!-- Start of Beans for Service -->
+	<bean id="userService"
+		class="com.gslab.linkedin.linkedindemo.service.impl.UserServiceImpl"></bean>
+	<bean id="userPostService"
+		class="com.gslab.linkedin.linkedindemo.service.impl.UserPostServiceImpl">
+	</bean>
+	<bean id="userCommentService"
+		class="com.gslab.linkedin.linkedindemo.service.impl.UserCommentServiceImpl">
+	</bean>
+	<bean id="messageService"
+		class="com.gslab.linkedin.linkedindemo.service.impl.MessageServiceImpl">
+	</bean>
+	<!-- End of Beans for Service -->
+
+
+	<!-- Start Beans for DAO -->
+	<bean id="userDAO"
+		class="com.gslab.linkedin.linkedindemo.dao.impl.UserDAOImpl"></bean>
+	<bean id="userAccountDAO"
+		class="com.gslab.linkedin.linkedindemo.dao.impl.UserAccountDAOImpl"></bean>
+	<bean id="userPostDAO"
+		class="com.gslab.linkedin.linkedindemo.dao.impl.UserPostDAOImpl"></bean>
+	<bean id="userProfileInfoDAO"
+		class="com.gslab.linkedin.linkedindemo.dao.impl.UserProfileInfoDAOImpl"></bean>
+	<bean id="userCommentDAO"
+		class="com.gslab.linkedin.linkedindemo.dao.impl.UserCommentDAOImpl"></bean>
+	<bean id="messageDAO"
+		class="com.gslab.linkedin.linkedindemo.dao.impl.MessageDAOImpl"></bean>
+	<!-- End Beans for DAO -->
 </beans>  

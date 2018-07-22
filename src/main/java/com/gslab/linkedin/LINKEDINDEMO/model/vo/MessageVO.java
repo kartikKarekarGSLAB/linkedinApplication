@@ -6,9 +6,9 @@ public class MessageVO extends BeanBase {
 	 * 
 	 */
 	private static final long serialVersionUID = 8430173947514662501L;
-	
+
 	private String message;
-	
+
 	private String type;
 
 	public String getMessage() {
@@ -26,7 +26,5 @@ public class MessageVO extends BeanBase {
 	public void setType(String type) {
 		this.type = type.toLowerCase();
 	}
-	
-	
-	
+
 }

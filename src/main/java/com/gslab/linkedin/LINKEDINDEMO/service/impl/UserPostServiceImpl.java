@@ -15,17 +15,18 @@ import com.gslab.linkedin.linkedindemo.model.UserPost;
 import com.gslab.linkedin.linkedindemo.model.vo.UserPostVO;
 import com.gslab.linkedin.linkedindemo.service.UserPostService;
 
-public class UserPostServiceImpl implements UserPostService{
+public class UserPostServiceImpl implements UserPostService {
 
 	@Autowired
 	private UserAccountDAO userAccountDAO;
 	@Autowired
 	private UserPostDAO userPostDAO;
+
 	@Override
 	public Integer create(Integer userAccountId, UserPostVO userPostVO) {
 
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-		Date date = new Date();		
+		Date date = new Date();
 		try {
 			UserAccount userAccount = userAccountDAO.findById(userAccountId);
 			if (userAccount != null) {
@@ -49,6 +50,7 @@ public class UserPostServiceImpl implements UserPostService{
 		}
 		return null;
 	}
+
 	@Override
 	public List<UserPostVO> findAll(Integer userAccountId) {
 		// TODO Auto-generated method stub
@@ -72,11 +74,12 @@ public class UserPostServiceImpl implements UserPostService{
 		}
 		return null;
 	}
+
 	@Override
-	public boolean update(Integer userAccountId,Integer postId, UserPostVO userPostVO) {
+	public boolean update(Integer userAccountId, Integer postId, UserPostVO userPostVO) {
 		// TODO Auto-generated method stub
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-		Date date = new Date();		
+		Date date = new Date();
 		try {
 			UserAccount userAccount = userAccountDAO.findById(userAccountId);
 			if (userAccount != null) {
@@ -85,7 +88,7 @@ public class UserPostServiceImpl implements UserPostService{
 					userPost.setDescription(userPostVO.getDescription());
 					userPost.setImageAttachment(userPostVO.getImageAttachment());
 					userPost.setUpdatedOn(date);
-					return userPostDAO.update(userAccountId,postId, userPost);
+					return userPostDAO.update(userAccountId, postId, userPost);
 				} else {
 					throw new InvalidUserInputException("Empty description for update post operation.");
 				}
@@ -98,13 +101,14 @@ public class UserPostServiceImpl implements UserPostService{
 		}
 		return false;
 	}
+
 	@Override
-	public boolean delete(Integer userAccountId,Integer postId) {
+	public boolean delete(Integer userAccountId, Integer postId) {
 		// TODO Auto-generated method stub
 		try {
 			UserAccount userAccount = userAccountDAO.findById(userAccountId);
 			if (userAccount != null) {
-				return userPostDAO.delete(userAccountId,postId);
+				return userPostDAO.delete(userAccountId, postId);
 			} else {
 				throw new InvalidUserInputException("Invalid user account number for delete post operation.");
 			}
@@ -114,6 +118,7 @@ public class UserPostServiceImpl implements UserPostService{
 		}
 		return false;
 	}
+
 	@Override
 	public UserPostVO findById(Integer userAccountId, Integer postId) {
 		// TODO Auto-generated method stub
@@ -138,13 +143,14 @@ public class UserPostServiceImpl implements UserPostService{
 		}
 		return null;
 	}
+
 	@Override
 	public UserPostVO find(Integer postId) {
 		// TODO Auto-generated method stub
 		UserPost userPost = userPostDAO.find(postId);
 		UserPostVO userPostVO = new UserPostVO();
 		userPostVO.setDescription(userPost.getDescription());
-		userPostVO.setImageAttachment(userPost.getImageAttachment());		
+		userPostVO.setImageAttachment(userPost.getImageAttachment());
 		return userPostVO;
 	}
 }

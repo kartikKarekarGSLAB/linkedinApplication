@@ -16,7 +16,7 @@ public class UserAccountDAOImpl implements UserAccountDAO {
 
 	@Autowired
 	private SessionFactory sessionFactory;
-	
+
 	@Override
 	public Integer create(UserAccount userAccount) {
 		// TODO Auto-generated method stub
@@ -24,7 +24,7 @@ public class UserAccountDAOImpl implements UserAccountDAO {
 		Transaction tr = session.beginTransaction();
 		int newUserId = (int) session.save(userAccount);
 		tr.commit();
-		session.close();		
+		session.close();
 		return newUserId;
 	}
 
@@ -35,41 +35,42 @@ public class UserAccountDAOImpl implements UserAccountDAO {
 		Transaction tr = session.beginTransaction();
 		Query query = session.createQuery("from UserAccount where id= :id");
 		query.setInteger("id", userId);
-		UserAccount userAccount = (UserAccount) query.uniqueResult();		
+		UserAccount userAccount = (UserAccount) query.uniqueResult();
 		tr.commit();
-		session.close();		
+		session.close();
 		return userAccount;
 	}
 
 	@Override
-	public boolean update(Integer userId,UserAccount userAccount) {
+	public boolean update(Integer userId, UserAccount userAccount) {
 		// TODO Auto-generated method stub
 		int updatedRowCounter = 0;
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
 		Query query = session.createQuery("from UserAccount where id= :id");
 		query.setInteger("id", userId);
-		UserAccount result = (UserAccount) query.uniqueResult();		
+		UserAccount result = (UserAccount) query.uniqueResult();
 		try {
 			if (result != null) {
-				query = session.createQuery("update UserAccount set username= :username,password= :password where id= :userId");
-				
-				//update useremail
+				query = session.createQuery(
+						"update UserAccount set username= :username,password= :password where id= :userId");
+
+				// update useremail
 				if (userAccount.getUsername() != null) {
 					query.setString("username", userAccount.getUsername());
 				} else {
 					query.setString("username", result.getUsername());
 				}
-				
-				//update user password
+
+				// update user password
 				if (userAccount.getPassword() != null) {
 					query.setString("password", userAccount.getPassword());
 				} else {
 					query.setString("password", result.getPassword());
-				}				
+				}
 				query.setInteger("userId", userId);
 				updatedRowCounter = query.executeUpdate();
-				
+
 			} else {
 				throw new InvalidUserInputException("invalid userid pass for update");
 			}
@@ -79,7 +80,7 @@ public class UserAccountDAOImpl implements UserAccountDAO {
 		}
 		tr.commit();
 		session.close();
-		if(updatedRowCounter == 1)
+		if (updatedRowCounter == 1)
 			return true;
 		else
 			return false;
@@ -96,7 +97,7 @@ public class UserAccountDAOImpl implements UserAccountDAO {
 		updatedRowCounter = query.executeUpdate();
 		tr.commit();
 		session.close();
-		if(updatedRowCounter == 1)
+		if (updatedRowCounter == 1)
 			return true;
 		else
 			return false;

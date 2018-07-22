@@ -9,10 +9,10 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class LinkedInDemoApplicationConfig {
-	
+
 	@Autowired
 	private EntityManagerFactory entityManagerFactory;
-	
+
 	@Bean
 	public SessionFactory getSessionFactory() {
 		if (entityManagerFactory.unwrap(SessionFactory.class) == null) {
@@ -20,7 +20,7 @@ public class LinkedInDemoApplicationConfig {
 		} else {
 			return entityManagerFactory.unwrap(SessionFactory.class);
 		}
-		
+
 	}
-	
+
 }

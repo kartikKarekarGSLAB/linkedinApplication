@@ -1,6 +1,5 @@
 package com.gslab.linkedin.linkedindemo.model;
 
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,27 +29,26 @@ public class UserAccount {
 	@Column(name = "id")
 	@GeneratedValue(generator = "userAccountSequenceGenerator")
 	private int id;
-	
+
 	@Column(name = "username", length = 20, nullable = false)
 	private String username;
-	
+
 	@Column(name = "password", length = 20, nullable = false)
 	private String password;
-	
+
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id")
 	private UserProfileInfo userProfileInfo;
 
-	@OneToMany(cascade = CascadeType.ALL,mappedBy="userAccount")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "userAccount")
 	private Set<UserPost> userPost;
 
-	@OneToMany(cascade = CascadeType.ALL,mappedBy="userAccount")
-	private Set<UserComment> userComment;	
-	
-	
-	@ManyToMany(cascade=CascadeType.ALL)
-	private Set<Message> message = new HashSet<Message>(0); 
-	
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "userAccount")
+	private Set<UserComment> userComment;
+
+	@ManyToMany(cascade = CascadeType.ALL)
+	private Set<Message> message = new HashSet<Message>(0);
+
 	public Set<Message> getMessage() {
 		return message;
 	}
@@ -62,11 +60,11 @@ public class UserAccount {
 	public Set<UserComment> getUserComment() {
 		return userComment;
 	}
-	
+
 	public void setUserComment(Set<UserComment> userComment) {
 		this.userComment = userComment;
 	}
-	
+
 	public Set<UserPost> getUserPost() {
 		return userPost;
 	}

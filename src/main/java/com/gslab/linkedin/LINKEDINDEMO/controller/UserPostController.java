@@ -14,42 +14,42 @@ import com.gslab.linkedin.linkedindemo.model.vo.UserPostVO;
 import com.gslab.linkedin.linkedindemo.service.UserPostService;
 
 @RestController
-@RequestMapping(value="/post")
+@RequestMapping(value = "/post")
 public class UserPostController {
-	
+
 	@Autowired
 	private UserPostService userPostService;
-	
+
 //	List all post of user
-	@RequestMapping(value="/{id}",method = RequestMethod.GET)
-	public List<UserPostVO> findAll(@PathVariable(name="id") Integer userAccountId) {
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	public List<UserPostVO> findAll(@PathVariable(name = "id") Integer userAccountId) {
 		return userPostService.findAll(userAccountId);
 	}
+
 //	List post of user by Id
-	@RequestMapping(value="/{id}/{postid}",method = RequestMethod.GET)
-	public UserPostVO findById(@PathVariable(name="id") Integer userAccountId,
-									 @PathVariable(name="postid") Integer userPostId) {
-		return userPostService.findById(userAccountId,userPostId);
-	}	
-//	Create post for user
-	@RequestMapping(value="/{id}",method = RequestMethod.POST)
-	public String createPost(@PathVariable(name="id") Integer userAccountId,@RequestBody UserPostVO userPostVO) {
-		return "User post created :"+userPostService.create(userAccountId,userPostVO);
+	@RequestMapping(value = "/{id}/{postid}", method = RequestMethod.GET)
+	public UserPostVO findById(@PathVariable(name = "id") Integer userAccountId,
+			@PathVariable(name = "postid") Integer userPostId) {
+		return userPostService.findById(userAccountId, userPostId);
 	}
-	
+
 //	Create post for user
-	@RequestMapping(value="/{id}/{postid}",method = RequestMethod.PUT)
-	public String updatePost(@PathVariable(name="id") Integer userAccountId,
-			                 @PathVariable(name="postid") Integer userPostId,
-			                 @RequestBody UserPostVO userPostVO) {
-		return "User post updated :"+userPostService.update(userAccountId,userPostId,userPostVO);
+	@RequestMapping(value = "/{id}", method = RequestMethod.POST)
+	public String createPost(@PathVariable(name = "id") Integer userAccountId, @RequestBody UserPostVO userPostVO) {
+		return "User post created :" + userPostService.create(userAccountId, userPostVO);
 	}
-	
+
 //	Create post for user
-	@RequestMapping(value="/{id}/{postid}",method = RequestMethod.DELETE)
-	public String deletePost(@PathVariable(name="id") Integer userAccountId,
-			                 @PathVariable(name="postid") Integer userPostId) {
-		return "User post updated :"+userPostService.delete(userAccountId,userPostId);
+	@RequestMapping(value = "/{id}/{postid}", method = RequestMethod.PUT)
+	public String updatePost(@PathVariable(name = "id") Integer userAccountId,
+			@PathVariable(name = "postid") Integer userPostId, @RequestBody UserPostVO userPostVO) {
+		return "User post updated :" + userPostService.update(userAccountId, userPostId, userPostVO);
+	}
+
+//	Create post for user
+	@RequestMapping(value = "/{id}/{postid}", method = RequestMethod.DELETE)
+	public String deletePost(@PathVariable(name = "id") Integer userAccountId,
+			@PathVariable(name = "postid") Integer userPostId) {
+		return "User post updated :" + userPostService.delete(userAccountId, userPostId);
 	}
 }
-

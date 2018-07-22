@@ -6,10 +6,14 @@ import com.gslab.linkedin.linkedindemo.model.vo.UserVO;
 import com.gslab.linkedin.linkedindemo.util.Response;
 
 public interface UserService {
-	public Response create(UserVO userVO);
+	public Integer create(UserVO userVO);
+
 	public List<UserVO> findAll();
+
 	public UserVO findById(Integer userId);
-	public String update(Integer userId,UserVO userVO);
-	public String delete(Integer userId);
-	
+
+	public boolean update(Integer userId, UserVO userVO);
+
+	public boolean delete(Integer userId);
+
 }
