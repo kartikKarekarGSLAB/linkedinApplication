@@ -15,34 +15,30 @@ import com.gslab.linkedin.linkedindemo.service.UserService;
 import com.gslab.linkedin.linkedindemo.util.Response;
 import com.gslab.linkedin.linkedindemo.validator.UserValidator;
 
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserAccountDAO userAccountDAO;
 	@Autowired
 	private UserProfileInfoDAO userProfileInfoDAO;
+
 	@Override
-	public Response create(UserVO userVO) {
+	public Integer create(UserVO userVO) {
 		// TODO Auto-generated method stub
-		Response response = new Response();
 		try {
-			if(UserValidator.validateUserName(userVO.getUsername())) {
+			if (UserValidator.validateUserName(userVO.getUsername())) {
 				if (UserValidator.validatePassword(userVO.getPassword())) {
-						UserAccount userAccount = new UserAccount();
-						userAccount.setUsername(userVO.getUsername());
-						userAccount.setPassword(userVO.getPassword());
-						
-						UserProfileInfo userProfileInfo = new UserProfileInfo();
-						userProfileInfo.setProfilePicture(userVO.getProfilePictureUrl());
-						userProfileInfo.setEmail(userVO.getEmail());
-						userProfileInfo.setCompanyName(userVO.getCompanyName());
-						userProfileInfo.setDesignation(userVO.getDesignation());
-						userProfileInfo.setUserAccount(userAccount);		
-						int newUserId = userProfileInfoDAO.create(userProfileInfo);
-						response.setStatusCode(200);
-						response.setErrorKey("");
-						response.setErrorMessage("");
-						response.setPayload("New user created with id : "+newUserId);						
+					UserAccount userAccount = new UserAccount();
+					userAccount.setUsername(userVO.getUsername());
+					userAccount.setPassword(userVO.getPassword());
+
+					UserProfileInfo userProfileInfo = new UserProfileInfo();
+					userProfileInfo.setProfilePicture(userVO.getProfilePictureUrl());
+					userProfileInfo.setEmail(userVO.getEmail());
+					userProfileInfo.setCompanyName(userVO.getCompanyName());
+					userProfileInfo.setDesignation(userVO.getDesignation());
+					userProfileInfo.setUserAccount(userAccount);
+					return userProfileInfoDAO.create(userProfileInfo);
 				} else {
 					throw new InvalidUserInputException("Invalid password");
 				}
@@ -51,13 +47,9 @@ public class UserServiceImpl implements UserService{
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			response.setStatusCode(500);
-			response.setErrorKey(e.toString());
-			response.setErrorMessage(e.getMessage());
-			response.setPayload(null);
 			e.printStackTrace();
 		}
-		return response;
+		return null;
 	}
 
 	@Override
@@ -66,11 +58,11 @@ public class UserServiceImpl implements UserService{
 		List<UserAccount> userAccountList = userAccountDAO.findAll();
 		List<UserProfileInfo> userProfileInfoList = userProfileInfoDAO.findAll();
 		List<UserVO> userVOlist = new ArrayList<UserVO>();
-		int index =0;
+		int index = 0;
 		for (UserProfileInfo userProfile : userProfileInfoList) {
 			System.out.println(userProfile.getEmail());
 			UserVO uservo = new UserVO();
-     		uservo.setUsername(userAccountList.get(index).getUsername());
+			uservo.setUsername(userAccountList.get(index).getUsername());
 			uservo.setProfilePictureUrl(userProfile.getProfilePicture());
 			uservo.setEmail(userProfile.getEmail());
 			uservo.setCompanyName(userProfile.getCompanyName());
@@ -89,34 +81,34 @@ public class UserServiceImpl implements UserService{
 		UserVO uservo = new UserVO();
 		uservo.setUsername(userAccount.getUsername());
 		uservo.setPassword("***********");
- 		uservo.setProfilePictureUrl(userProfile.getProfilePicture());
+		uservo.setProfilePictureUrl(userProfile.getProfilePicture());
 		uservo.setEmail(userProfile.getEmail());
 		uservo.setCompanyName(userProfile.getCompanyName());
-		uservo.setDesignation(userProfile.getDesignation());		
+		uservo.setDesignation(userProfile.getDesignation());
 		return uservo;
 	}
 
 	@Override
-	public String update(Integer userId,UserVO userVO) {
+	public boolean update(Integer userId, UserVO userVO) {
 		// TODO Auto-generated method stub
-		String result = "User updated status : "+false;
-		UserProfileInfo userProfileInfo =  new UserProfileInfo();
+		boolean result = false;
+		UserProfileInfo userProfileInfo = new UserProfileInfo();
 		userProfileInfo.setProfilePicture(userVO.getProfilePictureUrl());
 		userProfileInfo.setEmail(userVO.getEmail());
 		userProfileInfo.setCompanyName(userVO.getCompanyName());
 		userProfileInfo.setDesignation(userVO.getDesignation());
-		UserAccount userAccount =  new UserAccount();
+		UserAccount userAccount = new UserAccount();
 		userAccount.setUsername(userVO.getUsername());
 		userAccount.setPassword(userVO.getPassword());
-		if( userAccountDAO.update(userId, userAccount) ) {
-			result = "User updated status : "+userProfileInfoDAO.update(userId, userProfileInfo);			
+		if (userAccountDAO.update(userId, userAccount)) {
+			result = userProfileInfoDAO.update(userId, userProfileInfo);
 		}
 		return result;
 	}
 
 	@Override
-	public String delete(Integer userId) {
+	public boolean delete(Integer userId) {
 		// TODO Auto-generated method stub
-		return "User deleted : "+userProfileInfoDAO.delete(userId);
+		return userProfileInfoDAO.delete(userId);
 	}
 }

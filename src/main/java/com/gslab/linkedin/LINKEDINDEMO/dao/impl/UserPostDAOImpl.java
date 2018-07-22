@@ -34,7 +34,8 @@ public class UserPostDAOImpl implements UserPostDAO {
 		// TODO Auto-generated method stub
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
-		Query query = session.createQuery("from UserPost where user_account_id = :user_account_id order by updated_on desc");
+		Query query = session
+				.createQuery("from UserPost where user_account_id = :user_account_id order by updated_on desc");
 		query.setInteger("user_account_id", userAccountId);
 		List<UserPost> userPostList = query.list();
 		tr.commit();
@@ -52,7 +53,7 @@ public class UserPostDAOImpl implements UserPostDAO {
 			Query query = session.createQuery("from UserPost where id= :id and user_account_id = :user_account_id");
 			query.setInteger("id", postId);
 			query.setInteger("user_account_id", userAccountId);
-			UserPost result = (UserPost) query.uniqueResult();			
+			UserPost result = (UserPost) query.uniqueResult();
 			if (result != null) {
 				query = session.createQuery(
 						"update UserPost set description= :description,image_attachment= :image_attachment,updated_on= :updatedOn where id= :postId");
@@ -89,7 +90,7 @@ public class UserPostDAOImpl implements UserPostDAO {
 	}
 
 	@Override
-	public boolean delete(Integer userAccountId,Integer postId) {
+	public boolean delete(Integer userAccountId, Integer postId) {
 		// TODO Auto-generated method stub
 		int updatedRowCounter = 0;
 		try {
@@ -98,7 +99,7 @@ public class UserPostDAOImpl implements UserPostDAO {
 			Query query = session.createQuery("from UserPost where id= :id and user_account_id = :user_account_id");
 			query.setInteger("id", postId);
 			query.setInteger("user_account_id", userAccountId);
-			
+
 			UserPost result = (UserPost) query.uniqueResult();
 			if (result != null) {
 				tr = session.beginTransaction();
@@ -117,7 +118,7 @@ public class UserPostDAOImpl implements UserPostDAO {
 		if (updatedRowCounter == 1)
 			return true;
 		else
-			return false;		
+			return false;
 	}
 
 	@Override
@@ -129,7 +130,7 @@ public class UserPostDAOImpl implements UserPostDAO {
 			Query query = session.createQuery("from UserPost where id= :id and user_account_id = :user_account_id");
 			query.setInteger("id", postId);
 			query.setInteger("user_account_id", userAccountId);
-			UserPost result = (UserPost) query.uniqueResult();			
+			UserPost result = (UserPost) query.uniqueResult();
 			if (result != null) {
 				return result;
 			} else {
@@ -141,7 +142,7 @@ public class UserPostDAOImpl implements UserPostDAO {
 		} finally {
 			tr.commit();
 			session.close();
-			
+
 		}
 		return null;
 	}
@@ -154,7 +155,7 @@ public class UserPostDAOImpl implements UserPostDAO {
 		try {
 			Query query = session.createQuery("from UserPost where id= :id");
 			query.setInteger("id", postId);
-			UserPost result = (UserPost) query.uniqueResult();			
+			UserPost result = (UserPost) query.uniqueResult();
 			if (result != null) {
 				return result;
 			} else {
@@ -166,7 +167,7 @@ public class UserPostDAOImpl implements UserPostDAO {
 		} finally {
 			tr.commit();
 			session.close();
-			
+
 		}
 		return null;
 	}

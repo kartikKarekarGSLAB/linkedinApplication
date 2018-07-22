@@ -16,7 +16,7 @@ public class MessageDAOImpl implements MessageDAO {
 
 	@Autowired
 	private SessionFactory sessionFactory;
-	
+
 	@Override
 	public Integer create(Message message) {
 		// TODO Auto-generated method stub
@@ -24,22 +24,24 @@ public class MessageDAOImpl implements MessageDAO {
 		Transaction tr = session.beginTransaction();
 		int newUserId = (int) session.save(message);
 		tr.commit();
-		session.close();		
+		session.close();
 		return newUserId;
 	}
 
 	@Override
 	public List<Message> findAll(Integer userAccountId, String type) {
 		// TODO Auto-generated method stub
-		//Query : select * from message where id in (select message_id from message_user_account where user_account_id = 10023);
+		// Query : select * from message where id in (select message_id from
+		// message_user_account where user_account_id = 10023);
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
-		Query query = session.createQuery("from Message where id in (select message_id from MessageUserAccount where user_account_id = :userAccountId)");
+		Query query = session.createQuery(
+				"from Message where id in (select message_id from MessageUserAccount where user_account_id = :userAccountId)");
 		query.setInteger("user_account_id", userAccountId);
 		List<Message> userPostList = query.list();
 		tr.commit();
 		session.close();
-		return userPostList;				
+		return userPostList;
 	}
 
 	@Override
@@ -53,7 +55,7 @@ public class MessageDAOImpl implements MessageDAO {
 		updatedRowCounter = query.executeUpdate();
 		tr.commit();
 		session.close();
-		if(updatedRowCounter == 1)
+		if (updatedRowCounter == 1)
 			return true;
 		else
 			return false;

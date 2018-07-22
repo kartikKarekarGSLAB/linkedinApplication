@@ -10,9 +10,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gslab.linkedin.linkedindemo.dao.impl.UserAccountDAOImpl;
+import com.gslab.linkedin.linkedindemo.model.vo.BeanBase;
+import com.gslab.linkedin.linkedindemo.model.vo.ResponseBase;
 import com.gslab.linkedin.linkedindemo.model.vo.UserVO;
 import com.gslab.linkedin.linkedindemo.service.UserService;
-import com.gslab.linkedin.linkedindemo.util.Response;
 
 @RestController
 @RequestMapping(value = "/user")
@@ -22,31 +23,54 @@ public class UserController {
 	private UserService userService;
 	@Autowired
 	private UserAccountDAOImpl userAccountDAOImpl;
-	
+
 	@RequestMapping(value = "/")
 	public List<UserVO> diplayAll() {
 		return userService.findAll();
 	}
-	@RequestMapping(value = "/{id}",method=RequestMethod.GET)
-	public UserVO readUser(@PathVariable(name="id") Integer userId) {
-		return userService.findById(userId);
-	}	
-	//	Method for create user
-	@RequestMapping(method = RequestMethod.POST)
-	public Response createUser(@RequestBody UserVO userVO) {
-		return userService.create(userVO).getResponseStat();
-	}
-	//	Method for create user
-	@RequestMapping(value="/{id}",method = RequestMethod.PUT)
-	public String updateUser(@PathVariable(name="id") Integer userAccountId,@RequestBody UserVO userVO) {
-		String result = userService.update(userAccountId, userVO);
-		return "User update:" + result;
-	}	
 
-	//	Method for create user
-	@RequestMapping(value="/{id}",method = RequestMethod.DELETE)
-	public String deleteUser(@PathVariable(name="id") Integer userAccountId) {
-		String result = userService.delete(userAccountId);
-		return "User delete :" + result;
-	}	
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	public ResponseBase readUser(@PathVariable(name = "id") Integer userId) {
+		UserVO user = userService.findById(userId);
+		ResponseBase responseBase = new ResponseBase();
+		responseBase.setStatusCode(200);
+		responseBase.setErrorKey("OK");
+		responseBase.setErrorMessage("");
+		responseBase.setPayLoad(user);
+		return responseBase;
+	}
+
+	// Method for create user
+	@RequestMapping(method = RequestMethod.POST)
+	public ResponseBase createUser(@RequestBody UserVO userVO) {
+		Integer newIntegerId = userService.create(userVO);
+		ResponseBase responseBase = new ResponseBase();
+		responseBase.setStatusCode(200);
+		responseBase.setErrorKey("OK");
+		responseBase.setErrorMessage("USER CREATED SUCCESSFULLY WITH ID: " + newIntegerId);
+		return responseBase;
+	}
+
+	// Method for create user
+	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+	public ResponseBase updateUser(@PathVariable(name = "id") Integer userAccountId, @RequestBody UserVO userVO) {
+		boolean result = userService.update(userAccountId, userVO);
+		Integer newIntegerId = userService.create(userVO);
+		ResponseBase responseBase = new ResponseBase();
+		responseBase.setStatusCode(200);
+		responseBase.setErrorKey("OK");
+		responseBase.setErrorMessage("USER UPDATED STATUS :" + result);
+		return responseBase;
+	}
+
+	// Method for create user
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	public ResponseBase deleteUser(@PathVariable(name = "id") Integer userAccountId) {
+		boolean result = userService.delete(userAccountId);
+		ResponseBase responseBase = new ResponseBase();
+		responseBase.setStatusCode(200);
+		responseBase.setErrorKey("OK");
+		responseBase.setErrorMessage("USER UPDATED STATUS :" + result);
+		return responseBase;
+	}
 }
