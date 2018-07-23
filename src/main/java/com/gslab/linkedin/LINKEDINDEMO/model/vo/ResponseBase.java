@@ -1,37 +1,36 @@
 package com.gslab.linkedin.linkedindemo.model.vo;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class ResponseBase {
 
-	private int statusCode;
-	private String errorMessage;
-	private String errorKey;
+	private Status status; 
 	private BeanBase payLoad;
 	private List<BeanBase> payLoadList;
-
-	public int getStatusCode() {
-		return statusCode;
+ 
+	public ResponseBase() {
+		// TODO Auto-generated constructor stub
+		status = new Status();
+		payLoad = new BeanBase();
+		payLoadList = new ArrayList<BeanBase>(); 		
+	}
+	public ResponseBase(Status status, BeanBase payLoad, List<BeanBase> payLoadList) {
+		super();
+		this.status = status;
+		this.payLoad = payLoad;
+		this.payLoadList = payLoadList;
 	}
 
-	public void setStatusCode(int statusCode) {
-		this.statusCode = statusCode;
+	public Status getStatus() {
+		return status;
 	}
 
-	public String getErrorMessage() {
-		return errorMessage;
-	}
-
-	public void setErrorMessage(String errorMessage) {
-		this.errorMessage = errorMessage;
-	}
-
-	public String getErrorKey() {
-		return errorKey;
-	}
-
-	public void setErrorKey(String errorKey) {
-		this.errorKey = errorKey;
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 
 	public BeanBase getPayLoad() {

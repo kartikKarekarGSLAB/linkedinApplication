@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gslab.linkedin.linkedindemo.dao.UserProfileInfoDAO;
 import com.gslab.linkedin.linkedindemo.exception.InvalidUserInputException;
-import com.gslab.linkedin.linkedindemo.model.UserAccount;
 import com.gslab.linkedin.linkedindemo.model.UserProfileInfo;
 
 public class UserProfileInfoDAOImpl implements UserProfileInfoDAO {
@@ -19,14 +18,14 @@ public class UserProfileInfoDAOImpl implements UserProfileInfoDAO {
 	private SessionFactory sessionFactory;
 
 	@Override
-	public Integer create(UserProfileInfo userProfileInfo) {
+	public UserProfileInfo create(UserProfileInfo userProfileInfo) {
 		// TODO Auto-generated method stub
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
 		int newUserId = (int) session.save(userProfileInfo);
 		tr.commit();
 		session.close();
-		return newUserId;
+		return userProfileInfo;
 	}
 
 	@Override
@@ -43,7 +42,7 @@ public class UserProfileInfoDAOImpl implements UserProfileInfoDAO {
 	}
 
 	@Override
-	public boolean update(Integer userAccountId, UserProfileInfo userProfileInfo) {
+	public UserProfileInfo update(Integer userAccountId, UserProfileInfo userProfileInfo) {
 		// TODO Auto-generated method stub
 		int updatedRowCounter = 0;
 		Session session = sessionFactory.openSession();
@@ -51,47 +50,45 @@ public class UserProfileInfoDAOImpl implements UserProfileInfoDAO {
 		Query query = session.createQuery("from UserProfileInfo where user_account_id= :user_account_id");
 		query.setInteger("user_account_id", userAccountId);
 		UserProfileInfo result = (UserProfileInfo) query.uniqueResult();
-		try {
-			if (result != null) {
-				query = session.createQuery(
-						"update UserProfileInfo set email= :email,company_name= :company_name,designation=:designation where user_account_id= :user_account_id");
+		if (result != null) {
+			query = session.createQuery(
+					"update UserProfileInfo set email= :email,company_name= :company_name,designation=:designation where user_account_id= :user_account_id");
 
-				// update email
-				if (userProfileInfo.getEmail() != null) {
-					query.setString("email", userProfileInfo.getEmail());
-				} else {
-					query.setString("email", result.getEmail());
-				}
-
-				// update company_name
-				if (userProfileInfo.getCompanyName() != null) {
-					query.setString("company_name", userProfileInfo.getCompanyName());
-				} else {
-					query.setString("company_name", result.getCompanyName());
-				}
-
-				// update designation
-				if (userProfileInfo.getDesignation() != null) {
-					query.setString("designation", userProfileInfo.getDesignation());
-				} else {
-					query.setString("designation", result.getDesignation());
-				}
-				query.setInteger("user_account_id", userAccountId);
-				updatedRowCounter = query.executeUpdate();
-
+			// update email
+			if (userProfileInfo.getEmail() != null) {
+				query.setString("email", userProfileInfo.getEmail());
 			} else {
-				throw new InvalidUserInputException("invalid userid pass for update");
+				query.setString("email", result.getEmail());
+				userProfileInfo.setEmail(result.getEmail());
 			}
-		} catch (InvalidUserInputException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+			// update company_name
+			if (userProfileInfo.getCompanyName() != null) {
+				query.setString("company_name", userProfileInfo.getCompanyName());
+			} else {
+				query.setString("company_name", result.getCompanyName());
+				userProfileInfo.setCompanyName(result.getCompanyName());
+			}
+
+			// update designation
+			if (userProfileInfo.getDesignation() != null) {
+				query.setString("designation", userProfileInfo.getDesignation());
+			} else {
+				query.setString("designation", result.getDesignation());
+				userProfileInfo.setDesignation(result.getDesignation());
+			}
+			query.setInteger("user_account_id", userAccountId);
+			updatedRowCounter = query.executeUpdate();
+
+		} else {
+			throw new InvalidUserInputException("invalid user account id pass for update");
 		}
 		tr.commit();
 		session.close();
 		if (updatedRowCounter == 1)
-			return true;
+			return userProfileInfo;
 		else
-			return false;
+			return null;
 	}
 
 	@Override

@@ -6,7 +6,7 @@ import com.gslab.linkedin.linkedindemo.model.UserPost;
 import com.gslab.linkedin.linkedindemo.model.vo.UserPostVO;
 
 public interface UserPostDAO {
-	public Integer create(UserPost userPost);
+	public UserPost create(UserPost userPost);
 
 	public UserPost find(Integer postId);
 
@@ -14,7 +14,7 @@ public interface UserPostDAO {
 
 	public List<UserPost> findAll(Integer userAccountId);
 
-	public boolean update(Integer userAccountId, Integer postId, UserPost userPost);
+	public UserPost update(Integer userAccountId, Integer postId, UserPost userPost);
 
 	public boolean delete(Integer userAccountId, Integer postId);
 }

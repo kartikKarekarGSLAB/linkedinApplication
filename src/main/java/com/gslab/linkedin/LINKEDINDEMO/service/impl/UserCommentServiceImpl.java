@@ -33,76 +33,58 @@ public class UserCommentServiceImpl implements UserCommentService {
 
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		Date date = new Date();
-		try {
-			UserAccount userAccount = userAccountDAO.findById(userAccountId);
-			if (userAccount != null) {
-				UserPost userPost = userPostDAO.find(userPostId);
-				if (userPost != null) {
-					if (userCommentVO.getMessage() != null) {
-						UserComment userComment = new UserComment();
-						userComment.setMessage(userCommentVO.getMessage());
-						userComment.setUserAccount(userAccount);
-						userComment.setUserPost(userPost);
-						userComment.setCreatedOn(date);
-						userComment.setUpdatedOn(date);
-						return userCommentDAO.create(userComment);
-					} else {
-						throw new InvalidUserInputException(
-								"Please enter some text in comment. empty comment is not accepted.");
-					}
-
+		UserAccount userAccount = userAccountDAO.findById(userAccountId);
+		if (userAccount != null) {
+			UserPost userPost = userPostDAO.find(userPostId);
+			if (userPost != null) {
+				if (userCommentVO.getMessage() != null) {
+					UserComment userComment = new UserComment();
+					userComment.setMessage(userCommentVO.getMessage());
+					userComment.setUserAccount(userAccount);
+					userComment.setUserPost(userPost);
+					userComment.setCreatedOn(date);
+					userComment.setUpdatedOn(date);
+					return userCommentDAO.create(userComment);
 				} else {
-					throw new InvalidUserInputException("Invalid post id for comment");
+					throw new InvalidUserInputException(
+							"Please enter some text in comment. empty comment is not accepted.");
 				}
+
 			} else {
-				throw new InvalidUserInputException("Invalid user account number for comment");
+				throw new InvalidUserInputException("Invalid post id for comment");
 			}
-		} catch (InvalidUserInputException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} else {
+			throw new InvalidUserInputException("Invalid user account number for comment");
 		}
-		return null;
 	}
 
 	@Override
 	public List<UserCommentVO> findAll(Integer userPostId) {
 		// TODO Auto-generated method stub
-		try {
-			UserPost userPost = userPostDAO.find(userPostId);
-			if (userPost != null) {
-				List<UserComment> userCommentList = userCommentDAO.findAll(userPostId);
-				List<UserCommentVO> userCommentVOList = new ArrayList<UserCommentVO>();
-				for (UserComment userComment : userCommentList) {
-					UserCommentVO comment = new UserCommentVO();
-					comment.setMessage(userComment.getMessage());
-					userCommentVOList.add(comment);
-				}
-				return userCommentVOList;
-			} else {
-				throw new InvalidUserInputException("Invalid post id for comment");
+		UserPost userPost = userPostDAO.find(userPostId);
+		if (userPost != null) {
+			List<UserComment> userCommentList = userCommentDAO.findAll(userPostId);
+			List<UserCommentVO> userCommentVOList = new ArrayList<UserCommentVO>();
+			for (UserComment userComment : userCommentList) {
+				UserCommentVO comment = new UserCommentVO();
+				comment.setMessage(userComment.getMessage());
+				userCommentVOList.add(comment);
 			}
-		} catch (InvalidUserInputException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return userCommentVOList;
+		} else {
+			throw new InvalidUserInputException("Invalid post id for comment");
 		}
-		return null;
 	}
 
 	@Override
 	public boolean delete(Integer userAccountId, Integer commentId) {
 		// TODO Auto-generated method stub
-		try {
-			UserAccount userAccount = userAccountDAO.findById(userAccountId);
-			if (userAccount != null) {
-				return userCommentDAO.delete(userAccountId, commentId);
-			} else {
-				throw new InvalidUserInputException("Invalid user account number for comment delete.");
-			}
-		} catch (InvalidUserInputException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		UserAccount userAccount = userAccountDAO.findById(userAccountId);
+		if (userAccount != null) {
+			return userCommentDAO.delete(userAccountId, commentId);
+		} else {
+			throw new InvalidUserInputException("Invalid user account number for comment delete.");
 		}
-		return false;
 	}
 
 	@Override
@@ -110,26 +92,20 @@ public class UserCommentServiceImpl implements UserCommentService {
 		// TODO Auto-generated method stub
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		Date date = new Date();
-		try {
-			UserAccount userAccount = userAccountDAO.findById(userAccountId);
-			if (userAccount != null) {
-				if (userCommentVO.getMessage() != null) {
-					UserComment userComment = new UserComment();
-					userComment.setMessage(userCommentVO.getMessage());
-					userComment.setUpdatedOn(date);
-					return userCommentDAO.update(userAccountId, userCommentId, userComment);
-				} else {
-					throw new InvalidUserInputException(
-							"Please enter some text in comment. empty comment is not accepted.");
-				}
+		UserAccount userAccount = userAccountDAO.findById(userAccountId);
+		if (userAccount != null) {
+			if (userCommentVO.getMessage() != null) {
+				UserComment userComment = new UserComment();
+				userComment.setMessage(userCommentVO.getMessage());
+				userComment.setUpdatedOn(date);
+				return userCommentDAO.update(userAccountId, userCommentId, userComment);
 			} else {
-				throw new InvalidUserInputException("Invalid user account number for comment");
+				throw new InvalidUserInputException(
+						"Please enter some text in comment. empty comment is not accepted.");
 			}
-		} catch (InvalidUserInputException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} else {
+			throw new InvalidUserInputException("Invalid user account number for comment");
 		}
-		return false;
 	}
 
 }

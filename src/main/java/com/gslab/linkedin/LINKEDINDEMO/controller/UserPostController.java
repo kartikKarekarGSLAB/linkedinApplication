@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gslab.linkedin.linkedindemo.model.vo.BeanBase;
 import com.gslab.linkedin.linkedindemo.model.vo.ResponseBase;
+import com.gslab.linkedin.linkedindemo.model.vo.Status;
 import com.gslab.linkedin.linkedindemo.model.vo.UserPostVO;
 import com.gslab.linkedin.linkedindemo.service.UserPostService;
 
@@ -22,34 +24,46 @@ public class UserPostController {
 
 //	List all post of user
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public List<UserPostVO> findAll(@PathVariable(name = "id") Integer userAccountId) {
-		return userPostService.findAll(userAccountId);
+	public ResponseBase findAll(@PathVariable(name = "id") Integer userAccountId) {
+		List<BeanBase> userPostList = userPostService.findAll(userAccountId);
+		return new ResponseBase(new Status(200, "", ""),null,userPostList);		
 	}
 
 //	List post of user by Id
 	@RequestMapping(value = "/{id}/{postid}", method = RequestMethod.GET)
-	public UserPostVO findById(@PathVariable(name = "id") Integer userAccountId,
-			@PathVariable(name = "postid") Integer userPostId) {
-		return userPostService.findById(userAccountId, userPostId);
+	public ResponseBase findById(@PathVariable(name = "id") Integer userAccountId,
+			 	@PathVariable(name = "postid") Integer userPostId) {
+		UserPostVO userPost = userPostService.findById(userAccountId, userPostId);
+		return new ResponseBase(new Status(200, "", ""),userPost,null);
 	}
 
 //	Create post for user
 	@RequestMapping(value = "/{id}", method = RequestMethod.POST)
-	public String createPost(@PathVariable(name = "id") Integer userAccountId, @RequestBody UserPostVO userPostVO) {
-		return "User post created :" + userPostService.create(userAccountId, userPostVO);
+	public ResponseBase create(@PathVariable(name = "id") Integer userAccountId, @RequestBody UserPostVO userPostVO) {
+		UserPostVO userPost = userPostService.create(userAccountId, userPostVO);
+		return new ResponseBase(new Status(200, "", ""),userPost,null);
 	}
-
-//	Create post for user
-	@RequestMapping(value = "/{id}/{postid}", method = RequestMethod.PUT)
-	public String updatePost(@PathVariable(name = "id") Integer userAccountId,
-			@PathVariable(name = "postid") Integer userPostId, @RequestBody UserPostVO userPostVO) {
-		return "User post updated :" + userPostService.update(userAccountId, userPostId, userPostVO);
-	}
-
-//	Create post for user
-	@RequestMapping(value = "/{id}/{postid}", method = RequestMethod.DELETE)
-	public String deletePost(@PathVariable(name = "id") Integer userAccountId,
+//	Repost  / Share other user post.
+	@RequestMapping(value = "/{id}/{postid}", method = RequestMethod.POST)
+	public ResponseBase share(@PathVariable(name = "id") Integer userAccountId,
 			@PathVariable(name = "postid") Integer userPostId) {
-		return "User post updated :" + userPostService.delete(userAccountId, userPostId);
+		UserPostVO userPost = userPostService.share(userAccountId, userPostId);
+		return new ResponseBase(new Status(200, "", ""),userPost,null);
+	}
+	
+//	Update post for user
+	@RequestMapping(value = "/{id}/{postid}", method = RequestMethod.PUT)
+	public ResponseBase update(@PathVariable(name = "id") Integer userAccountId,
+			@PathVariable(name = "postid") Integer userPostId, @RequestBody UserPostVO userPostVO) {
+		UserPostVO userPost = userPostService.update(userAccountId, userPostId, userPostVO);
+		return new ResponseBase(new Status(200, "", ""),userPost,null);
+	}
+
+//	Delete post for user
+	@RequestMapping(value = "/{id}/{postid}", method = RequestMethod.DELETE)
+	public ResponseBase delete(@PathVariable(name = "id") Integer userAccountId,
+			@PathVariable(name = "postid") Integer userPostId) {
+		boolean result =  userPostService.delete(userAccountId, userPostId);
+		return new ResponseBase(new Status(200, "", ""),null,null);
 	}
 }

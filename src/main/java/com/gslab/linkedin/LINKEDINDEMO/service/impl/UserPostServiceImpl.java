@@ -9,9 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gslab.linkedin.linkedindemo.dao.UserAccountDAO;
 import com.gslab.linkedin.linkedindemo.dao.UserPostDAO;
+import com.gslab.linkedin.linkedindemo.exception.CRUDOperationFailureException;
 import com.gslab.linkedin.linkedindemo.exception.InvalidUserInputException;
 import com.gslab.linkedin.linkedindemo.model.UserAccount;
 import com.gslab.linkedin.linkedindemo.model.UserPost;
+import com.gslab.linkedin.linkedindemo.model.vo.BeanBase;
 import com.gslab.linkedin.linkedindemo.model.vo.UserPostVO;
 import com.gslab.linkedin.linkedindemo.service.UserPostService;
 
@@ -23,125 +25,112 @@ public class UserPostServiceImpl implements UserPostService {
 	private UserPostDAO userPostDAO;
 
 	@Override
-	public Integer create(Integer userAccountId, UserPostVO userPostVO) {
+	public UserPostVO create(Integer userAccountId, UserPostVO userPostVO) {
 
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		Date date = new Date();
-		try {
-			UserAccount userAccount = userAccountDAO.findById(userAccountId);
-			if (userAccount != null) {
-				if (userPostVO.getDescription() != null) {
-					UserPost userPost = new UserPost();
-					userPost.setDescription(userPostVO.getDescription());
-					userPost.setImageAttachment(userPostVO.getImageAttachment());
-					userPost.setUserAccount(userAccount);
-					userPost.setCreatedOn(date);
-					userPost.setUpdatedOn(date);
-					return userPostDAO.create(userPost);
+		UserAccount userAccount = userAccountDAO.findById(userAccountId);
+		if (userAccount != null) {
+			if (userPostVO.getDescription() != null) {
+				UserPost userPost = new UserPost();
+
+				userPost.setDescription(userPostVO.getDescription());
+				userPost.setImageAttachment(userPostVO.getImageAttachment());
+				userPost.setUserAccount(userAccount);
+				userPost.setCreatedOn(date);
+				userPost.setUpdatedOn(date);
+
+				userPost = userPostDAO.create(userPost);
+
+				if (userPost != null) {
+					userPostVO.setDescription(userPost.getDescription());
+					userPostVO.setImageAttachment(userPost.getImageAttachment());
+					return userPostVO;
 				} else {
-					throw new InvalidUserInputException("Please enter some text in post. empyt post is not accepted.");
+					throw new CRUDOperationFailureException("Fail to create user post");
 				}
 			} else {
-				throw new InvalidUserInputException("Invalid user account number for post");
+				throw new InvalidUserInputException("Please enter some text in post. empty post is not accepted.");
 			}
-		} catch (InvalidUserInputException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} else {
+			throw new InvalidUserInputException("Invalid user account id for post");
 		}
-		return null;
 	}
 
 	@Override
-	public List<UserPostVO> findAll(Integer userAccountId) {
+	public List<BeanBase> findAll(Integer userAccountId) {
 		// TODO Auto-generated method stub
-		try {
-			UserAccount userAccount = userAccountDAO.findById(userAccountId);
-			if (userAccount != null) {
-				List<UserPostVO> userPostVOList = new ArrayList<UserPostVO>();
-				for (UserPost userPost : userPostDAO.findAll(userAccountId)) {
-					UserPostVO post = new UserPostVO();
-					post.setDescription(userPost.getDescription());
-					post.setImageAttachment(userPost.getImageAttachment());
-					userPostVOList.add(post);
-				}
-				return userPostVOList;
-			} else {
-				throw new InvalidUserInputException("Invalid user account number for post");
+		UserAccount userAccount = userAccountDAO.findById(userAccountId);
+		if (userAccount != null) {
+			List<BeanBase> userPostVOList = new ArrayList<BeanBase>();
+			for (UserPost userPost : userPostDAO.findAll(userAccountId)) {
+				UserPostVO post = new UserPostVO();
+				post.setDescription(userPost.getDescription());
+				post.setImageAttachment(userPost.getImageAttachment());
+				userPostVOList.add(post);
 			}
-		} catch (InvalidUserInputException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return userPostVOList;
+		} else {
+			throw new InvalidUserInputException("Invalid user account number for post");
 		}
-		return null;
 	}
 
 	@Override
-	public boolean update(Integer userAccountId, Integer postId, UserPostVO userPostVO) {
+	public UserPostVO update(Integer userAccountId, Integer postId, UserPostVO userPostVO) {
 		// TODO Auto-generated method stub
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		Date date = new Date();
-		try {
-			UserAccount userAccount = userAccountDAO.findById(userAccountId);
-			if (userAccount != null) {
-				if (userPostVO.getDescription() != null) {
-					UserPost userPost = new UserPost();
-					userPost.setDescription(userPostVO.getDescription());
-					userPost.setImageAttachment(userPostVO.getImageAttachment());
-					userPost.setUpdatedOn(date);
-					return userPostDAO.update(userAccountId, postId, userPost);
+		UserAccount userAccount = userAccountDAO.findById(userAccountId);
+		if (userAccount != null) {
+			if (userPostVO.getDescription() != null) {
+				UserPost userPost = new UserPost();
+				userPost.setDescription(userPostVO.getDescription());
+				userPost.setImageAttachment(userPostVO.getImageAttachment());
+				userPost.setUpdatedOn(date);
+				userPost = userPostDAO.update(userAccountId, postId, userPost);
+				if (userPost != null) {
+					userPostVO.setDescription(userPost.getDescription());
+					userPostVO.setImageAttachment(userPost.getImageAttachment());
+					return userPostVO;
 				} else {
-					throw new InvalidUserInputException("Empty description for update post operation.");
+					throw new CRUDOperationFailureException("Fail to update user post");
 				}
 			} else {
-				throw new InvalidUserInputException("Invalid user account number for post update opertaion.");
+				throw new InvalidUserInputException("Empty description for update post operation.");
 			}
-		} catch (InvalidUserInputException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} else {
+			throw new InvalidUserInputException("Invalid user account number for post update opertaion.");
 		}
-		return false;
 	}
 
 	@Override
 	public boolean delete(Integer userAccountId, Integer postId) {
 		// TODO Auto-generated method stub
-		try {
-			UserAccount userAccount = userAccountDAO.findById(userAccountId);
-			if (userAccount != null) {
-				return userPostDAO.delete(userAccountId, postId);
-			} else {
-				throw new InvalidUserInputException("Invalid user account number for delete post operation.");
-			}
-		} catch (InvalidUserInputException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		UserAccount userAccount = userAccountDAO.findById(userAccountId);
+		if (userAccount != null) {
+			return userPostDAO.delete(userAccountId, postId);
+		} else {
+			throw new InvalidUserInputException("Invalid user account number for delete post operation.");
 		}
-		return false;
 	}
 
 	@Override
 	public UserPostVO findById(Integer userAccountId, Integer postId) {
 		// TODO Auto-generated method stub
-		try {
-			UserAccount userAccount = userAccountDAO.findById(userAccountId);
-			if (userAccount != null) {
-				UserPost userPost = userPostDAO.findById(userAccountId, postId);
-				if (userPost != null) {
-					UserPostVO userPostVO = new UserPostVO();
-					userPostVO.setDescription(userPost.getDescription());
-					userPostVO.setImageAttachment(userPost.getImageAttachment());
-					return userPostVO;
-				} else {
-					throw new InvalidUserInputException("Invalid user account number or postid for post");
-				}
+		UserAccount userAccount = userAccountDAO.findById(userAccountId);
+		if (userAccount != null) {
+			UserPost userPost = userPostDAO.findById(userAccountId, postId);
+			if (userPost != null) {
+				UserPostVO userPostVO = new UserPostVO();
+				userPostVO.setDescription(userPost.getDescription());
+				userPostVO.setImageAttachment(userPost.getImageAttachment());
+				return userPostVO;
 			} else {
-				throw new InvalidUserInputException("Invalid user account number for post");
+				throw new InvalidUserInputException("Invalid user account number or postid for post");
 			}
-		} catch (InvalidUserInputException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} else {
+			throw new InvalidUserInputException("Invalid user account number for post");
 		}
-		return null;
 	}
 
 	@Override
@@ -151,6 +140,36 @@ public class UserPostServiceImpl implements UserPostService {
 		UserPostVO userPostVO = new UserPostVO();
 		userPostVO.setDescription(userPost.getDescription());
 		userPostVO.setImageAttachment(userPost.getImageAttachment());
+		return userPostVO;
+	}
+
+	@Override
+	public UserPostVO share(Integer userAccountId, Integer postId) {
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		Date date = new Date();
+		UserPostVO userPostVO = new UserPostVO();
+		UserAccount userAccount = userAccountDAO.findById(userAccountId);
+		if (userAccount != null) {
+			UserPost userPost = userPostDAO.find(postId);
+			if (userPost != null) {
+				userPost.setCreatedOn(date);
+				userPost.setUpdatedOn(date);
+				userPost.setRepostUserId(userAccountId);
+				System.out.println(userPost);
+				userPost = userPostDAO.create(userPost);
+				if (userPost != null) {
+					userPostVO.setDescription(userPost.getDescription());
+					userPostVO.setImageAttachment(userPost.getImageAttachment());
+				} else {
+					throw new CRUDOperationFailureException("Fail to create user post");
+				}
+
+			} else {
+				throw new InvalidUserInputException("Invalid postid for repost");
+			}
+		} else {
+			throw new InvalidUserInputException("Invalid user account number for repost");
+		}
 		return userPostVO;
 	}
 }

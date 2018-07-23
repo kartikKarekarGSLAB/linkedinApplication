@@ -28,32 +28,26 @@ public class MessageServiceImpl implements MessageService {
 	public Integer create(Integer userAccountId, MessageVO message) {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		Date date = new Date();
-		try {
-			UserAccount userAccount = userAccountDAO.findById(userAccountId);
-			if (userAccount != null) {
-				if (message.getType().equalsIgnoreCase("send") || message.getType().equalsIgnoreCase("receive")) {
-					if (message.getMessage() != null) {
-						Message newMessage = new Message();
-						newMessage.setMessage(message.getMessage());
-						newMessage.setType(message.getType());
-						newMessage.setCreatedOn(date);
-						(newMessage.getUserAccount()).add(userAccount);
-						return messageDAO.create(newMessage);
-					} else {
-						throw new InvalidUserInputException("Wrong Message type");
-					}
+		UserAccount userAccount = userAccountDAO.findById(userAccountId);
+		if (userAccount != null) {
+			if (message.getType().equalsIgnoreCase("send") || message.getType().equalsIgnoreCase("receive")) {
+				if (message.getMessage() != null) {
+					Message newMessage = new Message();
+					newMessage.setMessage(message.getMessage());
+					newMessage.setType(message.getType());
+					newMessage.setCreatedOn(date);
+					(newMessage.getUserAccount()).add(userAccount);
+					return messageDAO.create(newMessage);
 				} else {
 					throw new InvalidUserInputException("Wrong Message type");
 				}
-
 			} else {
-				throw new InvalidUserInputException("Invalid user account number for comment");
+				throw new InvalidUserInputException("Wrong Message type");
 			}
 
-		} catch (InvalidUserInputException e) {
-			// TODO: handle exception
+		} else {
+			throw new InvalidUserInputException("Invalid user account number for message");
 		}
-		return null;
 	}
 
 	@Override
