@@ -10,6 +10,16 @@ public class MessageVO extends BeanBase {
 	private String message;
 
 	private String type;
+		
+	private String receiverUserName;
+
+	public String getReceiverUserName() {
+		return receiverUserName;
+	}
+
+	public void setReceiverUserName(String receiverUserName) {
+		this.receiverUserName = receiverUserName;
+	}
 
 	public String getMessage() {
 		return message;

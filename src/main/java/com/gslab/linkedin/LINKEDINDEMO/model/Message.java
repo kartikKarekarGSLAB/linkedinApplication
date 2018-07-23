@@ -32,6 +32,13 @@ public class Message {
 	@Column(name = "message")
 	private String message;
 
+	@Column(name = "sender_user_name")
+	private String senderUserName;
+	
+	@Column(name = "receiver_user_name")
+	private String receiverUserName;
+	
+	
 	@Column(name = "type")
 	private String type;
 
@@ -63,6 +70,22 @@ public class Message {
 
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	public String getSenderUserName() {
+		return senderUserName;
+	}
+
+	public void setSenderUserName(String senderUserName) {
+		this.senderUserName = senderUserName;
+	}
+
+	public String getReceiverUserName() {
+		return receiverUserName;
+	}
+
+	public void setReceiverUserName(String receiverUserName) {
+		this.receiverUserName = receiverUserName;
 	}
 
 	public String getType() {

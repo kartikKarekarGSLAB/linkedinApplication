@@ -32,14 +32,28 @@ public class MessageServiceImpl implements MessageService {
 		if (userAccount != null) {
 			if (message.getType().equalsIgnoreCase("send") || message.getType().equalsIgnoreCase("receive")) {
 				if (message.getMessage() != null) {
-					Message newMessage = new Message();
-					newMessage.setMessage(message.getMessage());
-					newMessage.setType(message.getType());
-					newMessage.setCreatedOn(date);
-					(newMessage.getUserAccount()).add(userAccount);
-					return messageDAO.create(newMessage);
+					Message senderMessage = new Message();
+					senderMessage.setMessage(message.getMessage());
+					senderMessage.setCreatedOn(date);
+					//sender entry.
+					senderMessage.setType("send");
+					senderMessage.setReceiverUserName(message.getReceiverUserName());
+					senderMessage.setSenderUserName(userAccount.getUsername());
+					(senderMessage.getUserAccount()).add(userAccount);
+					Integer sendMessageID = messageDAO.create(senderMessage);
+					//receiver entry
+					Message receiverMessage = new Message();
+					receiverMessage.setMessage(message.getMessage());
+					receiverMessage.setCreatedOn(date);
+					//sender entry.
+					receiverMessage.setType("receive");
+					receiverMessage.setReceiverUserName(message.getReceiverUserName());
+					receiverMessage.setSenderUserName(userAccount.getUsername());
+					UserAccount receiverUserAccount = userAccountDAO.findByUserName(message.getReceiverUserName());
+					(receiverMessage.getUserAccount()).add(receiverUserAccount);
+					return messageDAO.create(receiverMessage);
 				} else {
-					throw new InvalidUserInputException("Wrong Message type");
+					throw new InvalidUserInputException("unable to send Empty message.");
 				}
 			} else {
 				throw new InvalidUserInputException("Wrong Message type");

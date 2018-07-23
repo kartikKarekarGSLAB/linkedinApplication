@@ -1,6 +1,5 @@
 package com.gslab.linkedin.linkedindemo.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gslab.linkedin.linkedindemo.dao.impl.UserAccountDAOImpl;
 import com.gslab.linkedin.linkedindemo.model.vo.BeanBase;
 import com.gslab.linkedin.linkedindemo.model.vo.ResponseBase;
 import com.gslab.linkedin.linkedindemo.model.vo.Status;

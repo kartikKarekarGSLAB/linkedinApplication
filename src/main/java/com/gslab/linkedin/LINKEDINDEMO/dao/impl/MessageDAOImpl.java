@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gslab.linkedin.linkedindemo.dao.MessageDAO;
 import com.gslab.linkedin.linkedindemo.model.Message;
-import com.gslab.linkedin.linkedindemo.model.UserPost;
 
 public class MessageDAOImpl implements MessageDAO {
 
