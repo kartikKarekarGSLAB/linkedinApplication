@@ -20,6 +20,8 @@
 	<bean id="messageService"
 		class="com.gslab.linkedin.linkedindemo.service.impl.MessageServiceImpl">
 	</bean>
+	<bean id="FollowService"
+		class="com.gslab.linkedin.linkedindemo.service.impl.UserFollowServiceImpl"></bean>
 	<!-- End of Beans for Service -->
 
 
@@ -36,5 +38,16 @@
 		class="com.gslab.linkedin.linkedindemo.dao.impl.UserCommentDAOImpl"></bean>
 	<bean id="messageDAO"
 		class="com.gslab.linkedin.linkedindemo.dao.impl.MessageDAOImpl"></bean>
+	<bean id="userFollowDAO"
+		class="com.gslab.linkedin.linkedindemo.dao.impl.UserFollowDAOImpl">
+	</bean>
 	<!-- End Beans for DAO -->
+
+	<!-- MessagSource Bean -->
+	<bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basename">
+			<value>messages_en_US</value>
+		</property>
+	</bean>
 </beans>  

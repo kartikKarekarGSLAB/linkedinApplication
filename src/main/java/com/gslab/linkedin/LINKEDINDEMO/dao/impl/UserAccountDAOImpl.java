@@ -42,7 +42,20 @@ public class UserAccountDAOImpl implements UserAccountDAO {
 	}
 
 	@Override
-	public boolean update(Integer userId, UserAccount userAccount) {
+	public UserAccount findByUserName(String username) {
+		// TODO Auto-generated method stub
+		Session session = sessionFactory.openSession();
+		Transaction tr = session.beginTransaction();
+		Query query = session.createQuery("from UserAccount where username= :username");
+		query.setString("username", username);
+		UserAccount userAccount = (UserAccount) query.uniqueResult();
+		tr.commit();
+		session.close();
+		return userAccount;
+	}	
+	
+	@Override
+	public UserAccount update(Integer userId, UserAccount userAccount) {
 		// TODO Auto-generated method stub
 		int updatedRowCounter = 0;
 		Session session = sessionFactory.openSession();
@@ -50,40 +63,37 @@ public class UserAccountDAOImpl implements UserAccountDAO {
 		Query query = session.createQuery("from UserAccount where id= :id");
 		query.setInteger("id", userId);
 		UserAccount result = (UserAccount) query.uniqueResult();
-		try {
-			if (result != null) {
-				query = session.createQuery(
-						"update UserAccount set username= :username,password= :password where id= :userId");
+		if (result != null) {
+			query = session
+					.createQuery("update UserAccount set username= :username,password= :password where id= :userId");
 
-				// update useremail
-				if (userAccount.getUsername() != null) {
-					query.setString("username", userAccount.getUsername());
-				} else {
-					query.setString("username", result.getUsername());
-				}
-
-				// update user password
-				if (userAccount.getPassword() != null) {
-					query.setString("password", userAccount.getPassword());
-				} else {
-					query.setString("password", result.getPassword());
-				}
-				query.setInteger("userId", userId);
-				updatedRowCounter = query.executeUpdate();
-
+			// update useremail
+			if (userAccount.getUsername() != null) {
+				query.setString("username", userAccount.getUsername());
 			} else {
-				throw new InvalidUserInputException("invalid userid pass for update");
+				query.setString("username", result.getUsername());
+				userAccount.setUsername(result.getUsername());
 			}
-		} catch (InvalidUserInputException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+			// update user password
+			if (userAccount.getPassword() != null) {
+				query.setString("password", userAccount.getPassword());
+			} else {
+				query.setString("password", result.getPassword());
+				userAccount.setPassword(result.getPassword());
+			}
+			query.setInteger("userId", userId);
+			updatedRowCounter = query.executeUpdate();
+
+		} else {
+			throw new InvalidUserInputException("invalid userid pass for update");
 		}
 		tr.commit();
 		session.close();
 		if (updatedRowCounter == 1)
-			return true;
+			return userAccount;
 		else
-			return false;
+			return null;
 	}
 
 	@Override

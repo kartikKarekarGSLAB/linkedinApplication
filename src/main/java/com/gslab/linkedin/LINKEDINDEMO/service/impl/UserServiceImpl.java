@@ -10,9 +10,9 @@ import com.gslab.linkedin.linkedindemo.dao.UserProfileInfoDAO;
 import com.gslab.linkedin.linkedindemo.exception.InvalidUserInputException;
 import com.gslab.linkedin.linkedindemo.model.UserAccount;
 import com.gslab.linkedin.linkedindemo.model.UserProfileInfo;
+import com.gslab.linkedin.linkedindemo.model.vo.BeanBase;
 import com.gslab.linkedin.linkedindemo.model.vo.UserVO;
 import com.gslab.linkedin.linkedindemo.service.UserService;
-import com.gslab.linkedin.linkedindemo.util.Response;
 import com.gslab.linkedin.linkedindemo.validator.UserValidator;
 
 public class UserServiceImpl implements UserService {
@@ -23,44 +23,45 @@ public class UserServiceImpl implements UserService {
 	private UserProfileInfoDAO userProfileInfoDAO;
 
 	@Override
-	public Integer create(UserVO userVO) {
-		// TODO Auto-generated method stub
-		try {
-			if (UserValidator.validateUserName(userVO.getUsername())) {
-				if (UserValidator.validatePassword(userVO.getPassword())) {
-					UserAccount userAccount = new UserAccount();
-					userAccount.setUsername(userVO.getUsername());
-					userAccount.setPassword(userVO.getPassword());
-
-					UserProfileInfo userProfileInfo = new UserProfileInfo();
-					userProfileInfo.setProfilePicture(userVO.getProfilePictureUrl());
-					userProfileInfo.setEmail(userVO.getEmail());
-					userProfileInfo.setCompanyName(userVO.getCompanyName());
-					userProfileInfo.setDesignation(userVO.getDesignation());
-					userProfileInfo.setUserAccount(userAccount);
-					return userProfileInfoDAO.create(userProfileInfo);
+	public UserVO create(UserVO userVO) {
+		if (UserValidator.validateUserName(userVO.getUsername())) {
+			if (UserValidator.validatePassword(userVO.getPassword())) {
+				if (userVO.getEmail() != null) {
+					UserAccount existingUserAccount = userAccountDAO.findByUserName(userVO.getUsername());
+					if (existingUserAccount == null) {
+						UserAccount userAccount = new UserAccount();
+						userAccount.setUsername(userVO.getUsername());
+						userAccount.setPassword(userVO.getPassword());
+						UserProfileInfo userProfileInfo = new UserProfileInfo();
+						userProfileInfo.setProfilePicture(userVO.getProfilePictureUrl());
+						userProfileInfo.setEmail(userVO.getEmail());
+						userProfileInfo.setCompanyName(userVO.getCompanyName());
+						userProfileInfo.setDesignation(userVO.getDesignation());
+						userProfileInfo.setUserAccount(userAccount);
+						userProfileInfoDAO.create(userProfileInfo);
+					} else {
+						throw new InvalidUserInputException("username already exists ");// add username
+					}
 				} else {
-					throw new InvalidUserInputException("Invalid password");
+					throw new InvalidUserInputException("empty/invalid email");
 				}
 			} else {
-				throw new InvalidUserInputException("Invalid username");
+				throw new InvalidUserInputException("Invalid password");
 			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} else {
+			throw new InvalidUserInputException("Invalid username");
 		}
-		return null;
+		return userVO;
 	}
 
 	@Override
-	public List<UserVO> findAll() {
+	public List<BeanBase> findAll() {
 		// TODO Auto-generated method stub
 		List<UserAccount> userAccountList = userAccountDAO.findAll();
 		List<UserProfileInfo> userProfileInfoList = userProfileInfoDAO.findAll();
-		List<UserVO> userVOlist = new ArrayList<UserVO>();
+		List<BeanBase> userVOlist = new ArrayList<BeanBase>();
 		int index = 0;
 		for (UserProfileInfo userProfile : userProfileInfoList) {
-			System.out.println(userProfile.getEmail());
 			UserVO uservo = new UserVO();
 			uservo.setUsername(userAccountList.get(index).getUsername());
 			uservo.setProfilePictureUrl(userProfile.getProfilePicture());
@@ -89,9 +90,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public boolean update(Integer userId, UserVO userVO) {
+	public UserVO update(Integer userId, UserVO userVO) {
 		// TODO Auto-generated method stub
-		boolean result = false;
 		UserProfileInfo userProfileInfo = new UserProfileInfo();
 		userProfileInfo.setProfilePicture(userVO.getProfilePictureUrl());
 		userProfileInfo.setEmail(userVO.getEmail());
@@ -100,10 +100,20 @@ public class UserServiceImpl implements UserService {
 		UserAccount userAccount = new UserAccount();
 		userAccount.setUsername(userVO.getUsername());
 		userAccount.setPassword(userVO.getPassword());
-		if (userAccountDAO.update(userId, userAccount)) {
-			result = userProfileInfoDAO.update(userId, userProfileInfo);
+
+		userAccount = userAccountDAO.update(userId, userAccount);
+		if (userAccount != null) {
+			userVO.setUsername(userAccount.getUsername());
+			userVO.setPassword("*********");
+			userProfileInfo = userProfileInfoDAO.update(userId, userProfileInfo);
+			if (userProfileInfo != null) {
+				userVO.setProfilePictureUrl(userProfileInfo.getProfilePicture());
+				userVO.setEmail(userProfileInfo.getEmail());
+				userVO.setCompanyName(userProfileInfo.getCompanyName());
+				userVO.setDesignation(userProfileInfo.getDesignation());
+			}
 		}
-		return result;
+		return userVO;
 	}
 
 	@Override

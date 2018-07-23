@@ -49,26 +49,21 @@ public class UserCommentDAOImpl implements UserCommentDAO {
 		Query query = session.createQuery("from UserComment where id= :id");
 		query.setInteger("id", commentId);
 		UserComment result = (UserComment) query.uniqueResult();
-		try {
-			if (result != null) {
-				query = session.createQuery(
-						"update UserComment set message= :message , updated_on = :updated_on where id= :id and user_account_id = :user_account_id");
+		if (result != null) {
+			query = session.createQuery(
+					"update UserComment set message= :message , updated_on = :updated_on where id= :id and user_account_id = :user_account_id");
 
-				// update useremail
-				if (userComment.getMessage() != null) {
-					query.setString("message", userComment.getMessage());
-					query.setTimestamp("updated_on", userComment.getUpdatedOn());
-				}
-				query.setInteger("id", commentId);
-				query.setInteger("user_account_id", userAccountId);
-				updatedRowCounter = query.executeUpdate();
-
-			} else {
-				throw new InvalidUserInputException("invalid userid or commentid pass for update");
+			// update useremail
+			if (userComment.getMessage() != null) {
+				query.setString("message", userComment.getMessage());
+				query.setTimestamp("updated_on", userComment.getUpdatedOn());
 			}
-		} catch (InvalidUserInputException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			query.setInteger("id", commentId);
+			query.setInteger("user_account_id", userAccountId);
+			updatedRowCounter = query.executeUpdate();
+
+		} else {
+			throw new InvalidUserInputException("invalid userid or commentid pass for update");
 		}
 		tr.commit();
 		session.close();

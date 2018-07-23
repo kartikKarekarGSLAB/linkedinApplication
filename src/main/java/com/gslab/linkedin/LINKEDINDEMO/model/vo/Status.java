@@ -1,36 +1,48 @@
 package com.gslab.linkedin.linkedindemo.model.vo;
 
-
-public class ErrorBase {
+public class Status {
 
 	private int statusCode;
-	private String errorMessage;
+	
 	private String errorKey;
 	
-	
-	public ErrorBase(int statusCode, String errorMessage, String errorType) {
+	private String errorMessage;
+
+	public Status() {
+		// TODO Auto-generated constructor stub
+		statusCode = 200;
+		errorKey = "";
+		errorMessage = "";
+	}
+	public Status(int statusCode, String errorKey, String errorMessage) {
 		super();
 		this.statusCode = statusCode;
+		this.errorKey = errorKey;
 		this.errorMessage = errorMessage;
-		this.errorKey = errorType;
 	}
+
 	public int getStatusCode() {
 		return statusCode;
 	}
+
 	public void setStatusCode(int statusCode) {
 		this.statusCode = statusCode;
 	}
+
+	public String getErrorKey() {
+		return errorKey;
+	}
+
+	public void setErrorKey(String errorKey) {
+		this.errorKey = errorKey;
+	}
+
 	public String getErrorMessage() {
 		return errorMessage;
 	}
+
 	public void setErrorMessage(String errorMessage) {
 		this.errorMessage = errorMessage;
-	}
-	public String getErrorType() {
-		return errorKey;
-	}
-	public void setErrorType(String errorType) {
-		this.errorKey = errorType;
 	}
 	
 	

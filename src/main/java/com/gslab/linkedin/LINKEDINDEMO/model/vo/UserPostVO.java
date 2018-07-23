@@ -1,5 +1,8 @@
 package com.gslab.linkedin.linkedindemo.model.vo;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class UserPostVO extends BeanBase {
 
 	/**

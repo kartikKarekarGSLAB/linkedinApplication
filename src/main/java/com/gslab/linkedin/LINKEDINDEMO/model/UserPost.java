@@ -41,6 +41,9 @@ public class UserPost {
 	@Column(name = "updated_on")
 	private Date updatedOn;
 
+	@Column(name = "repost_user_id")
+	private Integer repostUserId;
+	
 	@ManyToOne(cascade = CascadeType.ALL)
 	private UserAccount userAccount;
 
@@ -86,6 +89,14 @@ public class UserPost {
 	public void setUpdatedOn(Date updatedOn) {
 		this.updatedOn = updatedOn;
 	}
+		
+	public Integer getRepostUserId() {
+		return repostUserId;
+	}
+
+	public void setRepostUserId(Integer repostUserId) {
+		this.repostUserId = repostUserId;
+	}
 
 	public UserAccount getUserAccount() {
 		return userAccount;
@@ -102,4 +113,12 @@ public class UserPost {
 	public void setUserComment(Set<UserComment> userComment) {
 		this.userComment = userComment;
 	}
+
+	@Override
+	public String toString() {
+		return "UserPost [id=" + id + ", description=" + description + ", imageAttachment=" + imageAttachment
+				+ ", createdOn=" + createdOn + ", updatedOn=" + updatedOn + ", repostUserId=" + repostUserId
+				+ ", userAccount=" + userAccount + "]";
+	}
+	
 }
