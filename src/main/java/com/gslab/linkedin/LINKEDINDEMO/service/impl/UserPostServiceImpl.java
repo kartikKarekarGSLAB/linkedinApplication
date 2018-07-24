@@ -90,9 +90,11 @@ public class UserPostServiceImpl implements UserPostService {
 			}
 //			user's all share post.
 			for (UserPost userPost : userPostDAO.findAllShare(userAccountId)) {
+				UserAccount postOwnerAccount = userAccountDAO.findById(userPost.getUserAccount().getId());
 				UserPostVO post = new UserPostVO();
 				post.setDescription(userPost.getDescription());
 				post.setImageAttachment(userPost.getImageAttachment());
+				post.setAuthorName(postOwnerAccount.getUsername());
 				userPostVOList.add(post);
 			}						
 			return userPostVOList;
@@ -181,6 +183,7 @@ public class UserPostServiceImpl implements UserPostService {
 				userPost.setCreatedOn(date);
 				userPost.setUpdatedOn(date);
 				userPost.setRepostUserId(userAccountId);
+				userPost.setRepostPostId(userPost.getId());
 				System.out.println(userPost);
 				userPost = userPostDAO.create(userPost);
 				if (userPost != null) {
@@ -206,9 +209,11 @@ public class UserPostServiceImpl implements UserPostService {
 			List<BeanBase> userPostVOList = new ArrayList<BeanBase>();
 //			user's all share post.
 			for (UserPost userPost : userPostDAO.findAllShare(userAccountId)) {
+				UserAccount postOwnerAccount = userAccountDAO.findById(userPost.getUserAccount().getId());
 				UserPostVO post = new UserPostVO();
 				post.setDescription(userPost.getDescription());
 				post.setImageAttachment(userPost.getImageAttachment());
+				post.setAuthorName(postOwnerAccount.getUsername());
 				userPostVOList.add(post);
 			}						
 			return userPostVOList;

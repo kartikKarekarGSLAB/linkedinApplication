@@ -16,6 +16,16 @@ public class UserPostVO extends BeanBase {
 	
 	private String authorName;
 
+	private String category;
+	
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
 	public String getAuthorName() {
 		return authorName;
 	}

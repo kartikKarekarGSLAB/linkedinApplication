@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gslab.linkedin.linkedindemo.dao.UserAccountDAO;
 import com.gslab.linkedin.linkedindemo.dao.UserProfileInfoDAO;
+import com.gslab.linkedin.linkedindemo.exception.CRUDOperationFailureException;
 import com.gslab.linkedin.linkedindemo.exception.InvalidUserInputException;
 import com.gslab.linkedin.linkedindemo.model.UserAccount;
 import com.gslab.linkedin.linkedindemo.model.UserProfileInfo;
@@ -24,32 +25,26 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserVO create(UserVO userVO) {
-		if (UserValidator.validateUserName(userVO.getUsername())) {
-			if (UserValidator.validatePassword(userVO.getPassword())) {
-				if (userVO.getEmail() != null) {
-					UserAccount existingUserAccount = userAccountDAO.findByUserName(userVO.getUsername());
-					if (existingUserAccount == null) {
-						UserAccount userAccount = new UserAccount();
-						userAccount.setUsername(userVO.getUsername());
-						userAccount.setPassword(userVO.getPassword());
-						UserProfileInfo userProfileInfo = new UserProfileInfo();
-						userProfileInfo.setProfilePicture(userVO.getProfilePictureUrl());
-						userProfileInfo.setEmail(userVO.getEmail());
-						userProfileInfo.setCompanyName(userVO.getCompanyName());
-						userProfileInfo.setDesignation(userVO.getDesignation());
-						userProfileInfo.setUserAccount(userAccount);
-						userProfileInfoDAO.create(userProfileInfo);
-					} else {
-						throw new InvalidUserInputException("username already exists ");// add username
-					}
-				} else {
-					throw new InvalidUserInputException("empty/invalid email");
-				}
-			} else {
-				throw new InvalidUserInputException("Invalid password");
-			}
-		} else {
-			throw new InvalidUserInputException("Invalid username");
+		if (!UserValidator.validateUserName(userVO.getUsername())) {
+			throw new InvalidUserInputException("Invalid username for create profile '" + userVO.getUsername() + "'.");
+		}
+		if (!UserValidator.validatePassword(userVO.getPassword())) {
+			throw new InvalidUserInputException("Invalid password for create profile.");
+		}
+		if (userVO.getEmail().isEmpty()) {
+			throw new InvalidUserInputException("Empty email not accepted for create profile.");
+		}
+		UserAccount existingUserAccount = userAccountDAO.findByUserName(userVO.getUsername());
+		if (existingUserAccount != null) {
+			throw new InvalidUserInputException(userVO.getUsername() + " username already exists.");
+		}
+		UserAccount userAccount = new UserAccount(userVO.getUsername(), userVO.getPassword());
+		UserProfileInfo userProfileInfo = new UserProfileInfo(userVO.getProfilePictureUrl(), userVO.getEmail(),
+				userVO.getCompanyName(), userVO.getDesignation());
+		userProfileInfo.setUserAccount(userAccount);
+		UserProfileInfo userProfile = userProfileInfoDAO.create(userProfileInfo);
+		if (userProfile == null) {
+			throw new InvalidUserInputException("Fail to create user profile for "+userVO.getUsername());
 		}
 		return userVO;
 	}
@@ -62,12 +57,9 @@ public class UserServiceImpl implements UserService {
 		List<BeanBase> userVOlist = new ArrayList<BeanBase>();
 		int index = 0;
 		for (UserProfileInfo userProfile : userProfileInfoList) {
-			UserVO uservo = new UserVO();
-			uservo.setUsername(userAccountList.get(index).getUsername());
-			uservo.setProfilePictureUrl(userProfile.getProfilePicture());
-			uservo.setEmail(userProfile.getEmail());
-			uservo.setCompanyName(userProfile.getCompanyName());
-			uservo.setDesignation(userProfile.getDesignation());
+			UserVO uservo = new UserVO(userAccountList.get(index).getUsername(),
+					userAccountList.get(index).getPassword(), userProfile.getProfilePicture(), userProfile.getEmail(),
+					userProfile.getCompanyName(), userProfile.getDesignation());
 			userVOlist.add(uservo);
 			index++;
 		}
@@ -79,46 +71,44 @@ public class UserServiceImpl implements UserService {
 		// TODO Auto-generated method stub
 		UserAccount userAccount = userAccountDAO.findById(userId);
 		UserProfileInfo userProfile = userProfileInfoDAO.findById(userId);
-		UserVO uservo = new UserVO();
-		uservo.setUsername(userAccount.getUsername());
-		uservo.setPassword("***********");
-		uservo.setProfilePictureUrl(userProfile.getProfilePicture());
-		uservo.setEmail(userProfile.getEmail());
-		uservo.setCompanyName(userProfile.getCompanyName());
-		uservo.setDesignation(userProfile.getDesignation());
+		UserVO uservo = new UserVO(userAccount.getUsername(), userAccount.getPassword(),
+				userProfile.getProfilePicture(), userProfile.getEmail(), userProfile.getCompanyName(),
+				userProfile.getDesignation());
 		return uservo;
 	}
 
 	@Override
 	public UserVO update(Integer userId, UserVO userVO) {
 		// TODO Auto-generated method stub
-		UserProfileInfo userProfileInfo = new UserProfileInfo();
-		userProfileInfo.setProfilePicture(userVO.getProfilePictureUrl());
-		userProfileInfo.setEmail(userVO.getEmail());
-		userProfileInfo.setCompanyName(userVO.getCompanyName());
-		userProfileInfo.setDesignation(userVO.getDesignation());
-		UserAccount userAccount = new UserAccount();
-		userAccount.setUsername(userVO.getUsername());
-		userAccount.setPassword(userVO.getPassword());
-
+		UserProfileInfo userProfileInfo = new UserProfileInfo(userVO.getProfilePictureUrl(), userVO.getEmail(),
+				userVO.getCompanyName(), userVO.getDesignation());
+		UserAccount userAccount = new UserAccount(userVO.getUsername(), userVO.getPassword());
 		userAccount = userAccountDAO.update(userId, userAccount);
-		if (userAccount != null) {
-			userVO.setUsername(userAccount.getUsername());
-			userVO.setPassword("*********");
-			userProfileInfo = userProfileInfoDAO.update(userId, userProfileInfo);
-			if (userProfileInfo != null) {
-				userVO.setProfilePictureUrl(userProfileInfo.getProfilePicture());
-				userVO.setEmail(userProfileInfo.getEmail());
-				userVO.setCompanyName(userProfileInfo.getCompanyName());
-				userVO.setDesignation(userProfileInfo.getDesignation());
-			}
+		if (userAccount == null) {
+			throw new InvalidUserInputException(
+					"Invalid user account details update for username \'" + userVO.getUsername() + "\'");
 		}
+		userProfileInfo = userProfileInfoDAO.update(userId, userProfileInfo);
+		if (userProfileInfo == null) {
+			throw new InvalidUserInputException(
+					"Invalid user account details update for username \'" + userVO.getUsername() + "\'");
+		}
+		userVO.setUsername(userAccount.getUsername());
+		userVO.setPassword(userAccount.getPassword());
+		userVO.setProfilePictureUrl(userProfileInfo.getProfilePicture());
+		userVO.setEmail(userProfileInfo.getEmail());
+		userVO.setCompanyName(userProfileInfo.getCompanyName());
+		userVO.setDesignation(userProfileInfo.getDesignation());
 		return userVO;
 	}
 
 	@Override
 	public boolean delete(Integer userId) {
 		// TODO Auto-generated method stub
-		return userProfileInfoDAO.delete(userId);
+		boolean result = userProfileInfoDAO.delete(userId);
+		if (result == false) {
+			throw new CRUDOperationFailureException("Fail to delete user with id "+userId);
+		}
+		return result;
 	}
 }

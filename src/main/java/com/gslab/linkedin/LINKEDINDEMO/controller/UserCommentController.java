@@ -2,6 +2,8 @@ package com.gslab.linkedin.linkedindemo.controller;
 
 import java.util.List;
 
+import javax.swing.text.rtf.RTFEditorKit;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -9,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gslab.linkedin.linkedindemo.model.vo.BeanBase;
+import com.gslab.linkedin.linkedindemo.model.vo.ResponseBase;
 import com.gslab.linkedin.linkedindemo.model.vo.UserCommentVO;
 import com.gslab.linkedin.linkedindemo.service.UserCommentService;
 
@@ -20,25 +24,29 @@ public class UserCommentController {
 	private UserCommentService userCommentService;
 
 	@RequestMapping(value = "/{postid}", method = RequestMethod.GET)
-	public List<UserCommentVO> findAll(@PathVariable(name = "postid") Integer userPostId) {
-		return userCommentService.findAll(userPostId);
+	public ResponseBase findAll(@PathVariable(name = "postid") Integer userPostId) {
+		List<BeanBase> userPostList = userCommentService.findAll(userPostId); 
+		return new ResponseBase(userPostList);
 	}
 
 	@RequestMapping(value = "/{accountid}/{postid}", method = RequestMethod.POST)
-	public String create(@PathVariable(name = "accountid") Integer userAccountId,
+	public ResponseBase create(@PathVariable(name = "accountid") Integer userAccountId,
 			@PathVariable(name = "postid") Integer userPostId, @RequestBody UserCommentVO userCommentVO) {
-		return "Comment added with id:" + userCommentService.create(userAccountId, userPostId, userCommentVO);
+		UserCommentVO comment = userCommentService.create(userAccountId, userPostId, userCommentVO);
+		return new ResponseBase(comment);
 	}
 
 	@RequestMapping(value = "/{accountid}/{commnetid}", method = RequestMethod.PUT)
-	public String update(@PathVariable(name = "accountid") Integer userAccountId,
+	public ResponseBase update(@PathVariable(name = "accountid") Integer userAccountId,
 			@PathVariable(name = "commnetid") Integer userCommentId, @RequestBody UserCommentVO userCommentVO) {
-		return "User Comment deleted :" + userCommentService.update(userAccountId, userCommentId, userCommentVO);
+		UserCommentVO comment = userCommentService.update(userAccountId, userCommentId, userCommentVO);
+		return new ResponseBase(comment); 
 	}
 
 	@RequestMapping(value = "/{accountid}/{commnetid}", method = RequestMethod.DELETE)
-	public String delete(@PathVariable(name = "accountid") Integer userAccountId,
+	public ResponseBase delete(@PathVariable(name = "accountid") Integer userAccountId,
 			@PathVariable(name = "commnetid") Integer userCommentId) {
-		return "User Comment deleted :" + userCommentService.delete(userAccountId, userCommentId);
+		userCommentService.delete(userAccountId, userCommentId);
+		return new ResponseBase();
 	}
 }

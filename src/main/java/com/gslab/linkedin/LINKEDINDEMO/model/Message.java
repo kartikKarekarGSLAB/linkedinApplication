@@ -8,12 +8,12 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.GeneratorType;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -44,8 +44,9 @@ public class Message {
 
 	@Column(name = "created_on")
 	private Date createdOn;
-
+	
 	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(name = "message_user_account", joinColumns = { @JoinColumn(name = "message_id") }, inverseJoinColumns = { @JoinColumn(name = "user_account_id") })
 	private Set<UserAccount> userAccount = new HashSet<UserAccount>(0);
 
 	public Set<UserAccount> getUserAccount() {

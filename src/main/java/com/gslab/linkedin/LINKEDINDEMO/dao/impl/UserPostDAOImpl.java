@@ -154,8 +154,8 @@ public class UserPostDAOImpl implements UserPostDAO {
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
 		Query query = session
-				.createQuery("from UserPost where repost_user_id = :repostUserId order by updated_on desc");
-		query.setInteger("repostUserId", userAccountId);
+				.createQuery("from UserPost where repost_user_id =:userAccountId and repost_post_id is not null order by updated_on desc");
+		query.setInteger("userAccountId", userAccountId);
 		List<UserPost> userPostList = query.list();
 		tr.commit();
 		session.close();

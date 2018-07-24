@@ -26,14 +26,14 @@ public class UserPostController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseBase findAll(@PathVariable(name = "id") Integer userAccountId) {
 		List<BeanBase> userPostList = userPostService.findAll(userAccountId);
-		return new ResponseBase(new Status(200, "", ""),null,userPostList);		
+		return new ResponseBase(userPostList);		
 	}
 	
 //	List all post of user
 	@RequestMapping(value = "/share/{id}", method = RequestMethod.GET)
 	public ResponseBase findAllShare(@PathVariable(name = "id") Integer userAccountId) {
 		List<BeanBase> userPostList = userPostService.findAllShare(userAccountId);
-		return new ResponseBase(new Status(200, "", ""),null,userPostList);		
+		return new ResponseBase(userPostList);		
 	}	
 
 //	List post of user by Id
@@ -41,21 +41,21 @@ public class UserPostController {
 	public ResponseBase findById(@PathVariable(name = "id") Integer userAccountId,
 			 	@PathVariable(name = "postid") Integer userPostId) {
 		UserPostVO userPost = userPostService.findById(userAccountId, userPostId);
-		return new ResponseBase(new Status(200, "", ""),userPost,null);
+		return new ResponseBase(userPost);
 	}
 
 //	Create post for user
 	@RequestMapping(value = "/{id}", method = RequestMethod.POST)
 	public ResponseBase create(@PathVariable(name = "id") Integer userAccountId, @RequestBody UserPostVO userPostVO) {
 		UserPostVO userPost = userPostService.create(userAccountId, userPostVO);
-		return new ResponseBase(new Status(200, "", ""),userPost,null);
+		return new ResponseBase(userPost);
 	}
 //	Repost  / Share other user post.
 	@RequestMapping(value = "/{id}/{postid}", method = RequestMethod.POST)
 	public ResponseBase share(@PathVariable(name = "id") Integer userAccountId,
 			@PathVariable(name = "postid") Integer userPostId) {
 		UserPostVO userPost = userPostService.share(userAccountId, userPostId);
-		return new ResponseBase(new Status(200, "", ""),userPost,null);
+		return new ResponseBase(userPost);
 	}
 	
 //	Update post for user
@@ -63,7 +63,7 @@ public class UserPostController {
 	public ResponseBase update(@PathVariable(name = "id") Integer userAccountId,
 			@PathVariable(name = "postid") Integer userPostId, @RequestBody UserPostVO userPostVO) {
 		UserPostVO userPost = userPostService.update(userAccountId, userPostId, userPostVO);
-		return new ResponseBase(new Status(200, "", ""),userPost,null);
+		return new ResponseBase(userPost);
 	}
 
 //	Delete post for user
@@ -71,6 +71,6 @@ public class UserPostController {
 	public ResponseBase delete(@PathVariable(name = "id") Integer userAccountId,
 			@PathVariable(name = "postid") Integer userPostId) {
 		boolean result =  userPostService.delete(userAccountId, userPostId);
-		return new ResponseBase(new Status(200, "", ""),null,null);
+		return new ResponseBase();
 	}
 }

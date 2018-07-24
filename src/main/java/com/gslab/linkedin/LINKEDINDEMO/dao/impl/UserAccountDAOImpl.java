@@ -52,8 +52,8 @@ public class UserAccountDAOImpl implements UserAccountDAO {
 		tr.commit();
 		session.close();
 		return userAccount;
-	}	
-	
+	}
+
 	@Override
 	public UserAccount update(Integer userId, UserAccount userAccount) {
 		// TODO Auto-generated method stub

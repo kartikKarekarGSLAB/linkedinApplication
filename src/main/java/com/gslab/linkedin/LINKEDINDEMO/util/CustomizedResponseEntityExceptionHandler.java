@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.gslab.linkedin.linkedindemo.exception.CRUDOperationFailureException;
 import com.gslab.linkedin.linkedindemo.exception.InvalidUserInputException;
 import com.gslab.linkedin.linkedindemo.model.vo.ErrorBase;
 
@@ -24,9 +25,14 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
   
   @ExceptionHandler(InvalidUserInputException.class)
   public final ResponseEntity<ErrorBase> handleUserNotFoundException(InvalidUserInputException ex, WebRequest request) {
-	  	ErrorBase errorDetails = new ErrorBase(406, ex.getMessage(), messageSource.getMessage("exception.invaliduserinput", null, Locale.US));
+	  	ErrorBase errorDetails = new ErrorBase(406, ex.getMessage(), messageSource.getMessage("exception.invalidcrudoperation", null, Locale.US));
 	    return new ResponseEntity<>(errorDetails, HttpStatus.NOT_ACCEPTABLE);
   }
+  @ExceptionHandler(CRUDOperationFailureException.class)
+  public final ResponseEntity<ErrorBase> handleCRUDOperationFailureException(CRUDOperationFailureException ex, WebRequest request) {
+	  	ErrorBase errorDetails = new ErrorBase(406, ex.getMessage(), messageSource.getMessage("exception.invaliduserinput", null, Locale.US));
+	    return new ResponseEntity<>(errorDetails, HttpStatus.NOT_ACCEPTABLE);
+  }  
   @ExceptionHandler(Exception.class)
   public final ResponseEntity<ErrorBase> handleAllExceptions(Exception ex, WebRequest request) {
 	  	ex.printStackTrace();

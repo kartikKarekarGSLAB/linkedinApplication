@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -46,8 +47,22 @@ public class UserAccount {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "userAccount")
 	private Set<UserComment> userComment;
 
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "userAccount")
+	private Set<UserPostLike> userPostLike;
+	
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "userAccount" ,fetch=FetchType.LAZY)
+	private Set<UserCommentLike> userCommentLike;	
+	
 	@ManyToMany(cascade = CascadeType.ALL)
 	private Set<Message> message = new HashSet<Message>(0);
+
+	public Set<UserCommentLike> getUserCommentLike() {
+		return userCommentLike;
+	}
+
+	public void setUserCommentLike(Set<UserCommentLike> userCommentLike) {
+		this.userCommentLike = userCommentLike;
+	}
 
 	public Set<Message> getMessage() {
 		return message;
@@ -55,6 +70,14 @@ public class UserAccount {
 
 	public void setMessage(Set<Message> message) {
 		this.message = message;
+	}
+
+	public Set<UserPostLike> getUserPostLike() {
+		return userPostLike;
+	}
+
+	public void setUserPostLike(Set<UserPostLike> userPostLike) {
+		this.userPostLike = userPostLike;
 	}
 
 	public Set<UserComment> getUserComment() {
@@ -104,4 +127,15 @@ public class UserAccount {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	
+	public UserAccount() {
+	}
+
+	public UserAccount(String username, String password) {
+		super();
+		this.username = username;
+		this.password = password;
+	}
+	
+	
 }

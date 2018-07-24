@@ -83,10 +83,16 @@ public class UserProfileInfo {
 	public void setDesignation(String designation) {
 		this.designation = designation;
 	}
-
-	@Override
-	public String toString() {
-		return "UserProfileInfo [ userAccountId=" + userAccountId + ", profilePicture=" + profilePicture + ", email="
-				+ email + ", companyName=" + companyName + ", designation=" + designation + "]";
+	public UserProfileInfo() {
 	}
+
+	public UserProfileInfo(String profilePicture, String email, String companyName, String designation) {
+		super();
+		this.profilePicture = profilePicture;
+		this.email = email;
+		this.companyName = companyName;
+		this.designation = designation;
+	}
+	
+	
 }

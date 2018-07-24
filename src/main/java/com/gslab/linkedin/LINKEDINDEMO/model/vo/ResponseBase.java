@@ -8,28 +8,25 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class ResponseBase {
 
-	private Status status; 
+	private Status status;
 	private BeanBase payLoad;
 	private List<BeanBase> payLoadList;
- 
+
 	public ResponseBase() {
 		// TODO Auto-generated constructor stub
 		status = new Status();
-		payLoad = new BeanBase();
-		payLoadList = new ArrayList<BeanBase>(); 		
 	}
-	public ResponseBase(Status status, BeanBase payLoad, List<BeanBase> payLoadList) {
+
+	public ResponseBase(List<BeanBase> payLoadList) {
 		super();
-		this.status = status;
-		this.payLoad = payLoad;
 		this.payLoadList = payLoadList;
 	}
-	public ResponseBase(BeanBase payLoad, List<BeanBase> payLoadList) {
+
+	public ResponseBase(BeanBase payLoad) {
 		super();
-		this.status = new Status(200, "", "SUCCESS");
 		this.payLoad = payLoad;
-		this.payLoadList = payLoadList;
 	}
+
 	public Status getStatus() {
 		return status;
 	}

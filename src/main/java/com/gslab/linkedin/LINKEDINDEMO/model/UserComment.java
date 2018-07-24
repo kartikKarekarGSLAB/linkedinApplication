@@ -1,6 +1,7 @@
 package com.gslab.linkedin.linkedindemo.model;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -9,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -43,6 +45,9 @@ public class UserComment {
 	@JoinColumn(name = "user_post_id")
 	private UserPost userPost;
 
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "userAccount")
+	private Set<UserCommentLike> userCommentLike;	
+	
 	public Date getUpdatedOn() {
 		return updatedOn;
 	}
@@ -91,4 +96,13 @@ public class UserComment {
 		this.userPost = userPost;
 	}
 
+	public Set<UserCommentLike> getUserCommentLike() {
+		return userCommentLike;
+	}
+
+	public void setUserCommentLike(Set<UserCommentLike> userCommentLike) {
+		this.userCommentLike = userCommentLike;
+	}	
+	
+	
 }

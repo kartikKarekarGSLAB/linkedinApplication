@@ -31,8 +31,6 @@ public class UserFollowDAOImpl implements UserFollowDAO {
 	@Override
 	public UserFollow alreadyFollowing(Integer followerId, Integer followingId) {
 		// TODO Auto-generated method stub
-		System.out.println(followerId+"follower");
-		System.out.println(followingId+"following");
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
 		Query query = session.createQuery("from UserFollow where following_user_id = :followingId and follower_user_account_id = :followerId");

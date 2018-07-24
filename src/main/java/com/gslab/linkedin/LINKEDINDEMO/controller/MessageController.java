@@ -22,19 +22,20 @@ public class MessageController {
 	@RequestMapping(value = "/{accountid}/{type}", method = RequestMethod.GET)
 	public String findAll(@PathVariable(name = "accountid") Integer userAccountId,
 			@PathVariable(name = "type") String type) {
+		//TODO
 		return "Comment added with id:" + messageService.findAll(userAccountId, type);
 	}
 
 	@RequestMapping(value = "/{accountid}", method = RequestMethod.POST)
 	public ResponseBase create(@PathVariable(name = "accountid") Integer userAccountId, @RequestBody MessageVO messageVO) {
 		messageVO = messageService.create(userAccountId, messageVO);
-		return new ResponseBase(messageVO,null); 
+		return new ResponseBase(messageVO); 
 	}
 
 	@RequestMapping(value = "/{messageid}", method = RequestMethod.DELETE)
 	public ResponseBase delete(@PathVariable(name = "messageid") Integer messageId) {
 		messageService.delete(messageId);
-		return new ResponseBase(null,null); 
+		return new ResponseBase(); 
 	}
 
 }

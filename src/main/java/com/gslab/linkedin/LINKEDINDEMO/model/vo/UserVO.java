@@ -16,6 +16,22 @@ public class UserVO extends BeanBase {
 	private String companyName;
 	private String designation;
 
+	public UserVO() {
+	}
+
+	public UserVO(String username, String password, String profilePictureUrl, String email, String companyName,
+			String designation) {
+		super();
+		this.username = username;
+		this.password = password;
+		this.profilePictureUrl = profilePictureUrl;
+		this.email = email;
+		this.companyName = companyName;
+		this.designation = designation;
+	}
+
+
+
 	public String getUsername() {
 		return username;
 	}
@@ -55,13 +71,7 @@ public class UserVO extends BeanBase {
 	public void setDesignation(String designation) {
 		this.designation = designation;
 	}
-
-	@Override
-	public String toString() {
-		return "UserVO [username=" + username + ", password=" + password + ", profilePictureUrl=" + profilePictureUrl
-				+ ", emial=" + email + ", companyName=" + companyName + ", designation=" + designation + "]";
-	}
-
+	
 	public String getEmail() {
 		return email;
 	}

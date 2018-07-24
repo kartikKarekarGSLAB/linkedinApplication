@@ -8,6 +8,8 @@ public interface UserCommentDAO {
 
 	public Integer create(UserComment userComment);
 
+	public UserComment findById(Integer userCommentId);
+	
 	public List<UserComment> findAll(Integer userPost);
 
 	public boolean update(Integer userAccountId, Integer commentId, UserComment userComment);

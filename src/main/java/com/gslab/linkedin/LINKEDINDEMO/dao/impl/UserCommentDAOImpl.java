@@ -33,7 +33,8 @@ public class UserCommentDAOImpl implements UserCommentDAO {
 		// TODO Auto-generated method stub
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
-		Query query = session.createQuery("from UserComment order by created_on desc");
+		Query query = session.createQuery("from UserComment where user_post_id= :postId order by created_on desc");
+		query.setInteger("postId", postId);
 		List<UserComment> userCommentList = query.list();
 		tr.commit();
 		session.close();
@@ -54,7 +55,7 @@ public class UserCommentDAOImpl implements UserCommentDAO {
 					"update UserComment set message= :message , updated_on = :updated_on where id= :id and user_account_id = :user_account_id");
 
 			// update useremail
-			if (userComment.getMessage() != null) {
+			if (!userComment.getMessage().isEmpty()) {
 				query.setString("message", userComment.getMessage());
 				query.setTimestamp("updated_on", userComment.getUpdatedOn());
 			}
@@ -90,6 +91,19 @@ public class UserCommentDAOImpl implements UserCommentDAO {
 			return true;
 		else
 			return false;
+	}
+
+	@Override
+	public UserComment findById(Integer userCommentId) {
+		// TODO Auto-generated method stub
+		Session session = sessionFactory.openSession();
+		Transaction tr = session.beginTransaction();
+		Query query = session.createQuery("from UserComment where id = :userCommentId");
+		query.setInteger("userCommentId", userCommentId);
+		UserComment userComment = (UserComment) query.uniqueResult();
+		tr.commit();
+		session.close();
+		return userComment;
 	}
 
 }

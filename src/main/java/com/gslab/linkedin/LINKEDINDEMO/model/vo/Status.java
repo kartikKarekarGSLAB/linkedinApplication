@@ -11,8 +11,6 @@ public class Status {
 	public Status() {
 		// TODO Auto-generated constructor stub
 		statusCode = 200;
-		errorKey = "";
-		errorMessage = "";
 	}
 	public Status(int statusCode, String errorKey, String errorMessage) {
 		super();

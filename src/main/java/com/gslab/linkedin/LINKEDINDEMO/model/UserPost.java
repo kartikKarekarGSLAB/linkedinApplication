@@ -44,12 +44,18 @@ public class UserPost {
 	@Column(name = "repost_user_id")
 	private Integer repostUserId;
 	
+	@Column(name = "repost_post_id")
+	private Integer repostPostId;	
+	
 	@ManyToOne(cascade = CascadeType.ALL)
 	private UserAccount userAccount;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "userPost")
 	private Set<UserComment> userComment;
 
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "userAccount")
+	private Set<UserPostLike> userPostLike;	
+	
 	public int getId() {
 		return id;
 	}
@@ -98,6 +104,14 @@ public class UserPost {
 		this.repostUserId = repostUserId;
 	}
 
+	public Integer getRepostPostId() {
+		return repostPostId;
+	}
+
+	public void setRepostPostId(Integer repostPostId) {
+		this.repostPostId = repostPostId;
+	}
+
 	public UserAccount getUserAccount() {
 		return userAccount;
 	}
@@ -114,11 +128,11 @@ public class UserPost {
 		this.userComment = userComment;
 	}
 
-	@Override
-	public String toString() {
-		return "UserPost [id=" + id + ", description=" + description + ", imageAttachment=" + imageAttachment
-				+ ", createdOn=" + createdOn + ", updatedOn=" + updatedOn + ", repostUserId=" + repostUserId
-				+ ", userAccount=" + userAccount + "]";
+	public Set<UserPostLike> getUserPostLike() {
+		return userPostLike;
 	}
-	
+
+	public void setUserPostLike(Set<UserPostLike> userPostLike) {
+		this.userPostLike = userPostLike;
+	}		
 }
