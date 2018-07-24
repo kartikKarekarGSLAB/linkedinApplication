@@ -24,7 +24,12 @@ public class ResponseBase {
 		this.payLoad = payLoad;
 		this.payLoadList = payLoadList;
 	}
-
+	public ResponseBase(BeanBase payLoad, List<BeanBase> payLoadList) {
+		super();
+		this.status = new Status(200, "", "SUCCESS");
+		this.payLoad = payLoad;
+		this.payLoadList = payLoadList;
+	}
 	public Status getStatus() {
 		return status;
 	}

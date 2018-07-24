@@ -13,6 +13,16 @@ public class UserPostVO extends BeanBase {
 	private String description;
 
 	private String imageAttachment;
+	
+	private String authorName;
+
+	public String getAuthorName() {
+		return authorName;
+	}
+
+	public void setAuthorName(String authorName) {
+		this.authorName = authorName;
+	}
 
 	public String getDescription() {
 		return description;

@@ -1,5 +1,8 @@
 package com.gslab.linkedin.linkedindemo.model.vo;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class MessageVO extends BeanBase {
 
 	/**
@@ -13,6 +16,11 @@ public class MessageVO extends BeanBase {
 		
 	private String receiverUserName;
 
+	public MessageVO() {
+		// TODO Auto-generated constructor stub
+		message = "Templete message.Hello user";
+		type = "send";
+	}
 	public String getReceiverUserName() {
 		return receiverUserName;
 	}
