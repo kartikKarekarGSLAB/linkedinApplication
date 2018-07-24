@@ -148,4 +148,18 @@ public class UserPostDAOImpl implements UserPostDAO {
 		}
 	}
 
+	@Override
+	public List<UserPost> findAllShare(Integer userAccountId) {
+		// TODO Auto-generated method stub
+		Session session = sessionFactory.openSession();
+		Transaction tr = session.beginTransaction();
+		Query query = session
+				.createQuery("from UserPost where repost_user_id = :repostUserId order by updated_on desc");
+		query.setInteger("repostUserId", userAccountId);
+		List<UserPost> userPostList = query.list();
+		tr.commit();
+		session.close();
+		return userPostList;
+	}
+
 }

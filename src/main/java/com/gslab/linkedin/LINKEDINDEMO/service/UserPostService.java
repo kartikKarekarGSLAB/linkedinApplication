@@ -13,6 +13,8 @@ public interface UserPostService {
 	public UserPostVO findById(Integer userAccountId, Integer postId);
 
 	public List<BeanBase> findAll(Integer userAccountId);
+	
+	public List<BeanBase> findAllShare(Integer userAccountId);
 
 	public UserPostVO update(Integer userAccountId, Integer postId, UserPostVO userPostVO);
 	

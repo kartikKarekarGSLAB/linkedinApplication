@@ -8,12 +8,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gslab.linkedin.linkedindemo.dao.UserAccountDAO;
+import com.gslab.linkedin.linkedindemo.dao.UserFollowDAO;
 import com.gslab.linkedin.linkedindemo.dao.UserPostDAO;
 import com.gslab.linkedin.linkedindemo.exception.CRUDOperationFailureException;
 import com.gslab.linkedin.linkedindemo.exception.InvalidUserInputException;
 import com.gslab.linkedin.linkedindemo.model.UserAccount;
+import com.gslab.linkedin.linkedindemo.model.UserFollow;
 import com.gslab.linkedin.linkedindemo.model.UserPost;
 import com.gslab.linkedin.linkedindemo.model.vo.BeanBase;
+import com.gslab.linkedin.linkedindemo.model.vo.UserFollowVO;
 import com.gslab.linkedin.linkedindemo.model.vo.UserPostVO;
 import com.gslab.linkedin.linkedindemo.service.UserPostService;
 
@@ -23,6 +26,9 @@ public class UserPostServiceImpl implements UserPostService {
 	private UserAccountDAO userAccountDAO;
 	@Autowired
 	private UserPostDAO userPostDAO;
+	@Autowired
+	private UserFollowDAO userFollowDAO;	
+	
 
 	@Override
 	public UserPostVO create(Integer userAccountId, UserPostVO userPostVO) {
@@ -63,12 +69,32 @@ public class UserPostServiceImpl implements UserPostService {
 		UserAccount userAccount = userAccountDAO.findById(userAccountId);
 		if (userAccount != null) {
 			List<BeanBase> userPostVOList = new ArrayList<BeanBase>();
+//			user's own post.
 			for (UserPost userPost : userPostDAO.findAll(userAccountId)) {
 				UserPostVO post = new UserPostVO();
 				post.setDescription(userPost.getDescription());
 				post.setImageAttachment(userPost.getImageAttachment());
+				post.setAuthorName(userAccount.getUsername());
 				userPostVOList.add(post);
 			}
+//			user's following member's post.
+			for (UserFollow userFollow : userFollowDAO.getFollowingList(userAccountId)) {
+				UserAccount followingAccount = userAccountDAO.findById(userFollow.getFollowingUserId());
+				for (UserPost userPost : userPostDAO.findAll(userFollow.getFollowingUserId())) {
+					UserPostVO post = new UserPostVO();
+					post.setDescription(userPost.getDescription());
+					post.setImageAttachment(userPost.getImageAttachment());
+					post.setAuthorName(followingAccount.getUsername());
+					userPostVOList.add(post);
+				}				
+			}
+//			user's all share post.
+			for (UserPost userPost : userPostDAO.findAllShare(userAccountId)) {
+				UserPostVO post = new UserPostVO();
+				post.setDescription(userPost.getDescription());
+				post.setImageAttachment(userPost.getImageAttachment());
+				userPostVOList.add(post);
+			}						
 			return userPostVOList;
 		} else {
 			throw new InvalidUserInputException("Invalid user account number for post");
@@ -171,5 +197,23 @@ public class UserPostServiceImpl implements UserPostService {
 			throw new InvalidUserInputException("Invalid user account number for repost");
 		}
 		return userPostVO;
+	}
+
+	@Override
+	public List<BeanBase> findAllShare(Integer userAccountId) {
+		UserAccount userAccount = userAccountDAO.findById(userAccountId);
+		if (userAccount != null) {
+			List<BeanBase> userPostVOList = new ArrayList<BeanBase>();
+//			user's all share post.
+			for (UserPost userPost : userPostDAO.findAllShare(userAccountId)) {
+				UserPostVO post = new UserPostVO();
+				post.setDescription(userPost.getDescription());
+				post.setImageAttachment(userPost.getImageAttachment());
+				userPostVOList.add(post);
+			}						
+			return userPostVOList;
+		} else {
+			throw new InvalidUserInputException("Invalid user account number for post");
+		}
 	}
 }

@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gslab.linkedin.linkedindemo.model.vo.MessageVO;
+import com.gslab.linkedin.linkedindemo.model.vo.ResponseBase;
+import com.gslab.linkedin.linkedindemo.model.vo.Status;
 import com.gslab.linkedin.linkedindemo.service.MessageService;
 
 @RestController
@@ -24,13 +26,15 @@ public class MessageController {
 	}
 
 	@RequestMapping(value = "/{accountid}", method = RequestMethod.POST)
-	public String create(@PathVariable(name = "accountid") Integer userAccountId, @RequestBody MessageVO messageVO) {
-		return "Comment added with id:" + messageService.create(userAccountId, messageVO);
+	public ResponseBase create(@PathVariable(name = "accountid") Integer userAccountId, @RequestBody MessageVO messageVO) {
+		messageVO = messageService.create(userAccountId, messageVO);
+		return new ResponseBase(messageVO,null); 
 	}
 
 	@RequestMapping(value = "/{messageid}", method = RequestMethod.DELETE)
-	public String delete(@PathVariable(name = "messageid") Integer messageId) {
-		return "Comment added with id:" + messageService.delete(messageId);
+	public ResponseBase delete(@PathVariable(name = "messageid") Integer messageId) {
+		messageService.delete(messageId);
+		return new ResponseBase(null,null); 
 	}
 
 }

@@ -13,6 +13,8 @@ public interface UserPostDAO {
 	public UserPost findById(Integer userAccountId, Integer postId);
 
 	public List<UserPost> findAll(Integer userAccountId);
+	
+	public List<UserPost> findAllShare(Integer userAccountId);
 
 	public UserPost update(Integer userAccountId, Integer postId, UserPost userPost);
 

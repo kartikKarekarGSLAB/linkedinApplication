@@ -28,6 +28,13 @@ public class UserPostController {
 		List<BeanBase> userPostList = userPostService.findAll(userAccountId);
 		return new ResponseBase(new Status(200, "", ""),null,userPostList);		
 	}
+	
+//	List all post of user
+	@RequestMapping(value = "/share/{id}", method = RequestMethod.GET)
+	public ResponseBase findAllShare(@PathVariable(name = "id") Integer userAccountId) {
+		List<BeanBase> userPostList = userPostService.findAllShare(userAccountId);
+		return new ResponseBase(new Status(200, "", ""),null,userPostList);		
+	}	
 
 //	List post of user by Id
 	@RequestMapping(value = "/{id}/{postid}", method = RequestMethod.GET)
