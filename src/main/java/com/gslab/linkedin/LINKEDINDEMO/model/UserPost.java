@@ -43,10 +43,10 @@ public class UserPost {
 
 	@Column(name = "repost_user_id")
 	private Integer repostUserId;
-	
+
 	@Column(name = "repost_post_id")
-	private Integer repostPostId;	
-	
+	private Integer repostPostId;
+
 	@ManyToOne(cascade = CascadeType.ALL)
 	private UserAccount userAccount;
 
@@ -54,8 +54,8 @@ public class UserPost {
 	private Set<UserComment> userComment;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "userAccount")
-	private Set<UserPostLike> userPostLike;	
-	
+	private Set<UserPostLike> userPostLike;
+
 	public int getId() {
 		return id;
 	}
@@ -95,7 +95,7 @@ public class UserPost {
 	public void setUpdatedOn(Date updatedOn) {
 		this.updatedOn = updatedOn;
 	}
-		
+
 	public Integer getRepostUserId() {
 		return repostUserId;
 	}
@@ -135,7 +135,7 @@ public class UserPost {
 	public void setUserPostLike(Set<UserPostLike> userPostLike) {
 		this.userPostLike = userPostLike;
 	}
-	
+
 	public UserPost() {
 	}
 
@@ -155,7 +155,5 @@ public class UserPost {
 		this.imageAttachment = imageAttachment;
 		this.updatedOn = updatedOn;
 	}
-	
-	
-	
+
 }

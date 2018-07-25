@@ -7,6 +7,8 @@ import com.gslab.linkedin.linkedindemo.model.Message;
 public interface MessageDAO {
 	public Integer create(Message message);
 
+	public Message findById(Integer messageId);
+
 	public List<Message> findAll(Integer userAccountId, String type);
 
 	public boolean delete(Integer messageId);

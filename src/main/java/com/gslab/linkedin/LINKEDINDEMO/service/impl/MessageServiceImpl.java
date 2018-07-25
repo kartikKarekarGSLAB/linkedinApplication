@@ -7,12 +7,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gslab.linkedin.linkedindemo.dao.MessageDAO;
+import com.gslab.linkedin.linkedindemo.dao.MessageUserAccountDAO;
 import com.gslab.linkedin.linkedindemo.dao.UserAccountDAO;
 import com.gslab.linkedin.linkedindemo.exception.InvalidUserInputException;
 import com.gslab.linkedin.linkedindemo.model.Message;
+import com.gslab.linkedin.linkedindemo.model.MessageUserAccount;
 import com.gslab.linkedin.linkedindemo.model.UserAccount;
-import com.gslab.linkedin.linkedindemo.model.UserComment;
-import com.gslab.linkedin.linkedindemo.model.UserPost;
 import com.gslab.linkedin.linkedindemo.model.vo.MessageVO;
 import com.gslab.linkedin.linkedindemo.service.MessageService;
 
@@ -24,49 +24,47 @@ public class MessageServiceImpl implements MessageService {
 	@Autowired
 	private UserAccountDAO userAccountDAO;
 
+	@Autowired
+	private MessageUserAccountDAO messageUserAccountDAO;
+
 	@Override
-	
-	public MessageVO create(Integer userAccountId, MessageVO messageVO) {
+	public MessageVO send(Integer userAccountId, MessageVO messageVO) {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		Date date = new Date();
-		UserAccount userAccount = userAccountDAO.findById(userAccountId);
-		if (userAccount != null) {
-			if (messageVO.getType().equalsIgnoreCase("send") || messageVO.getType().equalsIgnoreCase("receive")) {
-				if (!messageVO.getMessage().isEmpty()) {
-					UserAccount receiverUserAccount = userAccountDAO.findByUserName(messageVO.getReceiverUserName());
-					if (receiverUserAccount != null) {						
-						Message senderMessage = new Message();
-						senderMessage.setMessage(messageVO.getMessage());
-						senderMessage.setCreatedOn(date);
-						//sender entry.
-						senderMessage.setType("send");
-						senderMessage.setReceiverUserName(messageVO.getReceiverUserName());
-						senderMessage.setSenderUserName(userAccount.getUsername());
-						(senderMessage.getUserAccount()).add(userAccount);
-						Integer sendMessageID = messageDAO.create(senderMessage);
-						//receiver entry
-						Message receiverMessage = new Message();
-						receiverMessage.setMessage(messageVO.getMessage());
-						receiverMessage.setCreatedOn(date);
-						//sender entry.
-						receiverMessage.setType("receive");
-						receiverMessage.setReceiverUserName(messageVO.getReceiverUserName());
-						receiverMessage.setSenderUserName(userAccount.getUsername());
-						(receiverMessage.getUserAccount()).add(receiverUserAccount);
-						messageDAO.create(receiverMessage);
-					} else {
-						throw new InvalidUserInputException("invalid receiver username specified."+messageVO.getReceiverUserName());
-					}
-				} else {
-					throw new InvalidUserInputException("unable to send Empty message.");
-				}
-			} else {
-				throw new InvalidUserInputException("Wrong Message type.It should be either \"send\" or \"receive\". ");
-			}
-
-		} else {
-			throw new InvalidUserInputException("Invalid user account number for message");
+		// get sender account
+		UserAccount senderUserAccount = userAccountDAO.findById(userAccountId);
+		if (senderUserAccount == null) {
+			throw new InvalidUserInputException("Invalid user account number for sending message " + userAccountId);
 		}
+		// get receiver account
+		UserAccount receiverUserAccount = userAccountDAO.findByUserName(messageVO.getReceiverUserName());
+		if (receiverUserAccount == null) {
+			throw new InvalidUserInputException(
+					"Invalid user name for sending message " + messageVO.getReceiverUserName());
+		}
+
+		Message sendMessage = new Message(messageVO.getMessage(), senderUserAccount.getUsername(),
+				receiverUserAccount.getUsername(), date);
+		Integer sendMessageId = messageDAO.create(sendMessage);
+		sendMessage = messageDAO.findById(sendMessageId);
+
+		MessageUserAccount sendMessageUserAccount = new MessageUserAccount(senderUserAccount, sendMessage, "send");
+		Integer sendMessageUserAccountId = messageUserAccountDAO.create(sendMessageUserAccount);
+
+		Message receiveMessage = new Message(messageVO.getMessage(), senderUserAccount.getUsername(),
+				receiverUserAccount.getUsername(), date);
+		Integer receiveMessageId = messageDAO.create(receiveMessage);
+		receiveMessage = messageDAO.findById(receiveMessageId);
+
+		MessageUserAccount receiveMessageUserAccount = new MessageUserAccount(receiverUserAccount, receiveMessage,
+				"receive");
+		Integer receiveMessageUserAccountId = messageUserAccountDAO.create(receiveMessageUserAccount);
+
+		messageVO.setId(sendMessage.getId());
+		messageVO.setMessage(sendMessage.getMessage());
+		messageVO.setReceiverUserName(sendMessage.getReceiverUserName());
+		messageVO.setSenderUserName(sendMessage.getSenderUserName());
+		messageVO.setType("send");
 		return messageVO;
 	}
 
@@ -80,9 +78,32 @@ public class MessageServiceImpl implements MessageService {
 	}
 
 	@Override
-	public boolean delete(Integer messageId) {
+	public boolean delete(Integer userAccountId, Integer messageId) {
 		// TODO Auto-generated method stub
+		UserAccount existingUserAccount = userAccountDAO.findById(userAccountId);
+		if (existingUserAccount == null) {
+			throw new InvalidUserInputException("Invalid user account number for delete message " + userAccountId);
+		}
+		Message message = messageDAO.findById(messageId);
+		if (message == null) {
+			throw new InvalidUserInputException("Invalid message id for delete message " + messageId);
+		}
+		MessageUserAccount existingMessageUserAccount = messageUserAccountDAO.find(userAccountId, messageId);
+		if (existingMessageUserAccount == null) {
+			throw new InvalidUserInputException("Invalid message id " + messageId + " or user account id "
+					+ userAccountId + " for  delete message ");
+		}
+		boolean messageUserAccountDelete = messageUserAccountDAO.delete(userAccountId, messageId);
+
+		if (messageUserAccountDelete == false) {
+			throw new InvalidUserInputException(
+					"Fail to delete message with message id " + messageId + " and user account id " + userAccountId);
+		}
+		boolean messageDelete = messageDAO.delete(messageId);
+		if (messageDelete == false) {
+			throw new InvalidUserInputException(
+					"Fail to delete message with message id " + messageId + " and user account id " + userAccountId);
+		}
 		return messageDAO.delete(messageId);
 	}
-
 }

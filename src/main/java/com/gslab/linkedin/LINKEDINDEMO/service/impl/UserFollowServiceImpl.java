@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gslab.linkedin.linkedindemo.dao.UserAccountDAO;
 import com.gslab.linkedin.linkedindemo.dao.UserFollowDAO;
+import com.gslab.linkedin.linkedindemo.exception.CRUDOperationFailureException;
 import com.gslab.linkedin.linkedindemo.exception.InvalidUserInputException;
 import com.gslab.linkedin.linkedindemo.model.UserAccount;
 import com.gslab.linkedin.linkedindemo.model.UserFollow;
@@ -26,55 +27,91 @@ public class UserFollowServiceImpl implements UserFollowService {
 	private UserFollowDAO userFollowDAO;
 
 	@Override
-	public UserFollowVO create(UserFollowVO userFollowVO) {
+	public UserFollowVO follow(Integer followerUserAccountId, String followingUserName) {
 		// TODO Auto-generated method stub
-		if (!userFollowVO.getFollowerUserName().isEmpty() && !userFollowVO.getFollowingUserName().isEmpty()) {
-			if (!userFollowVO.getFollowerUserName().equalsIgnoreCase(userFollowVO.getFollowingUserName())) {
-				UserAccount followerUserAccount = userAccountDAO.findByUserName(userFollowVO.getFollowerUserName());
-				if (followerUserAccount != null) {
-					UserAccount followingUserAccount = userAccountDAO
-							.findByUserName(userFollowVO.getFollowingUserName());
-					if (followingUserAccount != null) {
-						
-						UserFollow existingUserFollow = userFollowDAO.alreadyFollowing(followerUserAccount.getId(), followingUserAccount.getId());	
-						if (existingUserFollow == null) {
-							UserFollow userFollow = new UserFollow();
-							userFollow.setFollowerUserAccount(followerUserAccount);
-							userFollow.setFollowingUserId(followingUserAccount.getId());
-							userFollowDAO.create(userFollow);
-						} else {
-							throw new InvalidUserInputException("already following the same user");
-						}
-					} else {
-						throw new InvalidUserInputException("following username does not exists");
-					}
-				} else {
-					throw new InvalidUserInputException("follower username does not exists");
-				}
-			} else {
-				throw new InvalidUserInputException("invalid request to follow");
-			}
-
-		} else {
-			throw new InvalidUserInputException("invalid request to follow");
+		if (followingUserName.isEmpty()) {
+			throw new InvalidUserInputException(
+					"Please select username for following his/her profile.It Should not be empty.");
 		}
-		return userFollowVO;
+		// get follower user account.
+		UserAccount followerUserAccount = userAccountDAO.findById(followerUserAccountId);
+		if (followerUserAccount == null) {
+			throw new InvalidUserInputException("Invalid user account id for follower." + followerUserAccountId);
+		}
+		if (followingUserName.equalsIgnoreCase(followerUserAccount.getUsername())) {
+			throw new InvalidUserInputException(
+					"Invalid follow request .Similar follower and following username. " + followingUserName);
+		}
+		// get following user account.
+		UserAccount followingUserAccount = userAccountDAO.findByUserName(followingUserName);
+		if (followingUserAccount == null) {
+			throw new InvalidUserInputException("Invalid user name for following." + followingUserName);
+		}
+		// check existing follow request.
+		UserFollow existingUserFollow = userFollowDAO.alreadyFollowing(followerUserAccount.getId(),
+				followingUserAccount.getId());
+		if (existingUserFollow != null) {
+			throw new InvalidUserInputException(
+					followerUserAccount.getUsername() + " already following " + followingUserName);
+		}
+		UserFollow userFollow = new UserFollow();
+		userFollow.setFollowerUserAccount(followerUserAccount);
+		userFollow.setFollowingUserId(followingUserAccount.getId());
+		Integer newFollowId = userFollowDAO.create(userFollow);
+		return new UserFollowVO(newFollowId, followingUserName, followerUserAccount.getUsername());
+	}
+
+	@Override
+	public boolean unfollow(Integer followerUserAccountId, String followingUserName) {
+		// TODO Auto-generated method stub
+		if (followingUserName.isEmpty()) {
+			throw new InvalidUserInputException(
+					"Please select username for unfollowing his/her profile.It Should not be empty.");
+		}
+		// get follower user account.
+		UserAccount followerUserAccount = userAccountDAO.findById(followerUserAccountId);
+		if (followerUserAccount == null) {
+			throw new InvalidUserInputException(
+					"Invalid user account id for follower." + followerUserAccountId + " inside unfollow request");
+		}
+		if (followingUserName.equalsIgnoreCase(followerUserAccount.getUsername())) {
+			throw new InvalidUserInputException(
+					"Invalid unfollow request .Similar follower and following username. " + followingUserName);
+		}
+		// get following user account.
+		UserAccount followingUserAccount = userAccountDAO.findByUserName(followingUserName);
+		if (followingUserAccount == null) {
+			throw new InvalidUserInputException("Invalid user name for following." + followingUserName);
+		}
+		// check existing follow request.
+		UserFollow existingUserFollow = userFollowDAO.alreadyFollowing(followerUserAccount.getId(),
+				followingUserAccount.getId());
+		if (existingUserFollow == null) {
+			throw new InvalidUserInputException(
+					followerUserAccount.getUsername() + " is not following " + followingUserName);
+		}
+		boolean result = userFollowDAO.unfollow(followerUserAccount.getId(), followingUserAccount.getId());
+		if (result == false) {
+			throw new CRUDOperationFailureException("Fail to unfollow user with follower id " + followerUserAccountId
+					+ " and following username " + followingUserName);
+		}
+		return result;
 	}
 
 	@Override
 	public List<BeanBase> getFollowingList(Integer followerId) {
 		// TODO Auto-generated method stub
-		UserAccount userAccount = userAccountDAO.findById(followerId);
 		List<BeanBase> userFollowingVOList = new ArrayList<BeanBase>();
-		if (userAccount != null) {
-			for (UserFollow userFollow : userFollowDAO.getFollowingList(followerId)) {
-				UserFollowVO followingUser = new UserFollowVO();
-				String followingUserName = userAccountDAO.findById(userFollow.getFollowingUserId()).getUsername(); 
-				followingUser.setFollowingUserName(followingUserName);
-				userFollowingVOList.add(followingUser);
-			}
-		} else {
-			throw new InvalidUserInputException("Invalid user account number.");
+		UserAccount existingFollowerUserAccount = userAccountDAO.findById(followerId);
+		if (existingFollowerUserAccount == null) {
+			throw new InvalidUserInputException(
+					"Invalid user account number for finding following user group " + followerId);
+		}
+		for (UserFollow userFollow : userFollowDAO.getFollowingList(followerId)) {
+			String followingUserName = userAccountDAO.findById(userFollow.getFollowingUserId()).getUsername();
+			UserFollowVO followingUser = new UserFollowVO(userFollow.getId(), followingUserName,
+					existingFollowerUserAccount.getUsername());
+			userFollowingVOList.add(followingUser);
 		}
 		return userFollowingVOList;
 	}
@@ -82,31 +119,18 @@ public class UserFollowServiceImpl implements UserFollowService {
 	@Override
 	public List<BeanBase> getFollowerList(Integer followingId) {
 		// TODO Auto-generated method stub
-		UserAccount userAccount = userAccountDAO.findById(followingId);
 		List<BeanBase> userFollowerVOList = new ArrayList<BeanBase>();
-		if (userAccount != null) {
-			for (UserFollow userFollow : userFollowDAO.getFollowerList(followingId)) {
-				UserFollowVO followingUser = new UserFollowVO();
-				String followingUserName = userAccountDAO.findById(userFollow.getFollowerUserAccount().getId()).getUsername(); 
-				followingUser.setFollowerUserName(followingUserName);
-				userFollowerVOList.add(followingUser);
-			}
-		} else {
-			throw new InvalidUserInputException("Invalid user account number.");
+		UserAccount existingUserFollowingAccount = userAccountDAO.findById(followingId);
+		if (existingUserFollowingAccount == null) {
+			throw new InvalidUserInputException("Invalid user account number for finding follower user group.");
+		}
+		for (UserFollow userFollower : userFollowDAO.getFollowerList(followingId)) {
+			String followerUserName = userAccountDAO.findById(userFollower.getFollowerUserAccount().getId())
+					.getUsername();
+			UserFollowVO followingUser = new UserFollowVO(userFollower.getId(),
+					existingUserFollowingAccount.getUsername(), followerUserName);
+			userFollowerVOList.add(followingUser);
 		}
 		return userFollowerVOList;
 	}
-
-	@Override
-	public boolean unfollow(Integer followerId, Integer followingId) {
-		// TODO Auto-generated method stub
-		UserFollow existingUserFollow = userFollowDAO.alreadyFollowing(followerId, followingId);
-		System.out.println(existingUserFollow);
-		if (existingUserFollow != null) {
-			return userFollowDAO.unfollow(followerId, followingId);
-		} else {
-			throw new InvalidUserInputException("Invalid request for unfollow");
-		}
-	}
-
 }

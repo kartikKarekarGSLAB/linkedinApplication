@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gslab.linkedin.linkedindemo.dao.MessageDAO;
 import com.gslab.linkedin.linkedindemo.model.Message;
+import com.gslab.linkedin.linkedindemo.model.UserAccount;
 
 public class MessageDAOImpl implements MessageDAO {
 
@@ -18,7 +19,6 @@ public class MessageDAOImpl implements MessageDAO {
 
 	@Override
 	public Integer create(Message message) {
-		// TODO Auto-generated method stub
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
 		int newUserId = (int) session.save(message);
@@ -58,6 +58,18 @@ public class MessageDAOImpl implements MessageDAO {
 			return true;
 		else
 			return false;
+	}
+
+	@Override
+	public Message findById(Integer messageId) {
+		Session session = sessionFactory.openSession();
+		Transaction tr = session.beginTransaction();
+		Query query = session.createQuery("from Message where id= :id");
+		query.setInteger("id", messageId);
+		Message message = (Message) query.uniqueResult();
+		tr.commit();
+		session.close();
+		return message;
 	}
 
 }

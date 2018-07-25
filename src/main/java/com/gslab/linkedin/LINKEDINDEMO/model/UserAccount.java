@@ -49,12 +49,20 @@ public class UserAccount {
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "userAccount")
 	private Set<UserPostLike> userPostLike;
-	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "userAccount" ,fetch=FetchType.LAZY)
-	private Set<UserCommentLike> userCommentLike;	
-	
-	@ManyToMany(cascade = CascadeType.ALL)
-	private Set<Message> message = new HashSet<Message>(0);
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "userAccount", fetch = FetchType.LAZY)
+	private Set<UserCommentLike> userCommentLike;
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "userAccount", fetch = FetchType.LAZY)
+	private Set<MessageUserAccount> messageUserAccount;
+
+	public Set<MessageUserAccount> getMessageUserAccount() {
+		return messageUserAccount;
+	}
+
+	public void setMessageUserAccount(Set<MessageUserAccount> messageUserAccount) {
+		this.messageUserAccount = messageUserAccount;
+	}
 
 	public Set<UserCommentLike> getUserCommentLike() {
 		return userCommentLike;
@@ -62,14 +70,6 @@ public class UserAccount {
 
 	public void setUserCommentLike(Set<UserCommentLike> userCommentLike) {
 		this.userCommentLike = userCommentLike;
-	}
-
-	public Set<Message> getMessage() {
-		return message;
-	}
-
-	public void setMessage(Set<Message> message) {
-		this.message = message;
 	}
 
 	public Set<UserPostLike> getUserPostLike() {
@@ -127,7 +127,7 @@ public class UserAccount {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+
 	public UserAccount() {
 	}
 
@@ -136,6 +136,5 @@ public class UserAccount {
 		this.username = username;
 		this.password = password;
 	}
-	
-	
+
 }

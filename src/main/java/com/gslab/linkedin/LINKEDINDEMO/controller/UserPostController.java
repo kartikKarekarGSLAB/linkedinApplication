@@ -26,30 +26,33 @@ public class UserPostController {
 
 //	List all post of user
 	@RequestMapping(value = "/{userAccountId}/posts", method = RequestMethod.GET)
-	public ResponseBase findAll(@PathVariable(name = "userAccountId") Integer userAccountId,@RequestParam(name="filter")String userpostFilter) {
+	public ResponseBase findAll(@PathVariable(name = "userAccountId") Integer userAccountId,
+			@RequestParam(name = "filter") String userpostFilter) {
 		List<BeanBase> userPostList = new ArrayList<BeanBase>();
 		if (userpostFilter.equalsIgnoreCase("all")) {
 			userPostList = userPostService.findAll(userAccountId);
 		} else if (userpostFilter.equalsIgnoreCase("share")) {
 			userPostList = userPostService.findAllShare(userAccountId);
 		}
-		return new ResponseBase(userPostList);		
+		return new ResponseBase(userPostList);
 	}
 
 //	List post of user by Id
 	@RequestMapping(value = "/{userAccountId}/posts/{userPostId}", method = RequestMethod.GET)
 	public ResponseBase findById(@PathVariable(name = "userAccountId") Integer userAccountId,
-			 	@PathVariable(name = "userPostId") Integer userPostId) {
+			@PathVariable(name = "userPostId") Integer userPostId) {
 		UserPostVO userPost = userPostService.findByUserAccountIdAndUserPostId(userAccountId, userPostId);
 		return new ResponseBase(userPost);
 	}
 
 //	Create post for user
 	@RequestMapping(value = "/{userAccountId}/posts", method = RequestMethod.POST)
-	public ResponseBase create(@PathVariable(name = "userAccountId") Integer userAccountId, @RequestBody UserPostVO userPostVO) {
+	public ResponseBase create(@PathVariable(name = "userAccountId") Integer userAccountId,
+			@RequestBody UserPostVO userPostVO) {
 		UserPostVO userPost = userPostService.create(userAccountId, userPostVO);
 		return new ResponseBase(userPost);
 	}
+
 //	Repost  / Share other user post.
 	@RequestMapping(value = "/{userAccountId}/posts/{shareUserPostId}", method = RequestMethod.POST)
 	public ResponseBase share(@PathVariable(name = "userAccountId") Integer userAccountId,
@@ -57,7 +60,7 @@ public class UserPostController {
 		UserPostVO userPost = userPostService.share(userAccountId, shareUserPostId);
 		return new ResponseBase(userPost);
 	}
-	
+
 //	Update post for user
 	@RequestMapping(value = "/{userAccountId}/posts/{userPostId}", method = RequestMethod.PUT)
 	public ResponseBase update(@PathVariable(name = "userAccountId") Integer userAccountId,
