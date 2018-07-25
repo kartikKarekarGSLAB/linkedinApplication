@@ -69,7 +69,7 @@ public class UserPostLikeDAOImpl implements UserPostLikeDAO {
 	}
 
 	@Override
-	public boolean delete(Integer userAccountId, Integer userPostId) {
+	public boolean deleteUserLike(Integer userAccountId, Integer userPostId) {
 		int updatedRowCounter = 0;
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
@@ -81,6 +81,24 @@ public class UserPostLikeDAOImpl implements UserPostLikeDAO {
 		tr.commit();
 		session.close();
 		if (updatedRowCounter == 1)
+			return true;
+		else
+			return false;
+	}
+
+	@Override
+	public boolean deleteAllPostLike(Integer userPostId) {
+		// TODO Auto-generated method stub
+		int updatedRowCounter = 0;
+		Session session = sessionFactory.openSession();
+		Transaction tr = session.beginTransaction();
+		Query query = session
+				.createQuery("delete UserPostLike where user_post_id=:userPostId");
+		query.setInteger("userPostId", userPostId);
+		updatedRowCounter = query.executeUpdate();
+		tr.commit();
+		session.close();
+		if (updatedRowCounter >= 1)
 			return true;
 		else
 			return false;

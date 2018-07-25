@@ -9,6 +9,7 @@ public interface UserPostLikeDAO {
 	public UserPostLike alreadyExists(Integer userAccountId,Integer postId);
 	public List<UserPostLike> findByPostId(Integer postId);
 	public List<UserPostLike> findByUserAccountIdId(Integer userAccountId);
-	public boolean delete(Integer userAccountId,Integer postId);
+	public boolean deleteUserLike(Integer userAccountId,Integer postId);
+	public boolean deleteAllPostLike(Integer postId);
 	
 }

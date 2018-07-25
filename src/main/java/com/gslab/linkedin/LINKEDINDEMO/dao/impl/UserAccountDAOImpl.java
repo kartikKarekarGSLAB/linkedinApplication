@@ -29,12 +29,12 @@ public class UserAccountDAOImpl implements UserAccountDAO {
 	}
 
 	@Override
-	public UserAccount findById(Integer userId) {
+	public UserAccount findById(Integer userAccountId) {
 		// TODO Auto-generated method stub
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
 		Query query = session.createQuery("from UserAccount where id= :id");
-		query.setInteger("id", userId);
+		query.setInteger("id", userAccountId);
 		UserAccount userAccount = (UserAccount) query.uniqueResult();
 		tr.commit();
 		session.close();
@@ -42,12 +42,12 @@ public class UserAccountDAOImpl implements UserAccountDAO {
 	}
 
 	@Override
-	public UserAccount findByUserName(String username) {
+	public UserAccount findByUserName(String userName) {
 		// TODO Auto-generated method stub
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
 		Query query = session.createQuery("from UserAccount where username= :username");
-		query.setString("username", username);
+		query.setString("username", userName);
 		UserAccount userAccount = (UserAccount) query.uniqueResult();
 		tr.commit();
 		session.close();
@@ -55,17 +55,17 @@ public class UserAccountDAOImpl implements UserAccountDAO {
 	}
 
 	@Override
-	public UserAccount update(Integer userId, UserAccount userAccount) {
+	public UserAccount update(Integer userAccountId, UserAccount userAccount) {
 		// TODO Auto-generated method stub
 		int updatedRowCounter = 0;
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
 		Query query = session.createQuery("from UserAccount where id= :id");
-		query.setInteger("id", userId);
+		query.setInteger("id", userAccountId);
 		UserAccount result = (UserAccount) query.uniqueResult();
 		if (result != null) {
 			query = session
-					.createQuery("update UserAccount set username= :username,password= :password where id= :userId");
+					.createQuery("update UserAccount set username= :username,password= :password where id= :id");
 
 			// update useremail
 			if (userAccount.getUsername() != null) {
@@ -82,11 +82,11 @@ public class UserAccountDAOImpl implements UserAccountDAO {
 				query.setString("password", result.getPassword());
 				userAccount.setPassword(result.getPassword());
 			}
-			query.setInteger("userId", userId);
+			query.setInteger("id", userAccountId);
 			updatedRowCounter = query.executeUpdate();
 
 		} else {
-			throw new InvalidUserInputException("invalid userid pass for update");
+			throw new InvalidUserInputException("User Account not exists for update with id "+userAccountId);
 		}
 		tr.commit();
 		session.close();
@@ -97,13 +97,13 @@ public class UserAccountDAOImpl implements UserAccountDAO {
 	}
 
 	@Override
-	public boolean delete(Integer userId) {
+	public boolean delete(Integer userAccountId) {
 		// TODO Auto-generated method stub
 		int updatedRowCounter = 0;
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
 		Query query = session.createQuery("delete from UserAccount where id= :id");
-		query.setInteger("id", userId);
+		query.setInteger("id", userAccountId);
 		updatedRowCounter = query.executeUpdate();
 		tr.commit();
 		session.close();

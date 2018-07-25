@@ -25,11 +25,14 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserVO create(UserVO userVO) {
+		if(userVO.getUsername() == null || userVO.getPassword() == null) {
+			throw new InvalidUserInputException("Empty username/password is not allowed for create profile.");
+		}
 		if (!UserValidator.validateUserName(userVO.getUsername())) {
-			throw new InvalidUserInputException("Invalid username for create profile '" + userVO.getUsername() + "'.");
+			throw new InvalidUserInputException("Invalid username for create profile '" + userVO.getUsername() + "'.It must contain minimum 6 character and max size is 19.combination of  letters, digits, '-' and '_' allowed.");
 		}
 		if (!UserValidator.validatePassword(userVO.getPassword())) {
-			throw new InvalidUserInputException("Invalid password for create profile.");
+			throw new InvalidUserInputException("Invalid password for create profile '" + userVO.getUsername() + "'.It must contain minimum 6 character and max size is 19.It must conatin 1 capital letter,small letter,digit and one special symbol from @,#,$,%,^,&,+,=");
 		}
 		if (userVO.getEmail().isEmpty()) {
 			throw new InvalidUserInputException("Empty email not accepted for create profile.");
@@ -42,10 +45,8 @@ public class UserServiceImpl implements UserService {
 		UserProfileInfo userProfileInfo = new UserProfileInfo(userVO.getProfilePictureUrl(), userVO.getEmail(),
 				userVO.getCompanyName(), userVO.getDesignation());
 		userProfileInfo.setUserAccount(userAccount);
-		UserProfileInfo userProfile = userProfileInfoDAO.create(userProfileInfo);
-		if (userProfile == null) {
-			throw new InvalidUserInputException("Fail to create user profile for "+userVO.getUsername());
-		}
+		Integer newUserId = userProfileInfoDAO.create(userProfileInfo);
+		userVO.setId(newUserId);
 		return userVO;
 	}
 
@@ -57,7 +58,7 @@ public class UserServiceImpl implements UserService {
 		List<BeanBase> userVOlist = new ArrayList<BeanBase>();
 		int index = 0;
 		for (UserProfileInfo userProfile : userProfileInfoList) {
-			UserVO uservo = new UserVO(userAccountList.get(index).getUsername(),
+			UserVO uservo = new UserVO(userAccountList.get(index).getId(),userAccountList.get(index).getUsername(),
 					userAccountList.get(index).getPassword(), userProfile.getProfilePicture(), userProfile.getEmail(),
 					userProfile.getCompanyName(), userProfile.getDesignation());
 			userVOlist.add(uservo);
@@ -67,11 +68,17 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserVO findById(Integer userId) {
+	public UserVO findById(Integer userAccountId) {
 		// TODO Auto-generated method stub
-		UserAccount userAccount = userAccountDAO.findById(userId);
-		UserProfileInfo userProfile = userProfileInfoDAO.findById(userId);
-		UserVO uservo = new UserVO(userAccount.getUsername(), userAccount.getPassword(),
+		UserAccount userAccount = userAccountDAO.findById(userAccountId);
+		if (userAccount == null) {
+			throw new InvalidUserInputException("No user account exists with id "+userAccountId);
+		}
+		UserProfileInfo userProfile = userProfileInfoDAO.findById(userAccountId);
+		if (userProfile == null) {
+			throw new InvalidUserInputException("No user profile exists with id "+userAccountId);
+		}
+		UserVO uservo = new UserVO(userAccount.getId(),userAccount.getUsername(), userAccount.getPassword(),
 				userProfile.getProfilePicture(), userProfile.getEmail(), userProfile.getCompanyName(),
 				userProfile.getDesignation());
 		return uservo;

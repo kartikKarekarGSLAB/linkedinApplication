@@ -25,12 +25,12 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
   
   @ExceptionHandler(InvalidUserInputException.class)
   public final ResponseEntity<ErrorBase> handleUserNotFoundException(InvalidUserInputException ex, WebRequest request) {
-	  	ErrorBase errorDetails = new ErrorBase(406, ex.getMessage(), messageSource.getMessage("exception.invalidcrudoperation", null, Locale.US));
+	  	ErrorBase errorDetails = new ErrorBase(406, ex.getMessage(), messageSource.getMessage("exception.invaliduserinput", null, Locale.US));
 	    return new ResponseEntity<>(errorDetails, HttpStatus.NOT_ACCEPTABLE);
   }
   @ExceptionHandler(CRUDOperationFailureException.class)
   public final ResponseEntity<ErrorBase> handleCRUDOperationFailureException(CRUDOperationFailureException ex, WebRequest request) {
-	  	ErrorBase errorDetails = new ErrorBase(406, ex.getMessage(), messageSource.getMessage("exception.invaliduserinput", null, Locale.US));
+	  	ErrorBase errorDetails = new ErrorBase(406, ex.getMessage(), messageSource.getMessage("exception.invalidcrudoperation", null, Locale.US));
 	    return new ResponseEntity<>(errorDetails, HttpStatus.NOT_ACCEPTABLE);
   }  
   @ExceptionHandler(Exception.class)

@@ -134,5 +134,28 @@ public class UserPost {
 
 	public void setUserPostLike(Set<UserPostLike> userPostLike) {
 		this.userPostLike = userPostLike;
-	}		
+	}
+	
+	public UserPost() {
+	}
+
+	public UserPost(String description, String imageAttachment, Date createdOn, Date updatedOn,
+			UserAccount userAccount) {
+		super();
+		this.description = description;
+		this.imageAttachment = imageAttachment;
+		this.createdOn = createdOn;
+		this.updatedOn = updatedOn;
+		this.userAccount = userAccount;
+	}
+
+	public UserPost(String description, String imageAttachment, Date updatedOn) {
+		super();
+		this.description = description;
+		this.imageAttachment = imageAttachment;
+		this.updatedOn = updatedOn;
+	}
+	
+	
+	
 }

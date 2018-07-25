@@ -72,7 +72,7 @@ public class UserPostLikeServiceImpl implements UserPostLikeService {
 			UserPost userPost = userPostDAO.find(userPostId);
 			if (userPost != null) {
 				if (userPostLikeDAO.alreadyExists(userAccountId, userPostId) != null) {
-					userPostLikeDAO.delete(userAccountId, userPostId);
+					userPostLikeDAO.deleteUserLike(userAccountId, userPostId);
 				} else {
 					throw new InvalidUserInputException("No like by you for this post.");
 				}

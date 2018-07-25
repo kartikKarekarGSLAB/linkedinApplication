@@ -18,14 +18,14 @@ public class UserProfileInfoDAOImpl implements UserProfileInfoDAO {
 	private SessionFactory sessionFactory;
 
 	@Override
-	public UserProfileInfo create(UserProfileInfo userProfileInfo) {
+	public Integer create(UserProfileInfo userProfileInfo) {
 		// TODO Auto-generated method stub
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
 		int newUserId = (int) session.save(userProfileInfo);
 		tr.commit();
 		session.close();
-		return userProfileInfo;
+		return newUserId;
 	}
 
 	@Override
@@ -81,7 +81,7 @@ public class UserProfileInfoDAOImpl implements UserProfileInfoDAO {
 			updatedRowCounter = query.executeUpdate();
 
 		} else {
-			throw new InvalidUserInputException("invalid user account id pass for update");
+			throw new InvalidUserInputException("invalid user account id pass for update "+userAccountId);
 		}
 		tr.commit();
 		session.close();
@@ -92,13 +92,13 @@ public class UserProfileInfoDAOImpl implements UserProfileInfoDAO {
 	}
 
 	@Override
-	public boolean delete(Integer userId) {
+	public boolean delete(Integer userAccountId) {
 		// TODO Auto-generated method stub
 		int updatedRowCounter = 0;
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
 		Query query = session.createQuery("delete from UserProfileInfo where user_account_id= :user_account_id");
-		query.setInteger("user_account_id", userId);
+		query.setInteger("user_account_id", userAccountId);
 		updatedRowCounter = query.executeUpdate();
 		tr.commit();
 		session.close();

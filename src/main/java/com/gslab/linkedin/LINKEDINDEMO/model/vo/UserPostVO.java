@@ -10,20 +10,20 @@ public class UserPostVO extends BeanBase {
 	 */
 	private static final long serialVersionUID = -3392675079933368279L;
 
+	private Integer id;
+
 	private String description;
 
 	private String imageAttachment;
-	
+
 	private String authorName;
 
-	private String category;
-	
-	public String getCategory() {
-		return category;
+	public Integer getId() {
+		return id;
 	}
 
-	public void setCategory(String category) {
-		this.category = category;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public String getAuthorName() {
@@ -48,6 +48,24 @@ public class UserPostVO extends BeanBase {
 
 	public void setImageAttachment(String imageAttachment) {
 		this.imageAttachment = imageAttachment;
+	}
+
+	public UserPostVO() {
+	}
+
+	public UserPostVO(Integer id, String description, String imageAttachment) {
+		super();
+		this.id = id;
+		this.description = description;
+		this.imageAttachment = imageAttachment;
+	}
+
+	public UserPostVO(Integer id, String description, String imageAttachment, String authorName) {
+		// TODO Auto-generated constructor stub
+		this.id = id;
+		this.description = description;
+		this.imageAttachment = imageAttachment;
+		this.authorName = authorName;
 	}
 
 }

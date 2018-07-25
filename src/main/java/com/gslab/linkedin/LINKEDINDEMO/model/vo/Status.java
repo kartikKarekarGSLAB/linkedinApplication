@@ -1,5 +1,8 @@
 package com.gslab.linkedin.linkedindemo.model.vo;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class Status {
 
 	private int statusCode;
@@ -10,7 +13,8 @@ public class Status {
 
 	public Status() {
 		// TODO Auto-generated constructor stub
-		statusCode = 200;
+		this.statusCode = 200;
+		this.errorMessage = "SUCCESS";
 	}
 	public Status(int statusCode, String errorKey, String errorMessage) {
 		super();

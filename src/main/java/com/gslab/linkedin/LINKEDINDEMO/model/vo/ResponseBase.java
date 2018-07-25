@@ -14,16 +14,18 @@ public class ResponseBase {
 
 	public ResponseBase() {
 		// TODO Auto-generated constructor stub
-		status = new Status();
+		this.status = new Status();
 	}
 
 	public ResponseBase(List<BeanBase> payLoadList) {
 		super();
+		this.status = new Status();
 		this.payLoadList = payLoadList;
 	}
 
 	public ResponseBase(BeanBase payLoad) {
 		super();
+		this.status = new Status();
 		this.payLoad = payLoad;
 	}
 
