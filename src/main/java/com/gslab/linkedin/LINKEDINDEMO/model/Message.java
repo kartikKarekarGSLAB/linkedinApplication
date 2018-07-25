@@ -7,11 +7,13 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -34,27 +36,33 @@ public class Message {
 
 	@Column(name = "sender_user_name")
 	private String senderUserName;
-	
+
 	@Column(name = "receiver_user_name")
 	private String receiverUserName;
-	
-	
-	@Column(name = "type")
-	private String type;
 
 	@Column(name = "created_on")
 	private Date createdOn;
-	
-	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(name = "message_user_account", joinColumns = { @JoinColumn(name = "message_id") }, inverseJoinColumns = { @JoinColumn(name = "user_account_id") })
-	private Set<UserAccount> userAccount = new HashSet<UserAccount>(0);
 
-	public Set<UserAccount> getUserAccount() {
-		return userAccount;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "message", fetch = FetchType.LAZY)
+	private Set<MessageUserAccount> messageUserAccount;
+
+	public Message() {
 	}
 
-	public void setUserAccount(Set<UserAccount> userAccount) {
-		this.userAccount = userAccount;
+	public Message(String message, String senderUserName, String receiverUserName, Date createdOn) {
+		super();
+		this.message = message;
+		this.senderUserName = senderUserName;
+		this.receiverUserName = receiverUserName;
+		this.createdOn = createdOn;
+	}
+
+	public Set<MessageUserAccount> getMessageUserAccount() {
+		return messageUserAccount;
+	}
+
+	public void setMessageUserAccount(Set<MessageUserAccount> messageUserAccount) {
+		this.messageUserAccount = messageUserAccount;
 	}
 
 	public int getId() {
@@ -87,14 +95,6 @@ public class Message {
 
 	public void setReceiverUserName(String receiverUserName) {
 		this.receiverUserName = receiverUserName;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
 	}
 
 	public Date getCreatedOn() {

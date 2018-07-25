@@ -6,8 +6,13 @@ import com.gslab.linkedin.linkedindemo.model.vo.BeanBase;
 import com.gslab.linkedin.linkedindemo.model.vo.UserFollowVO;
 
 public interface UserFollowService {
-	public UserFollowVO create(UserFollowVO userFollowVO);
+
+	public UserFollowVO follow(Integer followerUserAccountId, String followingUserName);
+
+	public boolean unfollow(Integer followerUserAccountId, String followingUserName);
+
 	public List<BeanBase> getFollowingList(Integer followerId);
+
 	public List<BeanBase> getFollowerList(Integer followingId);
-	public boolean unfollow(Integer followerId, Integer followingId);	
+
 }

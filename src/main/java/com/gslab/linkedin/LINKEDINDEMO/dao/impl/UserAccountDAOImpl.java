@@ -64,8 +64,7 @@ public class UserAccountDAOImpl implements UserAccountDAO {
 		query.setInteger("id", userAccountId);
 		UserAccount result = (UserAccount) query.uniqueResult();
 		if (result != null) {
-			query = session
-					.createQuery("update UserAccount set username= :username,password= :password where id= :id");
+			query = session.createQuery("update UserAccount set username= :username,password= :password where id= :id");
 
 			// update useremail
 			if (userAccount.getUsername() != null) {
@@ -86,7 +85,7 @@ public class UserAccountDAOImpl implements UserAccountDAO {
 			updatedRowCounter = query.executeUpdate();
 
 		} else {
-			throw new InvalidUserInputException("User Account not exists for update with id "+userAccountId);
+			throw new InvalidUserInputException("User Account not exists for update with id " + userAccountId);
 		}
 		tr.commit();
 		session.close();

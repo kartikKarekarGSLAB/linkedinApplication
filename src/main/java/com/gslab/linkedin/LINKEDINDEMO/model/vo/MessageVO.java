@@ -10,17 +10,47 @@ public class MessageVO extends BeanBase {
 	 */
 	private static final long serialVersionUID = 8430173947514662501L;
 
+	private int id;
+
 	private String message;
 
 	private String type;
-		
+
 	private String receiverUserName;
+
+	private String senderUserName;
 
 	public MessageVO() {
 		// TODO Auto-generated constructor stub
 		message = "Templete message.Hello user";
 		type = "send";
 	}
+
+	public MessageVO(int id, String message, String type, String receiverUserName, String senderUserName) {
+		super();
+		this.id = id;
+		this.message = message;
+		this.type = type;
+		this.receiverUserName = receiverUserName;
+		this.senderUserName = senderUserName;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getSenderUserName() {
+		return senderUserName;
+	}
+
+	public void setSenderUserName(String senderUserName) {
+		this.senderUserName = senderUserName;
+	}
+
 	public String getReceiverUserName() {
 		return receiverUserName;
 	}

@@ -16,10 +16,9 @@ public class UserFollowDAOImpl implements UserFollowDAO {
 
 	@Autowired
 	private SessionFactory sessionFactory;
-	
+
 	@Override
 	public Integer create(UserFollow userFollow) {
-		// TODO Auto-generated method stub
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
 		int newUserId = (int) session.save(userFollow);
@@ -30,10 +29,10 @@ public class UserFollowDAOImpl implements UserFollowDAO {
 
 	@Override
 	public UserFollow alreadyFollowing(Integer followerId, Integer followingId) {
-		// TODO Auto-generated method stub
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
-		Query query = session.createQuery("from UserFollow where following_user_id = :followingId and follower_user_account_id = :followerId");
+		Query query = session.createQuery(
+				"from UserFollow where following_user_id = :followingId and follower_user_account_id = :followerId");
 		query.setInteger("followerId", followerId);
 		query.setInteger("followingId", followingId);
 		UserFollow userFollow = (UserFollow) query.uniqueResult();
@@ -43,8 +42,25 @@ public class UserFollowDAOImpl implements UserFollowDAO {
 	}
 
 	@Override
+	public boolean unfollow(Integer followerId, Integer followingId) {
+		int updatedRowCounter = 0;
+		Session session = sessionFactory.openSession();
+		Transaction tr = session.beginTransaction();
+		Query query = session.createQuery(
+				"delete from UserFollow where following_user_id = :followingId and follower_user_account_id = :followerId");
+		query.setInteger("followerId", followerId);
+		query.setInteger("followingId", followingId);
+		updatedRowCounter = query.executeUpdate();
+		tr.commit();
+		session.close();
+		if (updatedRowCounter == 1)
+			return true;
+		else
+			return false;
+	}
+
+	@Override
 	public List<UserFollow> getFollowingList(Integer followerId) {
-		// TODO Auto-generated method stub
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
 		Query query = session.createQuery("from UserFollow where follower_user_account_id = :followerId");
@@ -57,7 +73,6 @@ public class UserFollowDAOImpl implements UserFollowDAO {
 
 	@Override
 	public List<UserFollow> getFollowerList(Integer followingId) {
-		// TODO Auto-generated method stub
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
 		Query query = session.createQuery("from UserFollow where following_user_id = :followingId");
@@ -67,23 +82,4 @@ public class UserFollowDAOImpl implements UserFollowDAO {
 		session.close();
 		return userFollowerList;
 	}
-
-	@Override
-	public boolean unfollow(Integer followerId, Integer followingId) {
-		// TODO Auto-generated method stub
-		int updatedRowCounter = 0;
-		Session session = sessionFactory.openSession();
-		Transaction tr = session.beginTransaction();
-		Query query = session.createQuery("delete from UserFollow where following_user_id = :followingId and follower_user_account_id = :followerId");
-		query.setInteger("followerId", followerId);
-		query.setInteger("followingId", followingId);
-		updatedRowCounter = query.executeUpdate();
-		tr.commit();
-		session.close();
-		if (updatedRowCounter == 1)
-			return true;
-		else
-			return false;
-	}
-
 }

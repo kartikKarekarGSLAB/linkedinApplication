@@ -52,10 +52,10 @@
   		<!-- End Of PSQL Dependency -->
   		
   		<!-- Start Of RabbitMQ Dependency -->
-		<dependency>
+<!-- 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-amqp</artifactId>
-		</dependency>  		
+		</dependency>  		 -->
   		<!-- End Of RabbitMQ Dependency -->
 	</dependencies>
 

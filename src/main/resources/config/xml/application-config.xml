@@ -25,7 +25,7 @@
 	<bean id="userPostLikeService"
 		class="com.gslab.linkedin.linkedindemo.service.impl.UserPostLikeServiceImpl"></bean>
 	<bean id="userCommentLikeService"
-		class="com.gslab.linkedin.linkedindemo.service.impl.UserCommentLikeServiceImpl"></bean>				
+		class="com.gslab.linkedin.linkedindemo.service.impl.UserCommentLikeServiceImpl"></bean>
 	<!-- End of Beans for Service -->
 
 
@@ -50,7 +50,10 @@
 	</bean>
 	<bean id="userCommentLikeDAO"
 		class="com.gslab.linkedin.linkedindemo.dao.impl.UserCommentLikeDAOImpl">
-	</bean>		
+	</bean>
+	<bean id="messageUserAccountDAO"
+		class="com.gslab.linkedin.linkedindemo.dao.impl.MessageUserAccountDAOImpl">
+	</bean>
 	<!-- End Beans for DAO -->
 
 	<!-- MessagSource Bean -->

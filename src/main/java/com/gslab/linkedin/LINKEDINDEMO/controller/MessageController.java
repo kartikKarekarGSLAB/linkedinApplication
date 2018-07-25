@@ -13,7 +13,7 @@ import com.gslab.linkedin.linkedindemo.model.vo.Status;
 import com.gslab.linkedin.linkedindemo.service.MessageService;
 
 @RestController
-@RequestMapping(value = "/message")
+@RequestMapping(value = "/users")
 public class MessageController {
 
 	@Autowired
@@ -22,20 +22,22 @@ public class MessageController {
 	@RequestMapping(value = "/{accountid}/{type}", method = RequestMethod.GET)
 	public String findAll(@PathVariable(name = "accountid") Integer userAccountId,
 			@PathVariable(name = "type") String type) {
-		//TODO
+		// TODO
 		return "Comment added with id:" + messageService.findAll(userAccountId, type);
 	}
 
-	@RequestMapping(value = "/{accountid}", method = RequestMethod.POST)
-	public ResponseBase create(@PathVariable(name = "accountid") Integer userAccountId, @RequestBody MessageVO messageVO) {
-		messageVO = messageService.create(userAccountId, messageVO);
-		return new ResponseBase(messageVO); 
+	@RequestMapping(value = "/{userAccountId}/message", method = RequestMethod.POST)
+	public ResponseBase sendMessage(@PathVariable(name = "userAccountId") Integer userAccountId,
+			@RequestBody MessageVO messageVO) {
+		messageVO = messageService.send(userAccountId, messageVO);
+		return new ResponseBase(messageVO);
 	}
 
-	@RequestMapping(value = "/{messageid}", method = RequestMethod.DELETE)
-	public ResponseBase delete(@PathVariable(name = "messageid") Integer messageId) {
-		messageService.delete(messageId);
-		return new ResponseBase(); 
+	@RequestMapping(value = "/{userAccountId}/message/{messageid}", method = RequestMethod.DELETE)
+	public ResponseBase delete(@PathVariable(name = "userAccountId") Integer userAccountId,
+			@PathVariable(name = "messageid") Integer messageId) {
+		messageService.delete(userAccountId, messageId);
+		return new ResponseBase();
 	}
 
 }

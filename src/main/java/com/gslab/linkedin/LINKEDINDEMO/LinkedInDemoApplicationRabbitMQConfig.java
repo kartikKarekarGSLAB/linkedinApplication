@@ -1,5 +1,5 @@
 package com.gslab.linkedin.linkedindemo;
-
+/*
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
@@ -8,13 +8,13 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Configuration;*/
 
 import com.gslab.linkedin.linkedindemo.listener.UserMessageListener;
 
-@Configuration
+//@Configuration
 public class LinkedInDemoApplicationRabbitMQConfig {
-	public final static String SFG_MESSAGE_QUEUE = "create-user";
+/*	public final static String SFG_MESSAGE_QUEUE = "create-user";
 
 	@Bean
 	Queue queue() {
@@ -44,5 +44,5 @@ public class LinkedInDemoApplicationRabbitMQConfig {
 	@Bean
 	MessageListenerAdapter listenerAdapter(UserMessageListener receiver) {
 		return new MessageListenerAdapter(receiver, "receiveMessage");
-	}
+	}*/
 }
