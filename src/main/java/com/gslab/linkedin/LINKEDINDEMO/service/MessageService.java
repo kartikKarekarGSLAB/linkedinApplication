@@ -2,13 +2,14 @@ package com.gslab.linkedin.linkedindemo.service;
 
 import java.util.List;
 
+import com.gslab.linkedin.linkedindemo.model.vo.BeanBase;
 import com.gslab.linkedin.linkedindemo.model.vo.MessageVO;
 
 public interface MessageService {
 
 	public MessageVO send(Integer userAccountId, MessageVO message);
-
-	public List<MessageVO> findAll(Integer userAccountId, String type);
+	
+	public List<BeanBase> findByCategory(Integer userAccountId,String category);
 
 	public boolean delete(Integer userAccountId, Integer messageId);
 }

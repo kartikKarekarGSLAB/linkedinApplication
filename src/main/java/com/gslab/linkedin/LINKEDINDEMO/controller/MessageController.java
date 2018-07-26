@@ -1,15 +1,18 @@
 package com.gslab.linkedin.linkedindemo.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gslab.linkedin.linkedindemo.model.vo.BeanBase;
 import com.gslab.linkedin.linkedindemo.model.vo.MessageVO;
 import com.gslab.linkedin.linkedindemo.model.vo.ResponseBase;
-import com.gslab.linkedin.linkedindemo.model.vo.Status;
 import com.gslab.linkedin.linkedindemo.service.MessageService;
 
 @RestController
@@ -19,11 +22,11 @@ public class MessageController {
 	@Autowired
 	private MessageService messageService;
 
-	@RequestMapping(value = "/{accountid}/{type}", method = RequestMethod.GET)
-	public String findAll(@PathVariable(name = "accountid") Integer userAccountId,
-			@PathVariable(name = "type") String type) {
-		// TODO
-		return "Comment added with id:" + messageService.findAll(userAccountId, type);
+	@RequestMapping(value = "/{userAccountId}/message", method = RequestMethod.GET)
+	public ResponseBase findAll(@PathVariable(name = "userAccountId") Integer userAccountId,
+			@RequestParam(name = "category") String category) {
+		List<BeanBase> messageVOList = messageService.findByCategory(userAccountId, category);
+		return new ResponseBase(messageVOList);
 	}
 
 	@RequestMapping(value = "/{userAccountId}/message", method = RequestMethod.POST)

@@ -64,7 +64,7 @@ public class UserCommentDAOImpl implements UserCommentDAO {
 			updatedRowCounter = query.executeUpdate();
 
 		} else {
-			throw new InvalidUserInputException("invalid userid or commentid pass for update");
+			throw new InvalidUserInputException("invalid userid "+userAccountId+" or commentid "+commentId+" pass for update");
 		}
 		tr.commit();
 		session.close();

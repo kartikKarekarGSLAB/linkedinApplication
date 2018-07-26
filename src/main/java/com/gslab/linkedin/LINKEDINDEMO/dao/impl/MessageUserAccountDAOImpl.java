@@ -1,5 +1,7 @@
 package com.gslab.linkedin.linkedindemo.dao.impl;
 
+import java.util.List;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -7,6 +9,7 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gslab.linkedin.linkedindemo.dao.MessageUserAccountDAO;
+import com.gslab.linkedin.linkedindemo.model.Message;
 import com.gslab.linkedin.linkedindemo.model.MessageUserAccount;
 
 public class MessageUserAccountDAOImpl implements MessageUserAccountDAO {
@@ -55,6 +58,21 @@ public class MessageUserAccountDAOImpl implements MessageUserAccountDAO {
 		tr.commit();
 		session.close();
 		return existingMessageUserAccount;
+	}
+
+	@Override
+	public List<Message> findByCategory(Integer userAccountId, String category) {
+		// TODO Auto-generated method stub
+		Session session = sessionFactory.openSession();
+		Transaction tr = session.beginTransaction();
+		Query query = session
+				.createQuery("from Message where id in (select message.id from MessageUserAccount where userAccount.id=:userAccountId and type=:type) order by createdOn desc");
+		query.setInteger("userAccountId", userAccountId);
+		query.setString("type", category);
+		List<Message> userMessageList = query.list();
+		tr.commit();
+		session.close();
+		return userMessageList;
 	}
 
 }

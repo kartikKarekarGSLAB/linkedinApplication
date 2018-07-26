@@ -1,6 +1,5 @@
 package com.gslab.linkedin.linkedindemo.model;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -10,13 +9,13 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.Parameter;
 
 @Entity
@@ -36,26 +35,39 @@ public class UserAccount {
 
 	@Column(name = "password", length = 20, nullable = false)
 	private String password;
-
-	@OneToOne(cascade = CascadeType.ALL)
+	
+	@OneToOne(cascade = CascadeType.ALL,orphanRemoval=true,mappedBy="userAccount")
 	@JoinColumn(name = "id")
 	private UserProfileInfo userProfileInfo;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "userAccount")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "userAccount",orphanRemoval=true)
 	private Set<UserPost> userPost;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "userAccount")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "userAccount",orphanRemoval=true)
 	private Set<UserComment> userComment;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "userAccount")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "userAccount",orphanRemoval=true)
 	private Set<UserPostLike> userPostLike;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "userAccount", fetch = FetchType.LAZY)
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "userAccount", fetch = FetchType.LAZY ,orphanRemoval=true)
 	private Set<UserCommentLike> userCommentLike;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "userAccount", fetch = FetchType.LAZY)
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "userAccount",orphanRemoval=true)
 	private Set<MessageUserAccount> messageUserAccount;
 
+	
+	public void addUserProfileInfo(UserProfileInfo userProfileInfo) {
+		this.userProfileInfo = userProfileInfo;
+		userProfileInfo.setUserAccount(this);
+	}
+	
+	public void removeUserProfileInfo() {
+		if (userProfileInfo != null) {
+			userProfileInfo.setUserAccount(null);
+		}
+		this.userProfileInfo = null;
+	}	
+	
 	public Set<MessageUserAccount> getMessageUserAccount() {
 		return messageUserAccount;
 	}
@@ -127,7 +139,7 @@ public class UserAccount {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
+	
 	public UserAccount() {
 	}
 

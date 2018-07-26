@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
 			throw new InvalidUserInputException("Invalid username for create profile '" + userVO.getUsername() + "'.It must contain minimum 6 character and max size is 19.combination of  letters, digits, '-' and '_' allowed.");
 		}
 		if (!UserValidator.validatePassword(userVO.getPassword())) {
-			throw new InvalidUserInputException("Invalid password for create profile '" + userVO.getUsername() + "'.It must contain minimum 6 character and max size is 19.It must conatin 1 capital letter,small letter,digit and one special symbol from @,#,$,%,^,&,+,=");
+			throw new InvalidUserInputException("Invalid password for create profile '" + userVO.getUsername() + "'.It must contain minimum 8 character and max size is 19.It MUST contain 1 capital letter,small letter,digit and one special symbol from @,#,$,%,^,&,+,=");
 		}
 		if (userVO.getEmail().isEmpty()) {
 			throw new InvalidUserInputException("Empty email not accepted for create profile.");
@@ -112,7 +112,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public boolean delete(Integer userId) {
 		// TODO Auto-generated method stub
-		boolean result = userProfileInfoDAO.delete(userId);
+		boolean result = userAccountDAO.delete(userId);
 		if (result == false) {
 			throw new CRUDOperationFailureException("Fail to delete user with id "+userId);
 		}

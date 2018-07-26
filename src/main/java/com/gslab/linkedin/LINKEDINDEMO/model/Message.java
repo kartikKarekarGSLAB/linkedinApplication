@@ -43,7 +43,7 @@ public class Message {
 	@Column(name = "created_on")
 	private Date createdOn;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "message", fetch = FetchType.LAZY)
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "message", fetch = FetchType.LAZY,orphanRemoval=true)
 	private Set<MessageUserAccount> messageUserAccount;
 
 	public Message() {

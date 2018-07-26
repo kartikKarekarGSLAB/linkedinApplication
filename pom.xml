@@ -43,21 +43,14 @@
 		</dependency>
 		<!-- End Of Spring Depedencies  -->
 		
-		<!-- PSQL Dependency -->
+<!-- 		PSQL Dependency -->
 		<dependency>
       		<groupId>org.postgresql</groupId>
       		<artifactId>postgresql</artifactId>
       		<version>9.3-1100-jdbc41</version>
   		</dependency>
   		<!-- End Of PSQL Dependency -->
-  		
-  		<!-- Start Of RabbitMQ Dependency -->
-<!-- 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-amqp</artifactId>
-		</dependency>  		 -->
-  		<!-- End Of RabbitMQ Dependency -->
-	</dependencies>
+  			</dependencies>
 
 	<build>
 		<plugins>

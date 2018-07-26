@@ -34,14 +34,20 @@ public class UserProfileInfo {
 
 	@Column(name = "profile_picture")
 	private String profilePicture;
+	
 	@Column(name = "email", length = 40)
 	private String email;
+	
 	@Column(name = "company_name", length = 30)
 	private String companyName;
+	
 	@Column(name = "designation", length = 25)
 	private String designation;
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "user_account_id")
+
+	//	@JoinColumn(name = "user_account_id")
+	
+	@OneToOne(cascade = CascadeType.ALL,orphanRemoval=true)
+	@PrimaryKeyJoinColumn(name="user_account_id")
 	private UserAccount userAccount;
 
 	public int getUserAccountId() {

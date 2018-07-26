@@ -108,7 +108,7 @@ public class UserPostServiceImpl implements UserPostService {
 			throw new InvalidUserInputException(
 					"Invalid user account number for post update opertaion " + userAccountId);
 		}
-		if (userPostVO.getDescription().isEmpty()) {
+		if (userPostVO.getDescription() != null && userPostVO.getDescription().isEmpty()) {
 			throw new InvalidUserInputException("Empty description for update post operation.");
 		}
 		UserPost aboutToUpdateUserPost = new UserPost(userPostVO.getDescription(), userPostVO.getImageAttachment(), date);

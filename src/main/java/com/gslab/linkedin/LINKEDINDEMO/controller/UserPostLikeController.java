@@ -10,30 +10,31 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gslab.linkedin.linkedindemo.model.vo.BeanBase;
 import com.gslab.linkedin.linkedindemo.model.vo.ResponseBase;
+import com.gslab.linkedin.linkedindemo.model.vo.UserPostLikeVO;
 import com.gslab.linkedin.linkedindemo.service.UserPostLikeService;
 
 @RestController
-@RequestMapping(value = "/postlike")
+@RequestMapping(value = "/users")
 public class UserPostLikeController {
 
 	@Autowired
 	private UserPostLikeService userPostLikeService;
 	
-//	user post like 
-	@RequestMapping(value = "/{id}/{postid}", method = RequestMethod.POST)
-	public ResponseBase like(@PathVariable(name = "id") Integer userAccountId,
-			@PathVariable(name = "postid") Integer userPostId) {
-		userPostLikeService.create(userAccountId, userPostId);
-		return new ResponseBase();
-	}	
-	@RequestMapping(value = "/{userPostId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/posts/{userPostId}/like", method = RequestMethod.GET)
 	public ResponseBase readUser(@PathVariable(name = "userPostId") Integer userPostId) {
 		List<BeanBase> userNameList = userPostLikeService.listUserLikedPost(userPostId);
 		return new ResponseBase(userNameList);
-	}
-	@RequestMapping(value = "/{id}/{postid}", method = RequestMethod.DELETE)
-	public ResponseBase unlike(@PathVariable(name = "id") Integer userAccountId,
-			@PathVariable(name = "postid") Integer userPostId) {
+	}	
+//	user post like 
+	@RequestMapping(value = "/{userAccountId}/posts/{userPostId}/like", method = RequestMethod.POST)
+	public ResponseBase like(@PathVariable(name = "userAccountId") Integer userAccountId,
+			@PathVariable(name = "userPostId") Integer userPostId) {
+		UserPostLikeVO userPostLikeVO = userPostLikeService.create(userAccountId, userPostId);
+		return new ResponseBase(userPostLikeVO);
+	}	
+	@RequestMapping(value = "/{userAccountId}/posts/{userPostId}/like", method = RequestMethod.DELETE)
+	public ResponseBase unlike(@PathVariable(name = "userAccountId") Integer userAccountId,
+			@PathVariable(name = "userPostId") Integer userPostId) {
 		userPostLikeService.delete(userAccountId, userPostId);
 		return new ResponseBase();
 	}	

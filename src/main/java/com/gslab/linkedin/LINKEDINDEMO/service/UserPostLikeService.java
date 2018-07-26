@@ -3,9 +3,10 @@ package com.gslab.linkedin.linkedindemo.service;
 import java.util.List;
 
 import com.gslab.linkedin.linkedindemo.model.vo.BeanBase;
+import com.gslab.linkedin.linkedindemo.model.vo.UserPostLikeVO;
 
 public interface UserPostLikeService {
-	public boolean create(Integer userAccountId, Integer userPostId);
+	public UserPostLikeVO create(Integer userAccountId, Integer userPostId);
 
 	public List<BeanBase> listUserLikedPost(Integer userPostId);
 

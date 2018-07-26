@@ -23,13 +23,14 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
-	
-	//	Display All records
+
+	// Display All records
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseBase diplayAll() {
 		List<BeanBase> userList = userService.findAll();
 		return new ResponseBase(userList);
 	}
+
 	// Display single record
 	@RequestMapping(value = "/{userAccountId}", method = RequestMethod.GET)
 	public ResponseBase readUser(@PathVariable(name = "userAccountId") Integer userAccountId) {
@@ -46,7 +47,8 @@ public class UserController {
 
 	// Method for update user
 	@RequestMapping(value = "/{userAccountId}", method = RequestMethod.PUT)
-	public ResponseBase updateUser(@PathVariable(name = "userAccountId") Integer userAccountId, @RequestBody UserVO userVO) {
+	public ResponseBase updateUser(@PathVariable(name = "userAccountId") Integer userAccountId,
+			@RequestBody UserVO userVO) {
 		UserVO user = userService.update(userAccountId, userVO);
 		return new ResponseBase(user);
 	}
@@ -56,5 +58,5 @@ public class UserController {
 	public ResponseBase deleteUser(@PathVariable(name = "userAccountId") Integer userAccountId) {
 		userService.delete(userAccountId);
 		return new ResponseBase();
-	}	
+	}
 }

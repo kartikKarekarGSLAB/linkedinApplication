@@ -1,6 +1,7 @@
 package com.gslab.linkedin.linkedindemo.service.impl;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import com.gslab.linkedin.linkedindemo.exception.InvalidUserInputException;
 import com.gslab.linkedin.linkedindemo.model.Message;
 import com.gslab.linkedin.linkedindemo.model.MessageUserAccount;
 import com.gslab.linkedin.linkedindemo.model.UserAccount;
+import com.gslab.linkedin.linkedindemo.model.vo.BeanBase;
 import com.gslab.linkedin.linkedindemo.model.vo.MessageVO;
 import com.gslab.linkedin.linkedindemo.service.MessageService;
 
@@ -69,16 +71,8 @@ public class MessageServiceImpl implements MessageService {
 	}
 
 	@Override
-	public List<MessageVO> findAll(Integer userAccountId, String type) {
-		// TODO Auto-generated method stub
-		for (Message m : messageDAO.findAll(userAccountId, "send")) {
-			System.out.println(m.getMessage());
-		}
-		return null;
-	}
-
-	@Override
 	public boolean delete(Integer userAccountId, Integer messageId) {
+
 		// TODO Auto-generated method stub
 		UserAccount existingUserAccount = userAccountDAO.findById(userAccountId);
 		if (existingUserAccount == null) {
@@ -106,4 +100,30 @@ public class MessageServiceImpl implements MessageService {
 		}
 		return messageDAO.delete(messageId);
 	}
+
+	@Override
+	public List<BeanBase> findByCategory(Integer userAccountId, String category) {
+		UserAccount existingUserAccount = userAccountDAO.findById(userAccountId);
+		if (existingUserAccount == null) {
+			throw new InvalidUserInputException("Invalid user account number for listing "+category+" message " + userAccountId);
+		}
+		if(!category.equalsIgnoreCase("inbox") && !category.equalsIgnoreCase("outbox")) {
+			throw new InvalidUserInputException("Invalid category '"+category+"' for listing message for user id" + userAccountId);
+		}
+		
+		String type = "receive";
+		if (category.equalsIgnoreCase("inbox")) {
+			type = "receive";
+		} else {
+			type = "send";
+		}
+		List<BeanBase> messageVOList = new ArrayList<BeanBase>();
+		for (Message message : messageUserAccountDAO.findByCategory(userAccountId, type)) {
+			MessageVO messageVO = new MessageVO(message.getId(), message.getMessage(), type, message.getReceiverUserName(), message.getSenderUserName());
+			messageVOList.add(messageVO);
+		}
+		return messageVOList;
+	}
+
+	
 }

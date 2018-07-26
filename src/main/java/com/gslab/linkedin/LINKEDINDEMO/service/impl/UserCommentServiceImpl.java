@@ -36,23 +36,23 @@ public class UserCommentServiceImpl implements UserCommentService {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		Date date = new Date();
 
-		UserAccount userAccount = userAccountDAO.findById(userAccountId);
-		if (userAccount == null) {
+		UserAccount existingUserAccount = userAccountDAO.findById(userAccountId);
+		if (existingUserAccount == null) {
 			throw new InvalidUserInputException("Invalid user account number for comment "+userAccountId);
 		}
-		UserPost userPost = userPostDAO.find(userPostId);
-		if (userPost == null) {
+		UserPost existingUserPost = userPostDAO.find(userPostId);
+		if (existingUserPost == null) {
 			throw new InvalidUserInputException("Invalid post id for comment"+userPostId);
 		}
 		if (userCommentVO.getMessage().isEmpty()) {
 			throw new InvalidUserInputException(
-					"Please enter some text in comment. empty comment is not accepted.");
+					"Please enter some text in comment. empty comment is not accepted for update/create.");
 		}
 		UserComment userComment = new UserComment();
 		userComment.setMessage(userCommentVO.getMessage());
-		userComment.setUserAccount(userAccount);
-		userPost.setUserAccount(userAccount);
-		userComment.setUserPost(userPost);
+		userComment.setUserAccount(existingUserAccount);
+		existingUserPost.setUserAccount(existingUserAccount);
+		userComment.setUserPost(existingUserPost);
 		userComment.setCreatedOn(date);
 		userComment.setUpdatedOn(date);
 		Integer newCommentId = userCommentDAO.create(userComment);
@@ -64,7 +64,7 @@ public class UserCommentServiceImpl implements UserCommentService {
 		// TODO Auto-generated method stub
 		UserPost userPost = userPostDAO.find(userPostId);
 		if (userPost == null) {
-			throw new InvalidUserInputException("Invalid post id for comment " + userPostId);
+			throw new InvalidUserInputException("Invalid post id for listing comments " + userPostId);
 		}
 		List<UserComment> userCommentList = userCommentDAO.findAll(userPostId);
 		List<BeanBase> userCommentVOList = new ArrayList<BeanBase>();
@@ -93,11 +93,11 @@ public class UserCommentServiceImpl implements UserCommentService {
 		Date date = new Date();
 		UserAccount userAccount = userAccountDAO.findById(userAccountId);
 		if (userAccount == null) {
-			throw new InvalidUserInputException("Invalid user account number for comment");
+			throw new InvalidUserInputException("Invalid user account number for comment "+userAccountId);
 		}
 		if (userCommentVO.getMessage().isEmpty()) {
 			throw new InvalidUserInputException(
-					"Please enter some text in comment. empty comment is not accepted.");
+					"Please enter some text in comment. empty comment is not accepted for update/create.");
 		}
 		UserComment userComment = new UserComment();
 		userComment.setMessage(userCommentVO.getMessage());
