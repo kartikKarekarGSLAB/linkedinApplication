@@ -6,9 +6,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public class Status {
 
 	private int statusCode;
-	
+
 	private String errorKey;
-	
+
 	private String errorMessage;
 
 	public Status() {
@@ -16,6 +16,7 @@ public class Status {
 		this.statusCode = 200;
 		this.errorMessage = "SUCCESS";
 	}
+
 	public Status(int statusCode, String errorKey, String errorMessage) {
 		super();
 		this.statusCode = statusCode;
@@ -46,6 +47,5 @@ public class Status {
 	public void setErrorMessage(String errorMessage) {
 		this.errorMessage = errorMessage;
 	}
-	
-	
+
 }

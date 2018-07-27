@@ -3,7 +3,6 @@ package com.gslab.linkedin.linkedindemo.dao;
 import java.util.List;
 
 import com.gslab.linkedin.linkedindemo.model.UserPost;
-import com.gslab.linkedin.linkedindemo.model.vo.UserPostVO;
 
 public interface UserPostDAO {
 	public Integer create(UserPost userPost);

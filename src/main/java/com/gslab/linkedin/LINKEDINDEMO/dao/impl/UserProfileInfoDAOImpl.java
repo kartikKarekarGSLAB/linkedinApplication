@@ -19,7 +19,6 @@ public class UserProfileInfoDAOImpl implements UserProfileInfoDAO {
 
 	@Override
 	public Integer create(UserProfileInfo userProfileInfo) {
-		// TODO Auto-generated method stub
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
 		int newUserId = (int) session.save(userProfileInfo);
@@ -30,7 +29,6 @@ public class UserProfileInfoDAOImpl implements UserProfileInfoDAO {
 
 	@Override
 	public UserProfileInfo findById(Integer userAccountId) {
-		// TODO Auto-generated method stub
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
 		Query query = session.createQuery("from UserProfileInfo where user_account_id= :user_account_id");
@@ -43,7 +41,6 @@ public class UserProfileInfoDAOImpl implements UserProfileInfoDAO {
 
 	@Override
 	public UserProfileInfo update(Integer userAccountId, UserProfileInfo userProfileInfo) {
-		// TODO Auto-generated method stub
 		int updatedRowCounter = 0;
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
@@ -81,7 +78,7 @@ public class UserProfileInfoDAOImpl implements UserProfileInfoDAO {
 			updatedRowCounter = query.executeUpdate();
 
 		} else {
-			throw new InvalidUserInputException("invalid user account id pass for update "+userAccountId);
+			throw new InvalidUserInputException("invalid user account id pass for update " + userAccountId);
 		}
 		tr.commit();
 		session.close();
@@ -93,7 +90,6 @@ public class UserProfileInfoDAOImpl implements UserProfileInfoDAO {
 
 	@Override
 	public boolean delete(Integer userAccountId) {
-		// TODO Auto-generated method stub
 		int updatedRowCounter = 0;
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
@@ -110,7 +106,6 @@ public class UserProfileInfoDAOImpl implements UserProfileInfoDAO {
 
 	@Override
 	public List<UserProfileInfo> findAll() {
-		// TODO Auto-generated method stub
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
 		Query query = session.createQuery("from UserProfileInfo");

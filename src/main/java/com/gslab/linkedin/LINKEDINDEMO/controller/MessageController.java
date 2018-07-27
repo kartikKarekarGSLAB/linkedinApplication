@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gslab.linkedin.linkedindemo.model.vo.BeanBase;
 import com.gslab.linkedin.linkedindemo.model.vo.MessageVO;
 import com.gslab.linkedin.linkedindemo.model.vo.ResponseBase;
 import com.gslab.linkedin.linkedindemo.service.MessageService;
@@ -25,7 +24,7 @@ public class MessageController {
 	@RequestMapping(value = "/{userAccountId}/message", method = RequestMethod.GET)
 	public ResponseBase findAll(@PathVariable(name = "userAccountId") Integer userAccountId,
 			@RequestParam(name = "category") String category) {
-		List<BeanBase> messageVOList = messageService.findByCategory(userAccountId, category);
+		List<MessageVO> messageVOList = messageService.findByCategory(userAccountId, category);
 		return new ResponseBase(messageVOList);
 	}
 

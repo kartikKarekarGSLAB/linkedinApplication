@@ -26,12 +26,12 @@
 		class="com.gslab.linkedin.linkedindemo.service.impl.UserPostLikeServiceImpl"></bean>
 	<bean id="userCommentLikeService"
 		class="com.gslab.linkedin.linkedindemo.service.impl.UserCommentLikeServiceImpl"></bean>
+	<bean id="userConsumer"
+		class="com.gslab.linkedin.linkedindemo.consumer.UserConsumer"></bean>
 	<!-- End of Beans for Service -->
 
 
 	<!-- Start Beans for DAO -->
-	<bean id="userDAO"
-		class="com.gslab.linkedin.linkedindemo.dao.impl.UserDAOImpl"></bean>
 	<bean id="userAccountDAO"
 		class="com.gslab.linkedin.linkedindemo.dao.impl.UserAccountDAOImpl"></bean>
 	<bean id="userPostDAO"

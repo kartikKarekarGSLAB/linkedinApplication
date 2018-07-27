@@ -5,7 +5,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
@@ -34,20 +33,20 @@ public class UserProfileInfo {
 
 	@Column(name = "profile_picture")
 	private String profilePicture;
-	
+
 	@Column(name = "email", length = 40)
 	private String email;
-	
+
 	@Column(name = "company_name", length = 30)
 	private String companyName;
-	
+
 	@Column(name = "designation", length = 25)
 	private String designation;
 
-	//	@JoinColumn(name = "user_account_id")
-	
-	@OneToOne(cascade = CascadeType.ALL,orphanRemoval=true)
-	@PrimaryKeyJoinColumn(name="user_account_id")
+	// @JoinColumn(name = "user_account_id")
+
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+	@PrimaryKeyJoinColumn(name = "user_account_id")
 	private UserAccount userAccount;
 
 	public int getUserAccountId() {
@@ -89,6 +88,7 @@ public class UserProfileInfo {
 	public void setDesignation(String designation) {
 		this.designation = designation;
 	}
+
 	public UserProfileInfo() {
 	}
 
@@ -99,6 +99,5 @@ public class UserProfileInfo {
 		this.companyName = companyName;
 		this.designation = designation;
 	}
-	
-	
+
 }

@@ -1,6 +1,5 @@
 package com.gslab.linkedin.linkedindemo.model.vo;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
@@ -14,7 +13,7 @@ public class UserVO extends BeanBase {
 	private static final long serialVersionUID = 7489083255526010122L;
 	private Integer id;
 	private String username;
-	@JsonProperty(access=Access.WRITE_ONLY)
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private String password;
 	private String profilePictureUrl;
 	private String email;
@@ -35,8 +34,6 @@ public class UserVO extends BeanBase {
 		this.companyName = companyName;
 		this.designation = designation;
 	}
-
-
 
 	public Integer getId() {
 		return id;
@@ -85,13 +82,20 @@ public class UserVO extends BeanBase {
 	public void setDesignation(String designation) {
 		this.designation = designation;
 	}
-	
+
 	public String getEmail() {
 		return email;
 	}
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	@Override
+	public String toString() {
+		return "UserVO [id=" + id + ", username=" + username + ", password=" + password + ", profilePictureUrl="
+				+ profilePictureUrl + ", email=" + email + ", companyName=" + companyName + ", designation="
+				+ designation + "]";
 	}
 
 }

@@ -8,13 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.gslab.linkedin.linkedindemo.dao.UserAccountDAO;
 import com.gslab.linkedin.linkedindemo.dao.UserPostDAO;
 import com.gslab.linkedin.linkedindemo.dao.UserPostLikeDAO;
+import com.gslab.linkedin.linkedindemo.exception.CRUDOperationFailureException;
 import com.gslab.linkedin.linkedindemo.exception.InvalidUserInputException;
 import com.gslab.linkedin.linkedindemo.model.UserAccount;
 import com.gslab.linkedin.linkedindemo.model.UserPost;
 import com.gslab.linkedin.linkedindemo.model.UserPostLike;
-import com.gslab.linkedin.linkedindemo.model.vo.BeanBase;
 import com.gslab.linkedin.linkedindemo.model.vo.UserPostLikeVO;
-import com.gslab.linkedin.linkedindemo.model.vo.UserVO;
 import com.gslab.linkedin.linkedindemo.service.UserPostLikeService;
 
 public class UserPostLikeServiceImpl implements UserPostLikeService {
@@ -48,16 +47,17 @@ public class UserPostLikeServiceImpl implements UserPostLikeService {
 		existingUserPost.setUserAccount(existingUserAccount);
 		userPostLike.setUserPost(existingUserPost);
 		Integer newUserPostLikeId = userPostLikeDAO.create(userPostLike);
-		
+
 		return new UserPostLikeVO(newUserPostLikeId, existingUserAccount.getUsername(), userPostId);
 	}
 
 	@Override
-	public List<BeanBase> listUserLikedPost(Integer userPostId) {
+	public List<UserPostLikeVO> listUserLikedPost(Integer userPostId) {
 		List<UserPostLike> userPostLikeList = userPostLikeDAO.findByPostId(userPostId);
-		List<BeanBase> userVOlist = new ArrayList<BeanBase>();
+		List<UserPostLikeVO> userVOlist = new ArrayList<UserPostLikeVO>();
 		for (UserPostLike userPostLike : userPostLikeList) {
-			UserPostLikeVO userPostLikeVO = new UserPostLikeVO(userPostLike.getId(),userAccountDAO.findById(userPostLike.getUserAccount().getId()).getUsername(),userPostId);
+			UserPostLikeVO userPostLikeVO = new UserPostLikeVO(userPostLike.getId(),
+					userAccountDAO.findById(userPostLike.getUserAccount().getId()).getUsername(), userPostId);
 			userVOlist.add(userPostLikeVO);
 		}
 		return userVOlist;
@@ -65,7 +65,6 @@ public class UserPostLikeServiceImpl implements UserPostLikeService {
 
 	@Override
 	public boolean delete(Integer userAccountId, Integer userPostId) {
-		// TODO Auto-generated method stub
 		UserAccount existingUserAccount = userAccountDAO.findById(userAccountId);
 		if (existingUserAccount == null) {
 			throw new InvalidUserInputException(
@@ -79,8 +78,12 @@ public class UserPostLikeServiceImpl implements UserPostLikeService {
 		if (userPostLikeDAO.alreadyExists(userAccountId, userPostId) == null) {
 			throw new InvalidUserInputException("Sorry you didn't liked this post.");
 		}
-		userPostLikeDAO.deleteUserLike(userAccountId, userPostId);
-		return true;
+		boolean result = userPostLikeDAO.deleteUserLike(userAccountId, userPostId);
+		if (result == false) {
+			throw new CRUDOperationFailureException(
+					"Fail to delete like for post with id " + userPostId + " for user with id " + userAccountId);
+		}
+		return result;
 	}
 
 }

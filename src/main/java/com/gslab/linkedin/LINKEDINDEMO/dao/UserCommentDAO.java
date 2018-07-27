@@ -12,7 +12,7 @@ public interface UserCommentDAO {
 	
 	public List<UserComment> findAll(Integer userPost);
 
-	public boolean update(Integer userAccountId, Integer commentId, UserComment userComment);
+	public UserComment update(Integer userAccountId, Integer commentId, UserComment userComment);
 
 	public boolean delete(Integer userAccountId, Integer commentId);
 }

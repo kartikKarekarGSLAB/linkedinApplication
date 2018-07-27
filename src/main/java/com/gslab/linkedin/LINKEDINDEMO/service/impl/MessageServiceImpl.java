@@ -14,7 +14,6 @@ import com.gslab.linkedin.linkedindemo.exception.InvalidUserInputException;
 import com.gslab.linkedin.linkedindemo.model.Message;
 import com.gslab.linkedin.linkedindemo.model.MessageUserAccount;
 import com.gslab.linkedin.linkedindemo.model.UserAccount;
-import com.gslab.linkedin.linkedindemo.model.vo.BeanBase;
 import com.gslab.linkedin.linkedindemo.model.vo.MessageVO;
 import com.gslab.linkedin.linkedindemo.service.MessageService;
 
@@ -62,7 +61,7 @@ public class MessageServiceImpl implements MessageService {
 				"receive");
 		Integer receiveMessageUserAccountId = messageUserAccountDAO.create(receiveMessageUserAccount);
 
-		messageVO.setId(sendMessage.getId());
+		messageVO.setId(sendMessageUserAccountId);
 		messageVO.setMessage(sendMessage.getMessage());
 		messageVO.setReceiverUserName(sendMessage.getReceiverUserName());
 		messageVO.setSenderUserName(sendMessage.getSenderUserName());
@@ -93,37 +92,39 @@ public class MessageServiceImpl implements MessageService {
 			throw new InvalidUserInputException(
 					"Fail to delete message with message id " + messageId + " and user account id " + userAccountId);
 		}
-		boolean messageDelete = messageDAO.delete(messageId);
-		if (messageDelete == false) {
+		boolean messageDeleteResult = messageDAO.delete(messageId);
+		if (messageDeleteResult == false) {
 			throw new InvalidUserInputException(
 					"Fail to delete message with message id " + messageId + " and user account id " + userAccountId);
 		}
-		return messageDAO.delete(messageId);
+		return messageDeleteResult;
 	}
 
 	@Override
-	public List<BeanBase> findByCategory(Integer userAccountId, String category) {
+	public List<MessageVO> findByCategory(Integer userAccountId, String category) {
 		UserAccount existingUserAccount = userAccountDAO.findById(userAccountId);
 		if (existingUserAccount == null) {
-			throw new InvalidUserInputException("Invalid user account number for listing "+category+" message " + userAccountId);
+			throw new InvalidUserInputException(
+					"Invalid user account number for listing " + category + " message " + userAccountId);
 		}
-		if(!category.equalsIgnoreCase("inbox") && !category.equalsIgnoreCase("outbox")) {
-			throw new InvalidUserInputException("Invalid category '"+category+"' for listing message for user id" + userAccountId);
+		if (!category.equalsIgnoreCase("inbox") && !category.equalsIgnoreCase("outbox")) {
+			throw new InvalidUserInputException(
+					"Invalid category '" + category + "' for listing message for user id" + userAccountId);
 		}
-		
+
 		String type = "receive";
 		if (category.equalsIgnoreCase("inbox")) {
 			type = "receive";
 		} else {
 			type = "send";
 		}
-		List<BeanBase> messageVOList = new ArrayList<BeanBase>();
+		List<MessageVO> messageVOList = new ArrayList<MessageVO>();
 		for (Message message : messageUserAccountDAO.findByCategory(userAccountId, type)) {
-			MessageVO messageVO = new MessageVO(message.getId(), message.getMessage(), type, message.getReceiverUserName(), message.getSenderUserName());
+			MessageVO messageVO = new MessageVO(message.getId(), message.getMessage(), type,
+					message.getReceiverUserName(), message.getSenderUserName());
 			messageVOList.add(messageVO);
 		}
 		return messageVOList;
 	}
 
-	
 }

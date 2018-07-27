@@ -1,4 +1,4 @@
-package com.gslab.linkedin.linkedindemo;
+package com.gslab.linkedin.linkedindemo.config;
 
 import javax.persistence.EntityManagerFactory;
 

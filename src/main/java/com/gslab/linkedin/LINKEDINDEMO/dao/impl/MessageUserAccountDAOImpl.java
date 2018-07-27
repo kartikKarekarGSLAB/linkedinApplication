@@ -47,7 +47,6 @@ public class MessageUserAccountDAOImpl implements MessageUserAccountDAO {
 
 	@Override
 	public MessageUserAccount find(Integer userAccountId, Integer messageId) {
-		// TODO Auto-generated method stub
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
 		Query query = session
@@ -62,11 +61,10 @@ public class MessageUserAccountDAOImpl implements MessageUserAccountDAO {
 
 	@Override
 	public List<Message> findByCategory(Integer userAccountId, String category) {
-		// TODO Auto-generated method stub
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
-		Query query = session
-				.createQuery("from Message where id in (select message.id from MessageUserAccount where userAccount.id=:userAccountId and type=:type) order by createdOn desc");
+		Query query = session.createQuery(
+				"from Message where id in (select message.id from MessageUserAccount where userAccount.id=:userAccountId and type=:type) order by createdOn desc");
 		query.setInteger("userAccountId", userAccountId);
 		query.setString("type", category);
 		List<Message> userMessageList = query.list();
