@@ -11,11 +11,7 @@ import com.gslab.linkedin.linkedindemo.exception.CRUDOperationFailureException;
 import com.gslab.linkedin.linkedindemo.exception.InvalidUserInputException;
 import com.gslab.linkedin.linkedindemo.model.UserAccount;
 import com.gslab.linkedin.linkedindemo.model.UserFollow;
-import com.gslab.linkedin.linkedindemo.model.UserPost;
-import com.gslab.linkedin.linkedindemo.model.UserProfileInfo;
-import com.gslab.linkedin.linkedindemo.model.vo.BeanBase;
 import com.gslab.linkedin.linkedindemo.model.vo.UserFollowVO;
-import com.gslab.linkedin.linkedindemo.model.vo.UserPostVO;
 import com.gslab.linkedin.linkedindemo.service.UserFollowService;
 
 public class UserFollowServiceImpl implements UserFollowService {
@@ -28,7 +24,6 @@ public class UserFollowServiceImpl implements UserFollowService {
 
 	@Override
 	public UserFollowVO follow(Integer followerUserAccountId, String followingUserName) {
-		// TODO Auto-generated method stub
 		if (followingUserName.isEmpty()) {
 			throw new InvalidUserInputException(
 					"Please select username for following his/her profile.It Should not be empty.");
@@ -63,7 +58,6 @@ public class UserFollowServiceImpl implements UserFollowService {
 
 	@Override
 	public boolean unfollow(Integer followerUserAccountId, String followingUserName) {
-		// TODO Auto-generated method stub
 		if (followingUserName.isEmpty()) {
 			throw new InvalidUserInputException(
 					"Please select username for unfollowing his/her profile.It Should not be empty.");
@@ -99,9 +93,8 @@ public class UserFollowServiceImpl implements UserFollowService {
 	}
 
 	@Override
-	public List<BeanBase> getFollowingList(Integer followerId) {
-		// TODO Auto-generated method stub
-		List<BeanBase> userFollowingVOList = new ArrayList<BeanBase>();
+	public List<UserFollowVO> getFollowingList(Integer followerId) {
+		List<UserFollowVO> userFollowingVOList = new ArrayList<UserFollowVO>();
 		UserAccount existingFollowerUserAccount = userAccountDAO.findById(followerId);
 		if (existingFollowerUserAccount == null) {
 			throw new InvalidUserInputException(
@@ -117,9 +110,8 @@ public class UserFollowServiceImpl implements UserFollowService {
 	}
 
 	@Override
-	public List<BeanBase> getFollowerList(Integer followingId) {
-		// TODO Auto-generated method stub
-		List<BeanBase> userFollowerVOList = new ArrayList<BeanBase>();
+	public List<UserFollowVO> getFollowerList(Integer followingId) {
+		List<UserFollowVO> userFollowerVOList = new ArrayList<UserFollowVO>();
 		UserAccount existingUserFollowingAccount = userAccountDAO.findById(followingId);
 		if (existingUserFollowingAccount == null) {
 			throw new InvalidUserInputException("Invalid user account number for finding follower user group.");

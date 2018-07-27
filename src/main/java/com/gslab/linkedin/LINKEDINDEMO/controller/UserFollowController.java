@@ -5,13 +5,11 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gslab.linkedin.linkedindemo.model.vo.BeanBase;
 import com.gslab.linkedin.linkedindemo.model.vo.ResponseBase;
 import com.gslab.linkedin.linkedindemo.model.vo.UserFollowVO;
 import com.gslab.linkedin.linkedindemo.service.UserFollowService;
@@ -25,7 +23,7 @@ public class UserFollowController {
 	@RequestMapping(value = "{userAccountId}/follow", method = RequestMethod.GET)
 	public ResponseBase getfollowingUserOrFollowerUserList(@PathVariable(name = "userAccountId") Integer userAccountId,
 			@RequestParam(name = "filter") String filter) {
-		List<BeanBase> userList = new ArrayList<BeanBase>();
+		List<UserFollowVO> userList = new ArrayList<UserFollowVO>();
 		if (filter.equalsIgnoreCase("follower")) {
 			userList = userFollowService.getFollowerList(userAccountId);
 		} else if (filter.equalsIgnoreCase("following")) {

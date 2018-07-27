@@ -9,12 +9,12 @@ public interface UserAccountDAO {
 
 	public List<UserAccount> findAll();
 
-	public UserAccount findById(Integer userId);
+	public UserAccount findById(Integer userAccountId);
 	
 	public UserAccount findByUserName(String username);
 
-	public UserAccount update(Integer userId, UserAccount userAccount);
+	public UserAccount update(Integer userAccountId, UserAccount userAccount);
 
-	public boolean delete(Integer userId);
+	public boolean delete(Integer userAccountId);
 
 }

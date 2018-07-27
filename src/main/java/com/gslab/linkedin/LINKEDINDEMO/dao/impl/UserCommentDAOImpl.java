@@ -19,7 +19,6 @@ public class UserCommentDAOImpl implements UserCommentDAO {
 
 	@Override
 	public Integer create(UserComment userComment) {
-		// TODO Auto-generated method stub
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
 		int newCommentId = (int) session.save(userComment);
@@ -30,7 +29,6 @@ public class UserCommentDAOImpl implements UserCommentDAO {
 
 	@Override
 	public List<UserComment> findAll(Integer postId) {
-		// TODO Auto-generated method stub
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
 		Query query = session.createQuery("from UserComment where user_post_id= :postId order by created_on desc");
@@ -42,41 +40,39 @@ public class UserCommentDAOImpl implements UserCommentDAO {
 	}
 
 	@Override
-	public boolean update(Integer userAccountId, Integer commentId, UserComment userComment) {
-		// TODO Auto-generated method stub
+	public UserComment update(Integer userAccountId, Integer commentId, UserComment userComment) {
 		int updatedRowCounter = 0;
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
 		Query query = session.createQuery("from UserComment where id= :id");
 		query.setInteger("id", commentId);
-		UserComment result = (UserComment) query.uniqueResult();
-		if (result != null) {
-			query = session.createQuery(
-					"update UserComment set message= :message , updated_on = :updated_on where id= :id and user_account_id = :user_account_id");
-
-			// update useremail
-			if (!userComment.getMessage().isEmpty()) {
-				query.setString("message", userComment.getMessage());
-				query.setTimestamp("updated_on", userComment.getUpdatedOn());
-			}
-			query.setInteger("id", commentId);
-			query.setInteger("user_account_id", userAccountId);
-			updatedRowCounter = query.executeUpdate();
-
-		} else {
-			throw new InvalidUserInputException("invalid userid "+userAccountId+" or commentid "+commentId+" pass for update");
+		UserComment existingUserComment = (UserComment) query.uniqueResult();
+		if (existingUserComment == null) {
+			throw new InvalidUserInputException(
+					"invalid userid " + userAccountId + " or commentid " + commentId + " pass for update");
 		}
+		query = session.createQuery(
+				"update UserComment set message= :message , updated_on = :updated_on where id= :id and user_account_id = :user_account_id");
+		// update useremail
+		if (!userComment.getMessage().isEmpty()) {
+			query.setString("message", userComment.getMessage());
+		} else {
+			query.setString("message", existingUserComment.getMessage());
+		}
+		query.setTimestamp("updated_on", userComment.getUpdatedOn());
+		query.setInteger("id", commentId);
+		query.setInteger("user_account_id", userAccountId);
+		updatedRowCounter = query.executeUpdate();
 		tr.commit();
 		session.close();
 		if (updatedRowCounter == 1)
-			return true;
+			return userComment;
 		else
-			return false;
+			return null;
 	}
 
 	@Override
 	public boolean delete(Integer userAccountId, Integer commentId) {
-		// TODO Auto-generated method stub
 		int updatedRowCounter = 0;
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
@@ -95,7 +91,6 @@ public class UserCommentDAOImpl implements UserCommentDAO {
 
 	@Override
 	public UserComment findById(Integer userCommentId) {
-		// TODO Auto-generated method stub
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
 		Query query = session.createQuery("from UserComment where id = :userCommentId");

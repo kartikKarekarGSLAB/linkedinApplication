@@ -9,12 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gslab.linkedin.linkedindemo.model.vo.BeanBase;
 import com.gslab.linkedin.linkedindemo.model.vo.ResponseBase;
-import com.gslab.linkedin.linkedindemo.model.vo.Status;
-import com.gslab.linkedin.linkedindemo.model.vo.UserFollowVO;
 import com.gslab.linkedin.linkedindemo.model.vo.UserVO;
-import com.gslab.linkedin.linkedindemo.service.UserFollowService;
 import com.gslab.linkedin.linkedindemo.service.UserService;
 
 @RestController
@@ -27,7 +23,7 @@ public class UserController {
 	// Display All records
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseBase diplayAll() {
-		List<BeanBase> userList = userService.findAll();
+		List<UserVO> userList = userService.findAll();
 		return new ResponseBase(userList);
 	}
 

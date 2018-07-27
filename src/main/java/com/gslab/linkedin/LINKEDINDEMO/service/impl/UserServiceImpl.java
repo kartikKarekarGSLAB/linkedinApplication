@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.gslab.linkedin.linkedindemo.dao.UserAccountDAO;
 import com.gslab.linkedin.linkedindemo.dao.UserProfileInfoDAO;
@@ -11,11 +12,11 @@ import com.gslab.linkedin.linkedindemo.exception.CRUDOperationFailureException;
 import com.gslab.linkedin.linkedindemo.exception.InvalidUserInputException;
 import com.gslab.linkedin.linkedindemo.model.UserAccount;
 import com.gslab.linkedin.linkedindemo.model.UserProfileInfo;
-import com.gslab.linkedin.linkedindemo.model.vo.BeanBase;
 import com.gslab.linkedin.linkedindemo.model.vo.UserVO;
 import com.gslab.linkedin.linkedindemo.service.UserService;
 import com.gslab.linkedin.linkedindemo.validator.UserValidator;
 
+@Component
 public class UserServiceImpl implements UserService {
 
 	@Autowired
@@ -25,17 +26,20 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserVO create(UserVO userVO) {
-		if(userVO.getUsername() == null || userVO.getPassword() == null) {
+		if (userVO.getUsername() == null || userVO.getPassword() == null) {
 			throw new InvalidUserInputException("Empty username/password is not allowed for create profile.");
 		}
 		if (!UserValidator.validateUserName(userVO.getUsername())) {
-			throw new InvalidUserInputException("Invalid username for create profile '" + userVO.getUsername() + "'.It must contain minimum 6 character and max size is 19.combination of  letters, digits, '-' and '_' allowed.");
+			throw new InvalidUserInputException("Invalid username for create profile '" + userVO.getUsername()
+					+ "'.It must contain minimum 6 character and max size is 19.combination of  letters, digits, '-' and '_' allowed.");
 		}
 		if (!UserValidator.validatePassword(userVO.getPassword())) {
-			throw new InvalidUserInputException("Invalid password for create profile '" + userVO.getUsername() + "'.It must contain minimum 8 character and max size is 19.It MUST contain 1 capital letter,small letter,digit and one special symbol from @,#,$,%,^,&,+,=");
+			throw new InvalidUserInputException("Invalid password for create profile '" + userVO.getUsername()
+					+ "'.It must contain minimum 8 character and max size is 19.It MUST contain 1 capital letter,small letter,digit and one special symbol from @,#,$,%,^,&,+,=");
 		}
 		if (userVO.getEmail().isEmpty()) {
-			throw new InvalidUserInputException("Empty email not accepted for create profile.");
+			throw new InvalidUserInputException(
+					"Empty email not accepted for create profile for user." + userVO.getUsername());
 		}
 		UserAccount existingUserAccount = userAccountDAO.findByUserName(userVO.getUsername());
 		if (existingUserAccount != null) {
@@ -51,14 +55,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<BeanBase> findAll() {
-		// TODO Auto-generated method stub
+	public List<UserVO> findAll() {
 		List<UserAccount> userAccountList = userAccountDAO.findAll();
 		List<UserProfileInfo> userProfileInfoList = userProfileInfoDAO.findAll();
-		List<BeanBase> userVOlist = new ArrayList<BeanBase>();
+		List<UserVO> userVOlist = new ArrayList<UserVO>();
 		int index = 0;
 		for (UserProfileInfo userProfile : userProfileInfoList) {
-			UserVO uservo = new UserVO(userAccountList.get(index).getId(),userAccountList.get(index).getUsername(),
+			UserVO uservo = new UserVO(userAccountList.get(index).getId(), userAccountList.get(index).getUsername(),
 					userAccountList.get(index).getPassword(), userProfile.getProfilePicture(), userProfile.getEmail(),
 					userProfile.getCompanyName(), userProfile.getDesignation());
 			userVOlist.add(uservo);
@@ -69,16 +72,15 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserVO findById(Integer userAccountId) {
-		// TODO Auto-generated method stub
 		UserAccount userAccount = userAccountDAO.findById(userAccountId);
 		if (userAccount == null) {
-			throw new InvalidUserInputException("No user account exists with id "+userAccountId);
+			throw new InvalidUserInputException("No user account exists with id " + userAccountId);
 		}
 		UserProfileInfo userProfile = userProfileInfoDAO.findById(userAccountId);
 		if (userProfile == null) {
-			throw new InvalidUserInputException("No user profile exists with id "+userAccountId);
+			throw new InvalidUserInputException("No user profile exists with id " + userAccountId);
 		}
-		UserVO uservo = new UserVO(userAccount.getId(),userAccount.getUsername(), userAccount.getPassword(),
+		UserVO uservo = new UserVO(userAccount.getId(), userAccount.getUsername(), userAccount.getPassword(),
 				userProfile.getProfilePicture(), userProfile.getEmail(), userProfile.getCompanyName(),
 				userProfile.getDesignation());
 		return uservo;
@@ -86,7 +88,6 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserVO update(Integer userId, UserVO userVO) {
-		// TODO Auto-generated method stub
 		UserProfileInfo userProfileInfo = new UserProfileInfo(userVO.getProfilePictureUrl(), userVO.getEmail(),
 				userVO.getCompanyName(), userVO.getDesignation());
 		UserAccount userAccount = new UserAccount(userVO.getUsername(), userVO.getPassword());
@@ -111,10 +112,9 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean delete(Integer userId) {
-		// TODO Auto-generated method stub
 		boolean result = userAccountDAO.delete(userId);
 		if (result == false) {
-			throw new CRUDOperationFailureException("Fail to delete user with id "+userId);
+			throw new CRUDOperationFailureException("Fail to delete user with id " + userId);
 		}
 		return result;
 	}

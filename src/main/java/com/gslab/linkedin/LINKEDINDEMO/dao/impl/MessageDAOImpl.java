@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gslab.linkedin.linkedindemo.dao.MessageDAO;
 import com.gslab.linkedin.linkedindemo.model.Message;
-import com.gslab.linkedin.linkedindemo.model.UserAccount;
 
 public class MessageDAOImpl implements MessageDAO {
 
@@ -29,9 +28,6 @@ public class MessageDAOImpl implements MessageDAO {
 
 	@Override
 	public List<Message> findAll(Integer userAccountId, String type) {
-		// TODO Auto-generated method stub
-		// Query : select * from message where id in (select message_id from
-		// message_user_account where user_account_id = 10023);
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
 		Query query = session.createQuery(
@@ -45,7 +41,6 @@ public class MessageDAOImpl implements MessageDAO {
 
 	@Override
 	public boolean delete(Integer messageId) {
-		// TODO Auto-generated method stub
 		int updatedRowCounter = 0;
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();

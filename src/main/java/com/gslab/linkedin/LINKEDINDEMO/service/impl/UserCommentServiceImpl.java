@@ -38,11 +38,11 @@ public class UserCommentServiceImpl implements UserCommentService {
 
 		UserAccount existingUserAccount = userAccountDAO.findById(userAccountId);
 		if (existingUserAccount == null) {
-			throw new InvalidUserInputException("Invalid user account number for comment "+userAccountId);
+			throw new InvalidUserInputException("Invalid user account number for comment " + userAccountId);
 		}
 		UserPost existingUserPost = userPostDAO.find(userPostId);
 		if (existingUserPost == null) {
-			throw new InvalidUserInputException("Invalid post id for comment"+userPostId);
+			throw new InvalidUserInputException("Invalid post id for comment" + userPostId);
 		}
 		if (userCommentVO.getMessage().isEmpty()) {
 			throw new InvalidUserInputException(
@@ -60,14 +60,13 @@ public class UserCommentServiceImpl implements UserCommentService {
 	}
 
 	@Override
-	public List<BeanBase> findAll(Integer userPostId) {
-		// TODO Auto-generated method stub
+	public List<UserCommentVO> findAll(Integer userPostId) {
 		UserPost userPost = userPostDAO.find(userPostId);
 		if (userPost == null) {
 			throw new InvalidUserInputException("Invalid post id for listing comments " + userPostId);
 		}
 		List<UserComment> userCommentList = userCommentDAO.findAll(userPostId);
-		List<BeanBase> userCommentVOList = new ArrayList<BeanBase>();
+		List<UserCommentVO> userCommentVOList = new ArrayList<UserCommentVO>();
 		for (UserComment userComment : userCommentList) {
 			UserCommentVO comment = new UserCommentVO();
 			comment.setMessage(userComment.getMessage());
@@ -78,22 +77,25 @@ public class UserCommentServiceImpl implements UserCommentService {
 
 	@Override
 	public boolean delete(Integer userAccountId, Integer commentId) {
-		// TODO Auto-generated method stub
 		UserAccount userAccount = userAccountDAO.findById(userAccountId);
 		if (userAccount == null) {
 			throw new InvalidUserInputException("Invalid user account number for comment delete." + userAccountId);
 		}
-		return userCommentDAO.delete(userAccountId, commentId);
+		boolean result = userCommentDAO.delete(userAccountId, commentId);
+		if (result == false) {
+			throw new CRUDOperationFailureException(
+					"Fail to delete comment with id " + commentId + " and user id " + userAccountId);
+		}
+		return result;
 	}
 
 	@Override
 	public UserCommentVO update(Integer userAccountId, Integer userCommentId, UserCommentVO userCommentVO) {
-		// TODO Auto-generated method stub
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		Date date = new Date();
 		UserAccount userAccount = userAccountDAO.findById(userAccountId);
 		if (userAccount == null) {
-			throw new InvalidUserInputException("Invalid user account number for comment "+userAccountId);
+			throw new InvalidUserInputException("Invalid user account number for comment " + userAccountId);
 		}
 		if (userCommentVO.getMessage().isEmpty()) {
 			throw new InvalidUserInputException(
@@ -102,11 +104,11 @@ public class UserCommentServiceImpl implements UserCommentService {
 		UserComment userComment = new UserComment();
 		userComment.setMessage(userCommentVO.getMessage());
 		userComment.setUpdatedOn(date);
-		boolean result = userCommentDAO.update(userAccountId, userCommentId, userComment);
-		if (result == false) {
-			throw new CRUDOperationFailureException("Fail to update comment for id "+userCommentId);
+		UserComment updateUserComment = userCommentDAO.update(userAccountId, userCommentId, userComment);
+		if (updateUserComment == null) {
+			throw new CRUDOperationFailureException("Fail to update comment for id " + userCommentId);
 		}
-		return userCommentVO; 
+		return userCommentVO;
 	}
 
 }

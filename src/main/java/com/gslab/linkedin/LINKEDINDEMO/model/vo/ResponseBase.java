@@ -1,6 +1,5 @@
 package com.gslab.linkedin.linkedindemo.model.vo;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -10,14 +9,14 @@ public class ResponseBase {
 
 	private Status status;
 	private BeanBase payLoad;
-	private List<BeanBase> payLoadList;
+	private List<? extends BeanBase> payLoadList;
 
 	public ResponseBase() {
 		// TODO Auto-generated constructor stub
 		this.status = new Status();
 	}
 
-	public ResponseBase(List<BeanBase> payLoadList) {
+	public ResponseBase(List<? extends BeanBase> payLoadList) {
 		super();
 		this.status = new Status();
 		this.payLoadList = payLoadList;
@@ -45,7 +44,7 @@ public class ResponseBase {
 		this.payLoad = payLoad;
 	}
 
-	public List<BeanBase> getPayLoadList() {
+	public List<? extends BeanBase> getPayLoadList() {
 		return payLoadList;
 	}
 

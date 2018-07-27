@@ -1,15 +1,14 @@
 package com.gslab.linkedin.linkedindemo.model.vo;
 
 public class UserCommentLikeVO extends BeanBase {
-	
-	
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -6368774541380114884L;
 
 	private int userAccountId;
-	
+
 	private int userCommentId;
 
 	public int getUserAccountId() {
@@ -33,6 +32,5 @@ public class UserCommentLikeVO extends BeanBase {
 		this.userAccountId = userAccountId;
 		this.userCommentId = userCommentId;
 	}
-	
-	
+
 }

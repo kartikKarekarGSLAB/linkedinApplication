@@ -21,8 +21,7 @@ public class MessageVO extends BeanBase {
 	private String senderUserName;
 
 	public MessageVO() {
-		// TODO Auto-generated constructor stub
-		message = "Templete message.Hello user";
+		message = "";
 		type = "send";
 	}
 

@@ -51,14 +51,14 @@
 			<version>9.3-1100-jdbc41</version>
 		</dependency>
 		<!-- End Of PSQL Dependency -->
-		
-		<!-- Start of RabbitMQ  Dependency -->
+
+		<!-- Start of RabbitMQ Dependency -->
 		<!-- AMQP : Advanced Messaging Queuing Protocol -->
 		<dependency>
-		    <groupId>org.springframework.boot</groupId>
-		    <artifactId>spring-boot-starter-amqp</artifactId>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-amqp</artifactId>
 		</dependency>
-		<!-- End of RabbitMQ  Dependency -->
+		<!-- End of RabbitMQ Dependency -->
 
 	</dependencies>
 

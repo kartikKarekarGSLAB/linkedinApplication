@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gslab.linkedin.linkedindemo.model.vo.BeanBase;
 import com.gslab.linkedin.linkedindemo.model.vo.ResponseBase;
-import com.gslab.linkedin.linkedindemo.model.vo.Status;
 import com.gslab.linkedin.linkedindemo.model.vo.UserPostVO;
 import com.gslab.linkedin.linkedindemo.service.UserPostService;
 
@@ -27,8 +25,8 @@ public class UserPostController {
 //	List all post of user
 	@RequestMapping(value = "/{userAccountId}/posts", method = RequestMethod.GET)
 	public ResponseBase findAll(@PathVariable(name = "userAccountId") Integer userAccountId,
-			@RequestParam(name = "filter") String userpostFilter) {
-		List<BeanBase> userPostList = new ArrayList<BeanBase>();
+			@RequestParam(name = "filter", required = true) String userpostFilter) {
+		List<UserPostVO> userPostList = new ArrayList<UserPostVO>();
 		if (userpostFilter.equalsIgnoreCase("all")) {
 			userPostList = userPostService.findAll(userAccountId);
 		} else if (userpostFilter.equalsIgnoreCase("share")) {

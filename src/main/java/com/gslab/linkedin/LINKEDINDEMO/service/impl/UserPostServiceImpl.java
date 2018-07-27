@@ -16,7 +16,6 @@ import com.gslab.linkedin.linkedindemo.exception.InvalidUserInputException;
 import com.gslab.linkedin.linkedindemo.model.UserAccount;
 import com.gslab.linkedin.linkedindemo.model.UserFollow;
 import com.gslab.linkedin.linkedindemo.model.UserPost;
-import com.gslab.linkedin.linkedindemo.model.vo.BeanBase;
 import com.gslab.linkedin.linkedindemo.model.vo.UserPostVO;
 import com.gslab.linkedin.linkedindemo.service.UserPostService;
 
@@ -30,9 +29,9 @@ public class UserPostServiceImpl implements UserPostService {
 
 	@Autowired
 	private UserFollowDAO userFollowDAO;
-	
+
 	@Autowired
-	private UserPostLikeDAO userPostLikeDAO; 
+	private UserPostLikeDAO userPostLikeDAO;
 
 	@Override
 	public UserPostVO create(Integer userAccountId, UserPostVO userPostVO) {
@@ -57,12 +56,12 @@ public class UserPostServiceImpl implements UserPostService {
 	}
 
 	@Override
-	public List<BeanBase> findAll(Integer userAccountId) {
+	public List<UserPostVO> findAll(Integer userAccountId) {
 		UserAccount userAccount = userAccountDAO.findById(userAccountId);
 		if (userAccount == null) {
 			throw new InvalidUserInputException("Invalid user account number for find all post " + userAccountId);
 		}
-		List<BeanBase> userPostVOList = new ArrayList<BeanBase>();
+		List<UserPostVO> userPostVOList = new ArrayList<UserPostVO>();
 		// this will add all post of user.
 //			user's own post.
 		for (UserPost userPost : userPostDAO.findAll(userAccountId)) {
@@ -100,7 +99,6 @@ public class UserPostServiceImpl implements UserPostService {
 
 	@Override
 	public UserPostVO update(Integer userAccountId, Integer userPostId, UserPostVO userPostVO) {
-		// TODO Auto-generated method stub
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		Date date = new Date();
 		UserAccount existingUserAccount = userAccountDAO.findById(userAccountId);
@@ -111,7 +109,8 @@ public class UserPostServiceImpl implements UserPostService {
 		if (userPostVO.getDescription() != null && userPostVO.getDescription().isEmpty()) {
 			throw new InvalidUserInputException("Empty description for update post operation.");
 		}
-		UserPost aboutToUpdateUserPost = new UserPost(userPostVO.getDescription(), userPostVO.getImageAttachment(), date);
+		UserPost aboutToUpdateUserPost = new UserPost(userPostVO.getDescription(), userPostVO.getImageAttachment(),
+				date);
 		UserPost updatedUserPost = userPostDAO.update(userAccountId, userPostId, aboutToUpdateUserPost);
 		if (updatedUserPost == null) {
 			throw new CRUDOperationFailureException("Fail to update user post");
@@ -125,19 +124,21 @@ public class UserPostServiceImpl implements UserPostService {
 
 	@Override
 	public boolean delete(Integer userAccountId, Integer userPostId) {
-		// TODO Auto-generated method stub
 		userPostLikeDAO.deleteAllPostLike(userPostId);
 		UserAccount userAccount = userAccountDAO.findById(userAccountId);
-		if (userAccount != null) {
-			return userPostDAO.delete(userAccountId, userPostId);
-		} else {
-			throw new InvalidUserInputException("Invalid user account number "+userAccountId+" for delete post operation.");
+		if (userAccount == null) {
+			throw new InvalidUserInputException(
+					"Invalid user account number " + userAccountId + " for delete post operation.");
 		}
+		boolean result = userPostDAO.delete(userAccountId, userPostId);
+		if (result == false) {
+			throw new CRUDOperationFailureException("Fail to delete post with id "+userPostId+" and user account id "+userAccountId);
+		}
+		return result;
 	}
 
 	@Override
 	public UserPostVO findByUserAccountIdAndUserPostId(Integer userAccountId, Integer userPostId) {
-		// TODO Auto-generated method stub
 		UserAccount existingUserAccount = userAccountDAO.findById(userAccountId);
 		if (existingUserAccount == null) {
 			throw new InvalidUserInputException("Invalid user account number for find post " + userAccountId);
@@ -155,7 +156,6 @@ public class UserPostServiceImpl implements UserPostService {
 
 	@Override
 	public UserPostVO find(Integer userPostId) {
-		// TODO Auto-generated method stub
 		UserPost existingUserPost = userPostDAO.find(userPostId);
 		UserPostVO userPostVO = new UserPostVO();
 		userPostVO.setDescription(existingUserPost.getDescription());
@@ -190,13 +190,13 @@ public class UserPostServiceImpl implements UserPostService {
 	}
 
 	@Override
-	public List<BeanBase> findAllShare(Integer userAccountId) {
+	public List<UserPostVO> findAllShare(Integer userAccountId) {
 		UserAccount existingUserAccount = userAccountDAO.findById(userAccountId);
 		if (existingUserAccount == null) {
 			throw new InvalidUserInputException("Invalid user account number for find all post " + userAccountId);
 		}
 //			user's all share post.
-		List<BeanBase> userSharePostVOList = new ArrayList<BeanBase>();
+		List<UserPostVO> userSharePostVOList = new ArrayList<UserPostVO>();
 		for (UserPost sharedUserPost : userPostDAO.findAllShare(userAccountId)) {
 			UserAccount postAuthorUserAccount = userAccountDAO.findById(sharedUserPost.getUserAccount().getId());
 			UserPostVO post = new UserPostVO(sharedUserPost.getId(), sharedUserPost.getDescription(),

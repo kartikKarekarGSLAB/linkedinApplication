@@ -19,7 +19,6 @@ public class UserAccountDAOImpl implements UserAccountDAO {
 
 	@Override
 	public Integer create(UserAccount userAccount) {
-		// TODO Auto-generated method stub
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
 		int newUserId = (int) session.save(userAccount);
@@ -30,7 +29,6 @@ public class UserAccountDAOImpl implements UserAccountDAO {
 
 	@Override
 	public UserAccount findById(Integer userAccountId) {
-		// TODO Auto-generated method stub
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
 		Query query = session.createQuery("from UserAccount where id= :id");
@@ -43,7 +41,6 @@ public class UserAccountDAOImpl implements UserAccountDAO {
 
 	@Override
 	public UserAccount findByUserName(String userName) {
-		// TODO Auto-generated method stub
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
 		Query query = session.createQuery("from UserAccount where username= :username");
@@ -56,7 +53,6 @@ public class UserAccountDAOImpl implements UserAccountDAO {
 
 	@Override
 	public UserAccount update(Integer userAccountId, UserAccount userAccount) {
-		// TODO Auto-generated method stub
 		int updatedRowCounter = 0;
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
@@ -66,8 +62,8 @@ public class UserAccountDAOImpl implements UserAccountDAO {
 		if (result != null) {
 			query = session.createQuery("update UserAccount set username= :username,password= :password where id= :id");
 
-			// update useremail
-			if (userAccount.getUsername() != null) {
+			// update user email
+			if (userAccount.getUsername() != null && !userAccount.getUsername().isEmpty()) {
 				query.setString("username", userAccount.getUsername());
 			} else {
 				query.setString("username", result.getUsername());
@@ -75,7 +71,7 @@ public class UserAccountDAOImpl implements UserAccountDAO {
 			}
 
 			// update user password
-			if (userAccount.getPassword() != null) {
+			if (userAccount.getPassword()!= null && !userAccount.getPassword().isEmpty()) {
 				query.setString("password", userAccount.getPassword());
 			} else {
 				query.setString("password", result.getPassword());
@@ -97,7 +93,6 @@ public class UserAccountDAOImpl implements UserAccountDAO {
 
 	@Override
 	public boolean delete(Integer userAccountId) {
-		// TODO Auto-generated method stub
 		int updatedRowCounter = 0;
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
@@ -114,7 +109,6 @@ public class UserAccountDAOImpl implements UserAccountDAO {
 
 	@Override
 	public List<UserAccount> findAll() {
-		// TODO Auto-generated method stub
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
 		Query query = session.createQuery("from UserAccount");

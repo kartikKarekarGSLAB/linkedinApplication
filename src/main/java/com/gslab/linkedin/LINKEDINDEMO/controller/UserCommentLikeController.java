@@ -12,10 +12,10 @@ import com.gslab.linkedin.linkedindemo.service.UserCommentLikeService;
 @RestController
 @RequestMapping(value = "/users")
 public class UserCommentLikeController {
-	
+
 	@Autowired
-	private UserCommentLikeService userCommentLikeService; 
-	
+	private UserCommentLikeService userCommentLikeService;
+
 	@RequestMapping(value = "/{userAccountId}/posts/comment/{userComentId}/like", method = RequestMethod.POST)
 	public ResponseBase like(@PathVariable(name = "userAccountId") Integer userAccountId,
 			@PathVariable(name = "userComentId") Integer userComentId) {
