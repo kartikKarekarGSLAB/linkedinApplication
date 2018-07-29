@@ -4,21 +4,26 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+
 @Entity
-@Table(name="user_post_like")
+@Table(name = "user_post_like")
 public class UserPostLike {
 
+	@GenericGenerator(name = "userPostLikeSequenceGenerator", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
+			@Parameter(name = "sequence_name", value = "userPostLikeSequence"),
+			@Parameter(name = "initial_value", value = "100"), @Parameter(name = "increment_size", value = "1") })
 	@Id
-	@Column(name="id")
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name = "id")
+	@GeneratedValue(generator = "userPostLikeSequenceGenerator")
 	private int id;
-	
+
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_account_id")
 	private UserAccount userAccount;
@@ -50,8 +55,5 @@ public class UserPostLike {
 	public void setUserPost(UserPost userPost) {
 		this.userPost = userPost;
 	}
-	
-	
-	
-	
+
 }

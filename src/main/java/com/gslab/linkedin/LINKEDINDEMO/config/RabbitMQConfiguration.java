@@ -16,41 +16,43 @@ import com.gslab.linkedin.linkedindemo.consumer.UserConsumer;
 
 @Configuration
 public class RabbitMQConfiguration {
-	
+
 	private static final String MESSAGE_QUEUE = "linkedin-create-user";
 
-    @Bean
-    public Queue simpleQueue() {
-        return new Queue(MESSAGE_QUEUE);
-    }
+	@Bean
+	public Queue simpleQueue() {
+		return new Queue(MESSAGE_QUEUE);
+	}
 
-    @Bean
+	@Bean
 	TopicExchange exchange() {
 		return new TopicExchange("linkedinpractice");
-	}    
-    
-    @Bean
+	}
+
+	@Bean
 	Binding binding(Queue queue, TopicExchange exchange) {
 		return BindingBuilder.bind(queue).to(exchange).with(MESSAGE_QUEUE);
-	}    
-    
-    @Bean
-    public MessageConverter jsonMessageConverter(){
-    	Jackson2JsonMessageConverter jackson2JsonMessageConverter = new Jackson2JsonMessageConverter();
-        return jackson2JsonMessageConverter;
-    }
-    @Bean
-    public UserConsumer getUserConsumer() {
-    	return new UserConsumer();
-    }
-    @Bean
-    public SimpleMessageListenerContainer listenerContainer(ConnectionFactory connectionFactory) {
-        SimpleMessageListenerContainer listenerContainer = new SimpleMessageListenerContainer();
-        listenerContainer.setConnectionFactory(connectionFactory);
-        listenerContainer.setQueues(simpleQueue());
-        listenerContainer.setMessageConverter(jsonMessageConverter());
-        listenerContainer.setMessageListener(getUserConsumer());
-        listenerContainer.setAcknowledgeMode(AcknowledgeMode.AUTO);
-        return listenerContainer;
-    }
+	}
+
+	@Bean
+	public MessageConverter jsonMessageConverter() {
+		Jackson2JsonMessageConverter jackson2JsonMessageConverter = new Jackson2JsonMessageConverter();
+		return jackson2JsonMessageConverter;
+	}
+
+	@Bean
+	public UserConsumer getUserConsumer() {
+		return new UserConsumer();
+	}
+
+	@Bean
+	public SimpleMessageListenerContainer listenerContainer(ConnectionFactory connectionFactory) {
+		SimpleMessageListenerContainer listenerContainer = new SimpleMessageListenerContainer();
+		listenerContainer.setConnectionFactory(connectionFactory);
+		listenerContainer.setQueues(simpleQueue());
+		listenerContainer.setMessageConverter(jsonMessageConverter());
+		listenerContainer.setMessageListener(getUserConsumer());
+		listenerContainer.setAcknowledgeMode(AcknowledgeMode.AUTO);
+		return listenerContainer;
+	}
 }

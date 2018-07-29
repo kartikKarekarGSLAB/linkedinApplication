@@ -10,7 +10,7 @@ public interface UserAccountDAO {
 	public List<UserAccount> findAll();
 
 	public UserAccount findById(Integer userAccountId);
-	
+
 	public UserAccount findByUserName(String username);
 
 	public UserAccount update(Integer userAccountId, UserAccount userAccount);

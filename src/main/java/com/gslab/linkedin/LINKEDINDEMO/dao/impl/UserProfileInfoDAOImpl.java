@@ -46,33 +46,40 @@ public class UserProfileInfoDAOImpl implements UserProfileInfoDAO {
 		Transaction tr = session.beginTransaction();
 		Query query = session.createQuery("from UserProfileInfo where user_account_id= :user_account_id");
 		query.setInteger("user_account_id", userAccountId);
-		UserProfileInfo result = (UserProfileInfo) query.uniqueResult();
-		if (result != null) {
+		UserProfileInfo existingUserProfile = (UserProfileInfo) query.uniqueResult();
+		if (existingUserProfile != null) {
 			query = session.createQuery(
-					"update UserProfileInfo set email= :email,company_name= :company_name,designation=:designation where user_account_id= :user_account_id");
+					"update UserProfileInfo set username=:username , email= :email,company_name= :company_name,designation=:designation where user_account_id= :user_account_id");
+
+			if (userProfileInfo.getUsername() != null && !userProfileInfo.getUsername().isEmpty()) {
+				query.setString("username", userProfileInfo.getUsername());
+			} else {
+				query.setString("username", existingUserProfile.getUsername());
+				userProfileInfo.setUsername(existingUserProfile.getUsername());
+			}
 
 			// update email
-			if (userProfileInfo.getEmail() != null) {
+			if (userProfileInfo.getEmail() != null && !userProfileInfo.getEmail().isEmpty()) {
 				query.setString("email", userProfileInfo.getEmail());
 			} else {
-				query.setString("email", result.getEmail());
-				userProfileInfo.setEmail(result.getEmail());
+				query.setString("email", existingUserProfile.getEmail());
+				userProfileInfo.setEmail(existingUserProfile.getEmail());
 			}
 
 			// update company_name
 			if (userProfileInfo.getCompanyName() != null) {
 				query.setString("company_name", userProfileInfo.getCompanyName());
 			} else {
-				query.setString("company_name", result.getCompanyName());
-				userProfileInfo.setCompanyName(result.getCompanyName());
+				query.setString("company_name", existingUserProfile.getCompanyName());
+				userProfileInfo.setCompanyName(existingUserProfile.getCompanyName());
 			}
 
 			// update designation
 			if (userProfileInfo.getDesignation() != null) {
 				query.setString("designation", userProfileInfo.getDesignation());
 			} else {
-				query.setString("designation", result.getDesignation());
-				userProfileInfo.setDesignation(result.getDesignation());
+				query.setString("designation", existingUserProfile.getDesignation());
+				userProfileInfo.setDesignation(existingUserProfile.getDesignation());
 			}
 			query.setInteger("user_account_id", userAccountId);
 			updatedRowCounter = query.executeUpdate();
@@ -113,6 +120,17 @@ public class UserProfileInfoDAOImpl implements UserProfileInfoDAO {
 		tr.commit();
 		session.close();
 		return userProfileInfoList;
+	}
+
+	@Override
+	public List<UserProfileInfo> findByUserName(String username) {
+		Session session = sessionFactory.openSession();
+		Transaction tr = session.beginTransaction();
+		Query query = session.createQuery("from UserProfileInfo where username like '%" + username + "%' ");
+		List<UserProfileInfo> userProfileInfo = query.list();
+		tr.commit();
+		session.close();
+		return userProfileInfo;
 	}
 
 }

@@ -1,7 +1,5 @@
 package com.gslab.linkedin.linkedindemo.dao.impl;
 
-import java.util.List;
-
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -15,10 +13,9 @@ public class UserCommentLikeDAOImpl implements UserCommentLikeDAO {
 
 	@Autowired
 	private SessionFactory sessionFactory;
-	
+
 	@Override
 	public Integer create(UserCommentLike userCommentLike) {
-		// TODO Auto-generated method stub
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
 		int newUserId = (int) session.save(userCommentLike);
@@ -29,10 +26,10 @@ public class UserCommentLikeDAOImpl implements UserCommentLikeDAO {
 
 	@Override
 	public UserCommentLike alreadyExists(Integer userAccountId, Integer userCommentId) {
-		// TODO Auto-generated method stub
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
-		Query query = session.createQuery("from UserCommentLike where user_account_id = :userAccountId and user_comment_id = :userCommentId");
+		Query query = session.createQuery(
+				"from UserCommentLike where user_account_id = :userAccountId and user_comment_id = :userCommentId");
 		query.setInteger("userAccountId", userAccountId);
 		query.setInteger("userCommentId", userCommentId);
 		UserCommentLike userCommentLike = (UserCommentLike) query.uniqueResult();
@@ -42,21 +39,19 @@ public class UserCommentLikeDAOImpl implements UserCommentLikeDAO {
 	}
 
 	@Override
-	public List<UserCommentLike> findByCommentId(Integer commentId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<UserCommentLike> findByUserAccountIdId(Integer userAccountId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean delete(Integer userAccountId, Integer userCommentId) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean delete(Integer userCommentId) {
+		int updatedRowCounter = 0;
+		Session session = sessionFactory.openSession();
+		Transaction tr = session.beginTransaction();
+		Query query = session.createQuery("delete from UserCommentLike where id= :id");
+		query.setInteger("id", userCommentId);
+		updatedRowCounter = query.executeUpdate();
+		tr.commit();
+		session.close();
+		if (updatedRowCounter == 1)
+			return true;
+		else
+			return false;
 	}
 
 }

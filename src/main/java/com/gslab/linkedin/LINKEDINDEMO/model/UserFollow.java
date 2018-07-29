@@ -10,18 +10,18 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="user_follow")
+@Table(name = "user_follow")
 public class UserFollow {
 
 	@Id
-	@Column(name="id")
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
-	@ManyToOne(cascade=CascadeType.ALL)
+
+	@ManyToOne(cascade = CascadeType.ALL)
 	private UserAccount FollowerUserAccount;
-	
-	@Column(name="following_user_id")
+
+	@Column(name = "following_user_id")
 	private int FollowingUserId;
 
 	public int getId() {
@@ -47,6 +47,5 @@ public class UserFollow {
 	public void setFollowingUserId(int followingUserId) {
 		FollowingUserId = followingUserId;
 	}
-	
-	
+
 }

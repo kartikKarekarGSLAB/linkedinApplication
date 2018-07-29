@@ -1,5 +1,6 @@
 package com.gslab.linkedin.linkedindemo.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gslab.linkedin.linkedindemo.model.vo.ResponseBase;
@@ -22,11 +24,22 @@ public class UserController {
 
 	// Display All records
 	@RequestMapping(method = RequestMethod.GET)
-	public ResponseBase diplayAll() {
-		List<UserVO> userList = userService.findAll();
+	public ResponseBase diplayAll(@RequestParam(name="searchedQuery") String searchedQuery ) {
+		List<UserVO> userList = new ArrayList<UserVO>();
+		if (searchedQuery.isEmpty()) {
+			userList = userService.findAll();			
+		} else {
+			userList = userService.search(searchedQuery);
+		}
 		return new ResponseBase(userList);
 	}
 
+/*	@RequestMapping(value = "/{searchedUserName}",method = RequestMethod.GET)
+	public ResponseBase search(@PathVariable(name = "searchedUserName") String searchedUserName ) {
+		List<UserVO> userList = userService.search(searchedUserName);
+		return new ResponseBase(userList);
+	}*/	
+	
 	// Display single record
 	@RequestMapping(value = "/{userAccountId}", method = RequestMethod.GET)
 	public ResponseBase readUser(@PathVariable(name = "userAccountId") Integer userAccountId) {

@@ -22,4 +22,12 @@ public class UserCommentLikeController {
 		;
 		return new ResponseBase(userCommentLikeService.create(userAccountId, userComentId));
 	}
+
+	@RequestMapping(value = "/{userAccountId}/posts/comment/{userComentId}/like", method = RequestMethod.DELETE)
+	public ResponseBase unlike(@PathVariable(name = "userAccountId") Integer userAccountId,
+			@PathVariable(name = "userComentId") Integer userComentId) {
+		;
+		userCommentLikeService.delete(userAccountId, userComentId);
+		return new ResponseBase();
+	}
 }
