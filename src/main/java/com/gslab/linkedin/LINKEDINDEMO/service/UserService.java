@@ -11,6 +11,8 @@ public interface UserService {
 
 	public UserVO findById(Integer userId);
 
+	public List<UserVO> search(String username);
+
 	public UserVO update(Integer userId, UserVO userVO);
 
 	public boolean delete(Integer userId);

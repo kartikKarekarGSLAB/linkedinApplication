@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
 			throw new InvalidUserInputException("Invalid password for create profile '" + userVO.getUsername()
 					+ "'.It must contain minimum 8 character and max size is 19.It MUST contain 1 capital letter,small letter,digit and one special symbol from @,#,$,%,^,&,+,=");
 		}
-		if (userVO.getEmail().isEmpty()) {
+		if (userVO.getEmail() == null || userVO.getEmail().isEmpty()) {
 			throw new InvalidUserInputException(
 					"Empty email not accepted for create profile for user." + userVO.getUsername());
 		}
@@ -46,8 +46,8 @@ public class UserServiceImpl implements UserService {
 			throw new InvalidUserInputException(userVO.getUsername() + " username already exists.");
 		}
 		UserAccount userAccount = new UserAccount(userVO.getUsername(), userVO.getPassword());
-		UserProfileInfo userProfileInfo = new UserProfileInfo(userVO.getProfilePictureUrl(), userVO.getEmail(),
-				userVO.getCompanyName(), userVO.getDesignation());
+		UserProfileInfo userProfileInfo = new UserProfileInfo(userVO.getUsername(), userVO.getProfilePictureUrl(),
+				userVO.getEmail(), userVO.getCompanyName(), userVO.getDesignation());
 		userProfileInfo.setUserAccount(userAccount);
 		Integer newUserId = userProfileInfoDAO.create(userProfileInfo);
 		userVO.setId(newUserId);
@@ -56,31 +56,24 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<UserVO> findAll() {
-		List<UserAccount> userAccountList = userAccountDAO.findAll();
 		List<UserProfileInfo> userProfileInfoList = userProfileInfoDAO.findAll();
 		List<UserVO> userVOlist = new ArrayList<UserVO>();
-		int index = 0;
 		for (UserProfileInfo userProfile : userProfileInfoList) {
-			UserVO uservo = new UserVO(userAccountList.get(index).getId(), userAccountList.get(index).getUsername(),
-					userAccountList.get(index).getPassword(), userProfile.getProfilePicture(), userProfile.getEmail(),
-					userProfile.getCompanyName(), userProfile.getDesignation());
+			UserVO uservo = new UserVO(userProfile.getUserAccount().getId(), userProfile.getUsername(),
+					userProfile.getProfilePicture(), userProfile.getEmail(), userProfile.getCompanyName(),
+					userProfile.getDesignation());
 			userVOlist.add(uservo);
-			index++;
 		}
 		return userVOlist;
 	}
 
 	@Override
 	public UserVO findById(Integer userAccountId) {
-		UserAccount userAccount = userAccountDAO.findById(userAccountId);
-		if (userAccount == null) {
-			throw new InvalidUserInputException("No user account exists with id " + userAccountId);
-		}
 		UserProfileInfo userProfile = userProfileInfoDAO.findById(userAccountId);
 		if (userProfile == null) {
 			throw new InvalidUserInputException("No user profile exists with id " + userAccountId);
 		}
-		UserVO uservo = new UserVO(userAccount.getId(), userAccount.getUsername(), userAccount.getPassword(),
+		UserVO uservo = new UserVO(userProfile.getUserAccount().getId(), userProfile.getUsername(),
 				userProfile.getProfilePicture(), userProfile.getEmail(), userProfile.getCompanyName(),
 				userProfile.getDesignation());
 		return uservo;
@@ -88,8 +81,8 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserVO update(Integer userId, UserVO userVO) {
-		UserProfileInfo userProfileInfo = new UserProfileInfo(userVO.getProfilePictureUrl(), userVO.getEmail(),
-				userVO.getCompanyName(), userVO.getDesignation());
+		UserProfileInfo userProfileInfo = new UserProfileInfo(userVO.getUsername(), userVO.getProfilePictureUrl(),
+				userVO.getEmail(), userVO.getCompanyName(), userVO.getDesignation());
 		UserAccount userAccount = new UserAccount(userVO.getUsername(), userVO.getPassword());
 		userAccount = userAccountDAO.update(userId, userAccount);
 		if (userAccount == null) {
@@ -117,5 +110,22 @@ public class UserServiceImpl implements UserService {
 			throw new CRUDOperationFailureException("Fail to delete user with id " + userId);
 		}
 		return result;
+	}
+
+	@Override
+	public List<UserVO> search(String username) {
+		List<UserProfileInfo> userProfileInfoList = userProfileInfoDAO.findByUserName(username);
+		if (userProfileInfoList.isEmpty()) {
+			throw new InvalidUserInputException(
+					"No user profile exists with search query with username as '" + username + "'");
+		}
+		List<UserVO> userVOlist = new ArrayList<UserVO>();
+		for (UserProfileInfo userProfile : userProfileInfoList) {
+			UserVO uservo = new UserVO(userProfile.getUserAccount().getId(), userProfile.getUsername(),
+					userProfile.getProfilePicture(), userProfile.getEmail(), userProfile.getCompanyName(),
+					userProfile.getDesignation());
+			userVOlist.add(uservo);
+		}
+		return userVOlist;
 	}
 }

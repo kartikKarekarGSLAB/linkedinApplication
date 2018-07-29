@@ -15,7 +15,6 @@ import com.gslab.linkedin.linkedindemo.exception.InvalidUserInputException;
 import com.gslab.linkedin.linkedindemo.model.UserAccount;
 import com.gslab.linkedin.linkedindemo.model.UserComment;
 import com.gslab.linkedin.linkedindemo.model.UserPost;
-import com.gslab.linkedin.linkedindemo.model.vo.BeanBase;
 import com.gslab.linkedin.linkedindemo.model.vo.UserCommentVO;
 import com.gslab.linkedin.linkedindemo.service.UserCommentService;
 

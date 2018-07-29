@@ -9,6 +9,8 @@ public interface UserProfileInfoDAO {
 
 	public UserProfileInfo findById(Integer userAccountId);
 
+	public List<UserProfileInfo> findByUserName(String username);
+
 	public List<UserProfileInfo> findAll();
 
 	public UserProfileInfo update(Integer userAccountId, UserProfileInfo userProfileInfo);

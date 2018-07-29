@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.gslab.linkedin.linkedindemo.dao.UserPostDAO;
 import com.gslab.linkedin.linkedindemo.exception.InvalidUserInputException;
 import com.gslab.linkedin.linkedindemo.model.UserPost;
-import com.gslab.linkedin.linkedindemo.model.vo.UserPostVO;
 
 public class UserPostDAOImpl implements UserPostDAO {
 
@@ -124,7 +123,8 @@ public class UserPostDAOImpl implements UserPostDAO {
 		if (result != null) {
 			return result;
 		} else {
-			throw new InvalidUserInputException("Trying to read invalid post.(wrong user with id "+userAccountId+" / wrong post id "+userPostId+")");
+			throw new InvalidUserInputException("Trying to read invalid post.(wrong user with id " + userAccountId
+					+ " / wrong post id " + userPostId + ")");
 		}
 	}
 
@@ -141,7 +141,7 @@ public class UserPostDAOImpl implements UserPostDAO {
 		if (result != null) {
 			return result;
 		} else {
-			throw new InvalidUserInputException("Trying to read invalid post.(wrong user / wrong post id)");
+			throw new InvalidUserInputException("Trying to read invalid post.(wrong post id) " + postId);
 		}
 	}
 
@@ -150,8 +150,8 @@ public class UserPostDAOImpl implements UserPostDAO {
 		// TODO Auto-generated method stub
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
-		Query query = session
-				.createQuery("from UserPost where repost_user_id =:userAccountId and repost_post_id is not null order by updated_on desc");
+		Query query = session.createQuery(
+				"from UserPost where repost_user_id =:userAccountId and repost_post_id is not null order by updated_on desc");
 		query.setInteger("userAccountId", userAccountId);
 		List<UserPost> userPostList = query.list();
 		tr.commit();

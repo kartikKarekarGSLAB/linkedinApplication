@@ -23,13 +23,8 @@ public class UserProfileInfo {
 			@Parameter(name = "property", value = "userAccount") })
 	private int userAccountId;
 
-	public UserAccount getUserAccount() {
-		return userAccount;
-	}
-
-	public void setUserAccount(UserAccount userAccount) {
-		this.userAccount = userAccount;
-	}
+	@Column(name = "username", length = 20, nullable = false)
+	private String username;
 
 	@Column(name = "profile_picture")
 	private String profilePicture;
@@ -43,8 +38,6 @@ public class UserProfileInfo {
 	@Column(name = "designation", length = 25)
 	private String designation;
 
-	// @JoinColumn(name = "user_account_id")
-
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@PrimaryKeyJoinColumn(name = "user_account_id")
 	private UserAccount userAccount;
@@ -55,6 +48,14 @@ public class UserProfileInfo {
 
 	public void setUserAccountId(int userAccountId) {
 		this.userAccountId = userAccountId;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getProfilePicture() {
@@ -89,11 +90,21 @@ public class UserProfileInfo {
 		this.designation = designation;
 	}
 
+	public UserAccount getUserAccount() {
+		return userAccount;
+	}
+
+	public void setUserAccount(UserAccount userAccount) {
+		this.userAccount = userAccount;
+	}
+
 	public UserProfileInfo() {
 	}
 
-	public UserProfileInfo(String profilePicture, String email, String companyName, String designation) {
+	public UserProfileInfo(String username, String profilePicture, String email, String companyName,
+			String designation) {
 		super();
+		this.username = username;
 		this.profilePicture = profilePicture;
 		this.email = email;
 		this.companyName = companyName;

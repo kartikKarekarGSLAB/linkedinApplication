@@ -20,29 +20,29 @@ public class UserCommentController {
 	@Autowired
 	private UserCommentService userCommentService;
 
-	@RequestMapping(value = "/posts/{postid}/comment", method = RequestMethod.GET)
-	public ResponseBase findAll(@PathVariable(name = "postid") Integer userPostId) {
+	@RequestMapping(value = "/posts/{userPostId}/comment", method = RequestMethod.GET)
+	public ResponseBase findAll(@PathVariable(name = "userPostId") Integer userPostId) {
 		List<UserCommentVO> userPostList = userCommentService.findAll(userPostId);
 		return new ResponseBase(userPostList);
 	}
 
-	@RequestMapping(value = "/{userAccountId}/posts/{postid}/comment", method = RequestMethod.POST)
+	@RequestMapping(value = "/{userAccountId}/posts/{userPostId}/comment", method = RequestMethod.POST)
 	public ResponseBase create(@PathVariable(name = "userAccountId") Integer userAccountId,
-			@PathVariable(name = "postid") Integer userPostId, @RequestBody UserCommentVO userCommentVO) {
+			@PathVariable(name = "userPostId") Integer userPostId, @RequestBody UserCommentVO userCommentVO) {
 		UserCommentVO comment = userCommentService.create(userAccountId, userPostId, userCommentVO);
 		return new ResponseBase(comment);
 	}
 
-	@RequestMapping(value = "/{userAccountId}/posts/comment/{commnetid}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/{userAccountId}/posts/comment/{userCommentId}", method = RequestMethod.PUT)
 	public ResponseBase update(@PathVariable(name = "userAccountId") Integer userAccountId,
-			@PathVariable(name = "commnetid") Integer userCommentId, @RequestBody UserCommentVO userCommentVO) {
+			@PathVariable(name = "userCommentId") Integer userCommentId, @RequestBody UserCommentVO userCommentVO) {
 		UserCommentVO comment = userCommentService.update(userAccountId, userCommentId, userCommentVO);
 		return new ResponseBase(comment);
 	}
 
-	@RequestMapping(value = "/{userAccountId}/posts/comment/{commnetid}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/{userAccountId}/posts/comment/{userCommentId}", method = RequestMethod.DELETE)
 	public ResponseBase delete(@PathVariable(name = "userAccountId") Integer userAccountId,
-			@PathVariable(name = "commnetid") Integer userCommentId) {
+			@PathVariable(name = "userCommentId") Integer userCommentId) {
 		userCommentService.delete(userAccountId, userCommentId);
 		return new ResponseBase();
 	}

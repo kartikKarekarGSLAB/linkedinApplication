@@ -1,7 +1,5 @@
 package com.gslab.linkedin.linkedindemo.dao;
 
-import java.util.List;
-
 import com.gslab.linkedin.linkedindemo.model.UserCommentLike;
 
 public interface UserCommentLikeDAO {
@@ -9,9 +7,5 @@ public interface UserCommentLikeDAO {
 
 	public UserCommentLike alreadyExists(Integer userAccountId, Integer userCommentId);
 
-	public List<UserCommentLike> findByCommentId(Integer commentId);
-
-	public List<UserCommentLike> findByUserAccountIdId(Integer userAccountId);
-
-	public boolean delete(Integer userAccountId, Integer userCommentId);
+	public boolean delete(Integer userCommentId);
 }

@@ -19,13 +19,14 @@ public class UserPostLikeController {
 	@Autowired
 	private UserPostLikeService userPostLikeService;
 
+//	
 	@RequestMapping(value = "/posts/{userPostId}/like", method = RequestMethod.GET)
 	public ResponseBase readUser(@PathVariable(name = "userPostId") Integer userPostId) {
 		List<UserPostLikeVO> userNameList = userPostLikeService.listUserLikedPost(userPostId);
 		return new ResponseBase(userNameList);
 	}
 
-//	user post like 
+//	user post like. 
 	@RequestMapping(value = "/{userAccountId}/posts/{userPostId}/like", method = RequestMethod.POST)
 	public ResponseBase like(@PathVariable(name = "userAccountId") Integer userAccountId,
 			@PathVariable(name = "userPostId") Integer userPostId) {
@@ -33,6 +34,7 @@ public class UserPostLikeController {
 		return new ResponseBase(userPostLikeVO);
 	}
 
+//  unlike post.
 	@RequestMapping(value = "/{userAccountId}/posts/{userPostId}/like", method = RequestMethod.DELETE)
 	public ResponseBase unlike(@PathVariable(name = "userAccountId") Integer userAccountId,
 			@PathVariable(name = "userPostId") Integer userPostId) {

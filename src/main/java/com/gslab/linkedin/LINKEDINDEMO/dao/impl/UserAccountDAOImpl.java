@@ -71,7 +71,7 @@ public class UserAccountDAOImpl implements UserAccountDAO {
 			}
 
 			// update user password
-			if (userAccount.getPassword()!= null && !userAccount.getPassword().isEmpty()) {
+			if (userAccount.getPassword() != null && !userAccount.getPassword().isEmpty()) {
 				query.setString("password", userAccount.getPassword());
 			} else {
 				query.setString("password", result.getPassword());

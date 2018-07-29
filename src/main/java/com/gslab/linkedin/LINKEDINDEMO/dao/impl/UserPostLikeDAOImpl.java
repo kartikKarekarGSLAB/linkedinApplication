@@ -32,7 +32,8 @@ public class UserPostLikeDAOImpl implements UserPostLikeDAO {
 		// TODO Auto-generated method stub
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
-		Query query = session.createQuery("from UserPostLike where user_account_id = :userAccountId and user_post_id = :postId");
+		Query query = session
+				.createQuery("from UserPostLike where user_account_id = :userAccountId and user_post_id = :postId");
 		query.setInteger("userAccountId", userAccountId);
 		query.setInteger("postId", postId);
 		UserPostLike userPostLike = (UserPostLike) query.uniqueResult();
@@ -46,21 +47,20 @@ public class UserPostLikeDAOImpl implements UserPostLikeDAO {
 		// TODO Auto-generated method stub
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
-		Query query = session
-				.createQuery("from UserPostLike where user_post_id = :postId");
+		Query query = session.createQuery("from UserPostLike where user_post_id = :postId");
 		query.setInteger("postId", postId);
 		List<UserPostLike> userPostList = query.list();
 		tr.commit();
 		session.close();
 		return userPostList;
 	}
+
 	@Override
 	public List<UserPostLike> findByUserAccountIdId(Integer userAccountId) {
 		// TODO Auto-generated method stub
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
-		Query query = session
-				.createQuery("from UserPostLike where user_account_id = :userAccountId");
+		Query query = session.createQuery("from UserPostLike where user_account_id = :userAccountId");
 		query.setInteger("userAccountId", userAccountId);
 		List<UserPostLike> userPostList = query.list();
 		tr.commit();
@@ -92,8 +92,7 @@ public class UserPostLikeDAOImpl implements UserPostLikeDAO {
 		int updatedRowCounter = 0;
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
-		Query query = session
-				.createQuery("delete UserPostLike where user_post_id=:userPostId");
+		Query query = session.createQuery("delete UserPostLike where user_post_id=:userPostId");
 		query.setInteger("userPostId", userPostId);
 		updatedRowCounter = query.executeUpdate();
 		tr.commit();

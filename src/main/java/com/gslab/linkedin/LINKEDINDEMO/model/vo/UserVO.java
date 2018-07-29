@@ -35,6 +35,17 @@ public class UserVO extends BeanBase {
 		this.designation = designation;
 	}
 
+	public UserVO(Integer id, String username, String profilePictureUrl, String email, String companyName,
+			String designation) {
+		super();
+		this.id = id;
+		this.username = username;
+		this.profilePictureUrl = profilePictureUrl;
+		this.email = email;
+		this.companyName = companyName;
+		this.designation = designation;
+	}
+
 	public Integer getId() {
 		return id;
 	}

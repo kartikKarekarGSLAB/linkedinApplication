@@ -43,7 +43,7 @@ public class UserPostServiceImpl implements UserPostService {
 			throw new InvalidUserInputException("Invalid user account id for create post " + userAccountId);
 		}
 
-		if (userPostVO.getDescription().isEmpty()) {
+		if (userPostVO.getDescription() == null || userPostVO.getDescription().isEmpty()) {
 			throw new InvalidUserInputException("Please enter some text to create a post.Empty post is not accepted.");
 		}
 		UserPost userPost = new UserPost(userPostVO.getDescription(), userPostVO.getImageAttachment(), date, date,
@@ -106,7 +106,7 @@ public class UserPostServiceImpl implements UserPostService {
 			throw new InvalidUserInputException(
 					"Invalid user account number for post update opertaion " + userAccountId);
 		}
-		if (userPostVO.getDescription() != null && userPostVO.getDescription().isEmpty()) {
+		if (userPostVO.getDescription() == null || userPostVO.getDescription().isEmpty()) {
 			throw new InvalidUserInputException("Empty description for update post operation.");
 		}
 		UserPost aboutToUpdateUserPost = new UserPost(userPostVO.getDescription(), userPostVO.getImageAttachment(),
@@ -132,7 +132,8 @@ public class UserPostServiceImpl implements UserPostService {
 		}
 		boolean result = userPostDAO.delete(userAccountId, userPostId);
 		if (result == false) {
-			throw new CRUDOperationFailureException("Fail to delete post with id "+userPostId+" and user account id "+userAccountId);
+			throw new CRUDOperationFailureException(
+					"Fail to delete post with id " + userPostId + " and user account id " + userAccountId);
 		}
 		return result;
 	}

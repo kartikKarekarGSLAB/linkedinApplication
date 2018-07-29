@@ -9,8 +9,8 @@ public interface MessageUserAccountDAO {
 	public Integer create(MessageUserAccount messageUserAccount);
 
 	public MessageUserAccount find(Integer userAccountId, Integer messageId);
-	
-	public List<Message> findByCategory(Integer userAccountId,String category);
+
+	public List<Message> findByCategory(Integer userAccountId, String category);
 
 	public boolean delete(Integer userAccountId, Integer messageId);
 }

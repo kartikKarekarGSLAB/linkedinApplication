@@ -46,8 +46,8 @@ public class UserComment {
 	private UserPost userPost;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "userAccount")
-	private Set<UserCommentLike> userCommentLike;	
-	
+	private Set<UserCommentLike> userCommentLike;
+
 	public Date getUpdatedOn() {
 		return updatedOn;
 	}
@@ -102,7 +102,6 @@ public class UserComment {
 
 	public void setUserCommentLike(Set<UserCommentLike> userCommentLike) {
 		this.userCommentLike = userCommentLike;
-	}	
-	
-	
+	}
+
 }

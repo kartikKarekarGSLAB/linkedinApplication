@@ -13,7 +13,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 @Entity
-@Table(name="user_comment_like")
+@Table(name = "user_comment_like")
 public class UserCommentLike {
 
 	@GenericGenerator(name = "userCommentLikeSequenceGenerator", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
@@ -23,7 +23,7 @@ public class UserCommentLike {
 	@Column(name = "id")
 	@GeneratedValue(generator = "userCommentLikeSequenceGenerator")
 	private int id;
-	
+
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_account_id")
 	private UserAccount userAccount;
@@ -35,9 +35,10 @@ public class UserCommentLike {
 	public UserCommentLike() {
 		// TODO Auto-generated constructor stub
 	}
+
 	public UserCommentLike(UserAccount userAccount, UserComment comment) {
-		this.userAccount=userAccount;
-		this.userCommnet=comment;
+		this.userAccount = userAccount;
+		this.userCommnet = comment;
 	}
 
 	public int getId() {
@@ -63,4 +64,4 @@ public class UserCommentLike {
 	public void setUserCommnet(UserComment userCommnet) {
 		this.userCommnet = userCommnet;
 	}
-}	
+}

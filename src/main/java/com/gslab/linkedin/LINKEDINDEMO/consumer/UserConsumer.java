@@ -1,6 +1,8 @@
 package com.gslab.linkedin.linkedindemo.consumer;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageListener;
@@ -19,6 +21,8 @@ public class UserConsumer implements MessageListener {
 	@Autowired
 	private UserService userService;
 
+	private static final Logger logger = Logger.getLogger(UserConsumer.class.getName());
+
 	@Override
 	public void onMessage(Message message) {
 		String newUserDetails = new String(message.getBody());
@@ -29,16 +33,26 @@ public class UserConsumer implements MessageListener {
 				System.out.println(newUserProfile);
 			}
 		} catch (JsonParseException e) {
-			e.printStackTrace();
+			logger.setLevel(Level.WARNING);
+			logger.warning(e.getMessage());
+//			e.printStackTrace();
 		} catch (JsonMappingException e) {
-			e.printStackTrace();
+			logger.setLevel(Level.WARNING);
+			logger.warning(e.getMessage());
+//			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.setLevel(Level.WARNING);
+			logger.warning(e.getMessage());
+//			e.printStackTrace();
 		} catch (InvalidUserInputException e) {
-			System.out.println(e.getMessage());
+			logger.setLevel(Level.WARNING);
+			logger.warning(e.getMessage());
+//			System.out.println(e.getMessage());
 //			e.printStackTrace();
 		} catch (CRUDOperationFailureException e) {
-			System.out.println(e.getMessage());
+			logger.setLevel(Level.WARNING);
+			logger.warning(e.getMessage());
+//			System.out.println(e.getMessage());
 //			e.printStackTrace();
 		}
 	}
