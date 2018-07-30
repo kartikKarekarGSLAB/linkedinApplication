@@ -29,13 +29,13 @@ public class UserProfileInfo {
 	@Column(name = "profile_picture")
 	private String profilePicture;
 
-	@Column(name = "email", length = 40)
+	@Column(name = "email", length = 50)
 	private String email;
 
-	@Column(name = "company_name", length = 30)
+	@Column(name = "company_name", length = 50)
 	private String companyName;
 
-	@Column(name = "designation", length = 25)
+	@Column(name = "designation", length = 40)
 	private String designation;
 
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)

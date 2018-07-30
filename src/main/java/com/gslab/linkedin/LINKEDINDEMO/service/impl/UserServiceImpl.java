@@ -41,6 +41,18 @@ public class UserServiceImpl implements UserService {
 			throw new InvalidUserInputException(
 					"Empty email not accepted for create profile for user." + userVO.getUsername());
 		}
+		if (userVO.getEmail().length() >= 50) {
+			throw new InvalidUserInputException("Email not accepted for create profile for user." + userVO.getUsername()
+					+ " It must contain character's less than 49.");
+		}
+		if (userVO.getCompanyName().length() >= 50) {
+			throw new InvalidUserInputException("Company Name not accepted for create profile for user."
+					+ userVO.getUsername() + " It must contain character's less than 49.");
+		}
+		if (userVO.getDesignation().length() >= 40) {
+			throw new InvalidUserInputException("Designation not accepted for create profile for user."
+					+ userVO.getUsername() + " It must contain character's less than 39.");
+		}
 		UserAccount existingUserAccount = userAccountDAO.findByUserName(userVO.getUsername());
 		if (existingUserAccount != null) {
 			throw new InvalidUserInputException(userVO.getUsername() + " username already exists.");
