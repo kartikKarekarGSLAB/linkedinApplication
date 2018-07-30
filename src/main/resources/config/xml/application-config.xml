@@ -28,6 +28,7 @@
 		class="com.gslab.linkedin.linkedindemo.service.impl.UserCommentLikeServiceImpl"></bean>
 	<bean id="userConsumer"
 		class="com.gslab.linkedin.linkedindemo.consumer.UserConsumer"></bean>
+	<bean id="fileStorageService" class="com.gslab.linkedin.linkedindemo.service.impl.FileStorageServiceImpl"></bean>		
 	<!-- End of Beans for Service -->
 
 

@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.gslab.linkedin.linkedindemo.model.vo.NewUserVO;
 import com.gslab.linkedin.linkedindemo.model.vo.ResponseBase;
 import com.gslab.linkedin.linkedindemo.model.vo.UserVO;
 import com.gslab.linkedin.linkedindemo.service.UserService;
@@ -32,6 +34,18 @@ public class UserController {
 			userList = userService.search(searchedQuery);
 		}
 		return new ResponseBase(userList);
+	}
+
+	@RequestMapping(value = "/file", method = RequestMethod.POST)
+	public ResponseBase createUserProfile(@RequestParam(name = "username") String username,
+			@RequestParam(name = "password") String password, @RequestParam(name = "email") String email,
+			@RequestParam(name = "companyName") String companyName,
+			@RequestParam(name = "designation") String designation,
+			@RequestParam(name = "profilePicture") MultipartFile profilePicture) {
+		System.out.println("*************************************************");
+		NewUserVO newUserProfile = new NewUserVO(username, password, profilePicture, email, companyName, designation);
+		NewUserVO createdUserProfile = userService.createWithFile(newUserProfile);
+		return new ResponseBase(createdUserProfile);
 	}
 
 	// Display single record

@@ -12,7 +12,9 @@ import com.gslab.linkedin.linkedindemo.exception.CRUDOperationFailureException;
 import com.gslab.linkedin.linkedindemo.exception.InvalidUserInputException;
 import com.gslab.linkedin.linkedindemo.model.UserAccount;
 import com.gslab.linkedin.linkedindemo.model.UserProfileInfo;
+import com.gslab.linkedin.linkedindemo.model.vo.NewUserVO;
 import com.gslab.linkedin.linkedindemo.model.vo.UserVO;
+import com.gslab.linkedin.linkedindemo.service.FileStorageService;
 import com.gslab.linkedin.linkedindemo.service.UserService;
 import com.gslab.linkedin.linkedindemo.validator.UserValidator;
 
@@ -21,9 +23,14 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserAccountDAO userAccountDAO;
+	
 	@Autowired
 	private UserProfileInfoDAO userProfileInfoDAO;
-
+	
+	@Autowired
+	private FileStorageService fileStorageService;
+	
+	
 	@Override
 	public UserVO create(UserVO userVO) {
 		if (userVO.getUsername() == null || userVO.getPassword() == null) {
@@ -139,5 +146,51 @@ public class UserServiceImpl implements UserService {
 			userVOlist.add(uservo);
 		}
 		return userVOlist;
+	}
+
+	@Override
+	public NewUserVO createWithFile(NewUserVO userVO) {
+		if (userVO.getUsername() == null || userVO.getPassword() == null) {
+			throw new InvalidUserInputException("Empty username/password is not allowed for create profile.");
+		}
+		if (!UserValidator.validateUserName(userVO.getUsername())) {
+			throw new InvalidUserInputException("Invalid username for create profile '" + userVO.getUsername()
+					+ "'.It must contain minimum 6 character and max size is 19.combination of  letters, digits, '-' and '_' allowed.");
+		}
+		if (!UserValidator.validatePassword(userVO.getPassword())) {
+			throw new InvalidUserInputException("Invalid password for create profile '" + userVO.getUsername()
+					+ "'.It must contain minimum 8 character and max size is 19.It MUST contain 1 capital letter,small letter,digit and one special symbol from @,#,$,%,^,&,+,=");
+		}
+		if (userVO.getEmail() == null || userVO.getEmail().isEmpty()) {
+			throw new InvalidUserInputException(
+					"Empty email not accepted for create profile for user." + userVO.getUsername());
+		}
+		if (userVO.getEmail().length() >= 50) {
+			throw new InvalidUserInputException("Email not accepted for create profile for user." + userVO.getUsername()
+					+ " It must contain character's less than 49.");
+		}
+		if (userVO.getCompanyName().length() >= 50) {
+			throw new InvalidUserInputException("Company Name not accepted for create profile for user."
+					+ userVO.getUsername() + " It must contain character's less than 49.");
+		}
+		if (userVO.getDesignation().length() >= 40) {
+			throw new InvalidUserInputException("Designation not accepted for create profile for user."
+					+ userVO.getUsername() + " It must contain character's less than 39.");
+		}
+		UserAccount existingUserAccount = userAccountDAO.findByUserName(userVO.getUsername());
+		if (existingUserAccount != null) {
+			throw new InvalidUserInputException(userVO.getUsername() + " username already exists.");
+		}
+		
+		String profilePictureURL = fileStorageService.storeFile(userVO.getProfilePicture(),userVO.getUsername());
+		
+		UserAccount userAccount = new UserAccount(userVO.getUsername(), userVO.getPassword());
+		UserProfileInfo userProfileInfo = new UserProfileInfo(userVO.getUsername(), profilePictureURL,
+				userVO.getEmail(), userVO.getCompanyName(), userVO.getDesignation());
+		userProfileInfo.setUserAccount(userAccount);
+		Integer newUserId = userProfileInfoDAO.create(userProfileInfo);
+		userVO.setId(newUserId);
+		userVO.setProfilePictureURL(profilePictureURL);
+		return userVO;
 	}
 }

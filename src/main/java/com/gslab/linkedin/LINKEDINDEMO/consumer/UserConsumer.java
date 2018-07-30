@@ -30,11 +30,13 @@ public class UserConsumer implements MessageListener {
 			UserVO messageUserVO = (UserVO) fromJson(newUserDetails);
 			if (messageUserVO != null) {
 				UserVO newUserProfile = userService.create(messageUserVO);
-				System.out.println(newUserProfile);
+				logger.log(Level.INFO, newUserProfile.toString());
+//				System.out.println(newUserProfile);
 			}
 		} catch (JsonParseException e) {
-			logger.setLevel(Level.WARNING);
-			logger.warning(e.getMessage());
+//			logger.setLevel(Level.WARNING);
+//			logger.warning(e.getMessage());
+			logger.log(Level.WARNING, e.getMessage(), e);
 //			e.printStackTrace();
 		} catch (JsonMappingException e) {
 			logger.setLevel(Level.WARNING);
@@ -53,6 +55,7 @@ public class UserConsumer implements MessageListener {
 			logger.setLevel(Level.WARNING);
 			logger.warning(e.getMessage());
 //			System.out.println(e.getMessage());
+			
 //			e.printStackTrace();
 		}
 	}
