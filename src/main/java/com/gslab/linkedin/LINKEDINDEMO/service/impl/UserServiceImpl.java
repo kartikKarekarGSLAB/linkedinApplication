@@ -12,7 +12,7 @@ import com.gslab.linkedin.linkedindemo.exception.CRUDOperationFailureException;
 import com.gslab.linkedin.linkedindemo.exception.InvalidUserInputException;
 import com.gslab.linkedin.linkedindemo.model.UserAccount;
 import com.gslab.linkedin.linkedindemo.model.UserProfileInfo;
-import com.gslab.linkedin.linkedindemo.model.vo.NewUserVO;
+import com.gslab.linkedin.linkedindemo.model.vo.FileUserVO;
 import com.gslab.linkedin.linkedindemo.model.vo.UserVO;
 import com.gslab.linkedin.linkedindemo.service.FileStorageService;
 import com.gslab.linkedin.linkedindemo.service.UserService;
@@ -149,7 +149,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public NewUserVO createWithFile(NewUserVO userVO) {
+	public FileUserVO createWithFile(FileUserVO userVO) {
 		if (userVO.getUsername() == null || userVO.getPassword() == null) {
 			throw new InvalidUserInputException("Empty username/password is not allowed for create profile.");
 		}

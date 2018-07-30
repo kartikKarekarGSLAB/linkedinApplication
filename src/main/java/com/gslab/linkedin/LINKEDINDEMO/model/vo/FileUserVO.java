@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class NewUserVO extends BeanBase {
+public class FileUserVO extends BeanBase {
 
 	/**
 	 * 
@@ -32,12 +32,12 @@ public class NewUserVO extends BeanBase {
 	
 	private String designation;
 
-	public NewUserVO() {
+	public FileUserVO() {
 	}
 	
 	
 	
-	public NewUserVO(String username, String password, MultipartFile profilePicture, String email,
+	public FileUserVO(String username, String password, MultipartFile profilePicture, String email,
 			String companyName, String designation) {
 		super();
 		this.username = username;

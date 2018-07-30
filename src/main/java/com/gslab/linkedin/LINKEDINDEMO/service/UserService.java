@@ -2,13 +2,13 @@ package com.gslab.linkedin.linkedindemo.service;
 
 import java.util.List;
 
-import com.gslab.linkedin.linkedindemo.model.vo.NewUserVO;
+import com.gslab.linkedin.linkedindemo.model.vo.FileUserVO;
 import com.gslab.linkedin.linkedindemo.model.vo.UserVO;
 
 public interface UserService {
 	public UserVO create(UserVO userVO);
 	
-	public NewUserVO createWithFile(NewUserVO userVO);
+	public FileUserVO createWithFile(FileUserVO userVO);
 
 	public List<UserVO> findAll();
 

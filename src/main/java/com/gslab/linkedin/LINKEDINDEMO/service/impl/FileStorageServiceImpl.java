@@ -35,11 +35,8 @@ public class FileStorageServiceImpl implements FileStorageService {
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
         System.out.println("this.fileStorageLocation : "+this.fileStorageLocation);
         try {
-            // Check if the file's name contains invalid characters
-            if(fileName.contains("..")) {
-                throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
-            }
             String filename = username + "." + file.getOriginalFilename().split("\\.")[1];
+            filename.lastIndexOf(".");
             Path targetLocation = Paths.get(this.fileStorageLocation + "\\" + filename);
             Path fileUploadedPath = Files.write(targetLocation	, file.getBytes());
             return fileUploadedPath.toString();

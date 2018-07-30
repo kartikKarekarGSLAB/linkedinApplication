@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.gslab.linkedin.linkedindemo.model.vo.NewUserVO;
+import com.gslab.linkedin.linkedindemo.model.vo.FileUserVO;
 import com.gslab.linkedin.linkedindemo.model.vo.ResponseBase;
 import com.gslab.linkedin.linkedindemo.model.vo.UserVO;
 import com.gslab.linkedin.linkedindemo.service.UserService;
@@ -42,9 +42,8 @@ public class UserController {
 			@RequestParam(name = "companyName") String companyName,
 			@RequestParam(name = "designation") String designation,
 			@RequestParam(name = "profilePicture") MultipartFile profilePicture) {
-		System.out.println("*************************************************");
-		NewUserVO newUserProfile = new NewUserVO(username, password, profilePicture, email, companyName, designation);
-		NewUserVO createdUserProfile = userService.createWithFile(newUserProfile);
+		FileUserVO newUserProfile = new FileUserVO(username, password, profilePicture, email, companyName, designation);
+		FileUserVO createdUserProfile = userService.createWithFile(newUserProfile);
 		return new ResponseBase(createdUserProfile);
 	}
 
