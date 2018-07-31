@@ -1,0 +1,63 @@
+2018-07-31 16:35:20 - logStarting 48 Starting LinkedInDemoApplication on VRISHAVARDHANA with PID 12596 (C:\Users\GS-1830\linkedINDemoWorkspace\LINKEDINDEMO\target\classes started by GS-1830 in C:\Users\GS-1830\linkedINDemoWorkspace\linkedindemo) 
+
+				 
+2018-07-31 16:35:20 - logStarting 51 Running with Spring Boot v1.5.15.BUILD-SNAPSHOT, Spring v4.3.18.RELEASE 
+
+				 
+2018-07-31 16:35:20 - logStartupProfileInfo 593 No active profile set, falling back to default profiles: default 
+
+				 
+2018-07-31 16:35:24 - logStarted 57 Started LinkedInDemoApplication in 4.236 seconds (JVM running for 4.952) 
+
+				 
+2018-07-31 16:37:39 - onMessage 33 this is debug message 
+
+				 
+2018-07-31 16:37:39 - onMessage 34 this is info message 
+
+				 
+2018-07-31 16:37:39 - onMessage 35 this is warn message 
+
+				 
+2018-07-31 16:37:39 - onMessage 37 Empty message from rabbitMQ. 
+
+				java.lang.RuntimeException: Empty message not accpeted
+	at com.gslab.linkedin.linkedindemo.consumer.UserConsumer.onMessage(UserConsumer.java:37)
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.doInvokeListener(AbstractMessageListenerContainer.java:899)
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.invokeListener(AbstractMessageListenerContainer.java:790)
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer.access$001(SimpleMessageListenerContainer.java:105)
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer$1.invokeListener(SimpleMessageListenerContainer.java:208)
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer.invokeListener(SimpleMessageListenerContainer.java:1381)
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.executeListener(AbstractMessageListenerContainer.java:760)
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer.doReceiveAndExecute(SimpleMessageListenerContainer.java:1324)
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer.receiveAndExecute(SimpleMessageListenerContainer.java:1294)
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer.access$1800(SimpleMessageListenerContainer.java:105)
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer$AsyncMessageProcessingConsumer.run(SimpleMessageListenerContainer.java:1550)
+	at java.base/java.lang.Thread.run(Thread.java:844)
+ 
+2018-07-31 16:37:39 - onMessage 39 inside on Message 
+
+				 
+2018-07-31 16:37:39 - onMessage 47 No content to map due to end-of-input
+ at [Source: ; line: 1, column: 0] 
+
+				com.fasterxml.jackson.databind.JsonMappingException: No content to map due to end-of-input
+ at [Source: ; line: 1, column: 0]
+	at com.fasterxml.jackson.databind.JsonMappingException.from(JsonMappingException.java:270)
+	at com.fasterxml.jackson.databind.ObjectMapper._initForReading(ObjectMapper.java:3854)
+	at com.fasterxml.jackson.databind.ObjectMapper._readMapAndClose(ObjectMapper.java:3799)
+	at com.fasterxml.jackson.databind.ObjectMapper.readValue(ObjectMapper.java:2858)
+	at com.gslab.linkedin.linkedindemo.consumer.UserConsumer.fromJson(UserConsumer.java:58)
+	at com.gslab.linkedin.linkedindemo.consumer.UserConsumer.onMessage(UserConsumer.java:40)
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.doInvokeListener(AbstractMessageListenerContainer.java:899)
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.invokeListener(AbstractMessageListenerContainer.java:790)
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer.access$001(SimpleMessageListenerContainer.java:105)
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer$1.invokeListener(SimpleMessageListenerContainer.java:208)
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer.invokeListener(SimpleMessageListenerContainer.java:1381)
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.executeListener(AbstractMessageListenerContainer.java:760)
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer.doReceiveAndExecute(SimpleMessageListenerContainer.java:1324)
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer.receiveAndExecute(SimpleMessageListenerContainer.java:1294)
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer.access$1800(SimpleMessageListenerContainer.java:105)
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer$AsyncMessageProcessingConsumer.run(SimpleMessageListenerContainer.java:1550)
+	at java.base/java.lang.Thread.run(Thread.java:844)
+ 

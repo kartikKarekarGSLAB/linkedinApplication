@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+	<!-- Define Default file location for logs. -->
+	<property name="LOG_HOME"
+		value="C:\\Users\\GS-1830\\linkedINDemoWorkspace\\LINKEDINDEMO\\linkedindemo-log" />
+
+	<!-- Console Appender for log -->
+	<appender name="CONSOLE-LOGGER"
+		class="ch.qos.logback.core.ConsoleAppender">
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>
+				%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36}
+				%class{50} %M - %msg%n
+			</Pattern>
+		</layout>
+	</appender>
+
+	<!-- File debug appender for log -->
+	<appender name="FILE-DEBUG-LOGGER"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_HOME}/linkedin-debug.log</file>
+		<encoder
+			class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<Pattern> %d{yyyy-MM-dd HH:mm:ss} - %msg%n </Pattern>
+		</encoder>
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			rollover daily
+			<fileNamePattern>${LOG_HOME}/debug/archived/linkedin-debug.%d{yyyy-MM-dd
+				HH:mm:ss}.%i.log </fileNamePattern>
+			<!-- <MinIndex>1</MinIndex> <MaxIndex>5</MaxIndex> -->
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>10MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+	</appender>
+
+	<!-- File error appender for log -->
+	<appender name="FILE-ERROR-LOGGER"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_HOME}/linkedin-error.log</file>
+		<encoder
+			class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<Pattern>
+				%d{yyyy-MM-dd HH:mm:ss} - %method %line %msg %n
+				%exception{full} %n
+			</Pattern>
+		</encoder>
+
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- rollover daily -->
+			<fileNamePattern>${LOG_HOME}/error/archived/linkedin-error.%d{yyyy-MM-dd
+				HH:mm:ss}.%i.log
+			</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>10MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+
+	</appender>
+
+
+	<logger name="com.gslab.linkedin.linkedindemo" level="error"
+		additivity="false">
+		<appender-ref ref="FILE-ERROR-LOGGER" />
+	</logger>
+
+	<logger name="com.gslab.linkedin.linkedindemo" level="debug"
+		additivity="false">
+		<appender-ref ref="FILE-DEBUG-LOGGER" />
+	</logger>
+	
+	<root level="info" name="com.gslab.linkedin.linkedindemo">
+		<appender-ref ref="CONSOLE-LOGGER" />
+	</root>
+
+</configuration>
