@@ -1,9 +1,9 @@
 package com.gslab.linkedin.linkedindemo.consumer;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,42 +21,37 @@ public class UserConsumer implements MessageListener {
 	@Autowired
 	private UserService userService;
 
-	private static final Logger logger = Logger.getLogger(UserConsumer.class.getName());
+	private static final Logger LOGGER = LoggerFactory.getLogger(UserConsumer.class);
 
 	@Override
 	public void onMessage(Message message) {
 		String newUserDetails = new String(message.getBody());
+
 		try {
+
+/*			LOGGER.trace("this is trace message");
+			LOGGER.debug("this is debug message");
+			LOGGER.info("this is info message");
+			LOGGER.warn("this is warn message");*/
+			if (newUserDetails.isEmpty()) {
+				LOGGER.error("Empty message from rabbitMQ.", new RuntimeException("Empty message not accpeted"));
+			}
+			LOGGER.info("inside on Message");
 			UserVO messageUserVO = (UserVO) fromJson(newUserDetails);
 			if (messageUserVO != null) {
 				UserVO newUserProfile = userService.create(messageUserVO);
-				logger.log(Level.INFO, newUserProfile.toString());
-//				System.out.println(newUserProfile);
+				LOGGER.info(newUserDetails);
 			}
 		} catch (JsonParseException e) {
-//			logger.setLevel(Level.WARNING);
-//			logger.warning(e.getMessage());
-			logger.log(Level.WARNING, e.getMessage(), e);
-//			e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
 		} catch (JsonMappingException e) {
-			logger.setLevel(Level.WARNING);
-			logger.warning(e.getMessage());
-//			e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
 		} catch (IOException e) {
-			logger.setLevel(Level.WARNING);
-			logger.warning(e.getMessage());
-//			e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
 		} catch (InvalidUserInputException e) {
-			logger.setLevel(Level.WARNING);
-			logger.warning(e.getMessage());
-//			System.out.println(e.getMessage());
-//			e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
 		} catch (CRUDOperationFailureException e) {
-			logger.setLevel(Level.WARNING);
-			logger.warning(e.getMessage());
-//			System.out.println(e.getMessage());
-			
-//			e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
 		}
 	}
 
