@@ -26,12 +26,12 @@ public class UserController {
 
 	// Display All records
 	@RequestMapping(method = RequestMethod.GET)
-	public ResponseBase diplayAll(@RequestParam(name = "searchedQuery") String searchedQuery) {
+	public ResponseBase diplayAll(@RequestParam(name = "query") String query) {
 		List<UserVO> userList = new ArrayList<UserVO>();
-		if (searchedQuery.equalsIgnoreCase("all")) {
+		if (query.equalsIgnoreCase("all")) {
 			userList = userService.findAll();
 		} else {
-			userList = userService.search(searchedQuery);
+			userList = userService.search(query);
 		}
 		return new ResponseBase(userList);
 	}
