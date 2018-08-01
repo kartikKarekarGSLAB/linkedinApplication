@@ -23,14 +23,13 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserAccountDAO userAccountDAO;
-	
+
 	@Autowired
 	private UserProfileInfoDAO userProfileInfoDAO;
-	
+
 	@Autowired
 	private FileStorageService fileStorageService;
-	
-	
+
 	@Override
 	public UserVO create(UserVO userVO) {
 		if (userVO.getUsername() == null || userVO.getPassword() == null) {
@@ -48,21 +47,26 @@ public class UserServiceImpl implements UserService {
 			throw new InvalidUserInputException(
 					"Empty email not accepted for create profile for user." + userVO.getUsername());
 		}
+
 		if (userVO.getEmail().length() >= 50) {
 			throw new InvalidUserInputException("Email not accepted for create profile for user." + userVO.getUsername()
 					+ " It must contain character's less than 49.");
 		}
-		if (userVO.getCompanyName().length() >= 50) {
+		if (userVO.getCompanyName() != null && userVO.getCompanyName().length() >= 50) {
 			throw new InvalidUserInputException("Company Name not accepted for create profile for user."
 					+ userVO.getUsername() + " It must contain character's less than 49.");
 		}
-		if (userVO.getDesignation().length() >= 40) {
+		if (userVO.getDesignation() != null && userVO.getDesignation().length() >= 40) {
 			throw new InvalidUserInputException("Designation not accepted for create profile for user."
 					+ userVO.getUsername() + " It must contain character's less than 39.");
 		}
-		UserAccount existingUserAccount = userAccountDAO.findByUserName(userVO.getUsername());
-		if (existingUserAccount != null) {
+		List<UserProfileInfo> existingUserProfileInfoList = userProfileInfoDAO.findByUserName(userVO.getUsername());
+		if (!existingUserProfileInfoList.isEmpty()) {
 			throw new InvalidUserInputException(userVO.getUsername() + " username already exists.");
+		}
+		UserProfileInfo existingUserProfileInfo = userProfileInfoDAO.findByEmail(userVO.getEmail());
+		if (existingUserProfileInfo != null) {
+			throw new InvalidUserInputException(userVO.getEmail() + "email already exists.");
 		}
 		UserAccount userAccount = new UserAccount(userVO.getUsername(), userVO.getPassword());
 		UserProfileInfo userProfileInfo = new UserProfileInfo(userVO.getUsername(), userVO.getProfilePictureUrl(),
@@ -181,9 +185,9 @@ public class UserServiceImpl implements UserService {
 		if (existingUserAccount != null) {
 			throw new InvalidUserInputException(userVO.getUsername() + " username already exists.");
 		}
-		
-		String profilePictureURL = fileStorageService.storeFile(userVO.getProfilePicture(),userVO.getUsername());
-		
+
+		String profilePictureURL = fileStorageService.storeFile(userVO.getProfilePicture(), userVO.getUsername());
+
 		UserAccount userAccount = new UserAccount(userVO.getUsername(), userVO.getPassword());
 		UserProfileInfo userProfileInfo = new UserProfileInfo(userVO.getUsername(), profilePictureURL,
 				userVO.getEmail(), userVO.getCompanyName(), userVO.getDesignation());
