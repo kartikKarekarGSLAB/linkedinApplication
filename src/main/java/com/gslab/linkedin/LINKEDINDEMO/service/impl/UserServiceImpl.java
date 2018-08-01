@@ -169,11 +169,11 @@ public class UserServiceImpl implements UserService {
 			throw new InvalidUserInputException("Email not accepted for create profile for user." + userVO.getUsername()
 					+ " It must contain character's less than 49.");
 		}
-		if (userVO.getCompanyName().length() >= 50) {
+		if (userVO.getCompanyName() != null && userVO.getCompanyName().length() >= 50) {
 			throw new InvalidUserInputException("Company Name not accepted for create profile for user."
 					+ userVO.getUsername() + " It must contain character's less than 49.");
 		}
-		if (userVO.getDesignation().length() >= 40) {
+		if (userVO.getDesignation() != null && userVO.getDesignation().length() >= 40) {
 			throw new InvalidUserInputException("Designation not accepted for create profile for user."
 					+ userVO.getUsername() + " It must contain character's less than 39.");
 		}
