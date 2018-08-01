@@ -3,7 +3,7 @@
 
 	<!-- Define Default file location for logs. -->
 	<property name="LOG_HOME"
-		value="C:\\Users\\GS-1830\\linkedINDemoWorkspace\\LINKEDINDEMO\\linkedindemo-log" />
+		value="linkedindemo-log" />
 
 	<!-- Console Appender for log -->
 	<appender name="CONSOLE-LOGGER"
