@@ -28,11 +28,6 @@ public class UserConsumer implements MessageListener {
 		String newUserDetails = new String(message.getBody());
 
 		try {
-
-/*			LOGGER.trace("this is trace message");
-			LOGGER.debug("this is debug message");
-			LOGGER.info("this is info message");
-			LOGGER.warn("this is warn message");*/
 			if (newUserDetails.isEmpty()) {
 				LOGGER.error("Empty message from rabbitMQ.", new RuntimeException("Empty message not accpeted"));
 			}
@@ -40,7 +35,7 @@ public class UserConsumer implements MessageListener {
 			UserVO messageUserVO = (UserVO) fromJson(newUserDetails);
 			if (messageUserVO != null) {
 				UserVO newUserProfile = userService.create(messageUserVO);
-				LOGGER.info(newUserDetails);
+				LOGGER.info(newUserProfile.toString());
 			}
 		} catch (JsonParseException e) {
 			LOGGER.error(e.getMessage(), e);

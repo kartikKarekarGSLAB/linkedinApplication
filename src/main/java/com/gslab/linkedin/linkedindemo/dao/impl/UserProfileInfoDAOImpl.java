@@ -126,8 +126,21 @@ public class UserProfileInfoDAOImpl implements UserProfileInfoDAO {
 	public List<UserProfileInfo> findByUserName(String username) {
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
-		Query query = session.createQuery("from UserProfileInfo where username like '%" + username + "%' ");
+		Query query = session
+				.createQuery("from UserProfileInfo where lower(username) like '%" + username.toLowerCase() + "%' ");
 		List<UserProfileInfo> userProfileInfo = query.list();
+		tr.commit();
+		session.close();
+		return userProfileInfo;
+	}
+
+	@Override
+	public UserProfileInfo findByEmail(String userEmail) {
+		Session session = sessionFactory.openSession();
+		Transaction tr = session.beginTransaction();
+		Query query = session.createQuery("from UserProfileInfo where email=:userEmail");
+		query.setString("userEmail", userEmail);
+		UserProfileInfo userProfileInfo = (UserProfileInfo) query.uniqueResult();
 		tr.commit();
 		session.close();
 		return userProfileInfo;
