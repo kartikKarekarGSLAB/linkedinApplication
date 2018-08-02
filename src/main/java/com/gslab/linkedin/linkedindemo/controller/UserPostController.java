@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gslab.linkedin.linkedindemo.model.vo.ResponseBase;
@@ -22,16 +21,18 @@ public class UserPostController {
 	@Autowired
 	private UserPostService userPostService;
 
-//	List all post of user
 	@RequestMapping(value = "/{userAccountId}/posts", method = RequestMethod.GET)
-	public ResponseBase findAll(@PathVariable(name = "userAccountId") Integer userAccountId,
-			@RequestParam(name = "filter", required = true) String userpostFilter) {
+	public ResponseBase findAll(@PathVariable(name = "userAccountId") Integer userAccountId) {
 		List<UserPostVO> userPostList = new ArrayList<UserPostVO>();
-		if (userpostFilter.equalsIgnoreCase("all")) {
-			userPostList = userPostService.findAll(userAccountId);
-		} else if (userpostFilter.equalsIgnoreCase("share")) {
-			userPostList = userPostService.findAllShare(userAccountId);
-		}
+		userPostList = userPostService.findAll(userAccountId);
+		return new ResponseBase(userPostList);
+	}
+
+//	List all post of user
+	@RequestMapping(value = "/{userAccountId}/posts/share", method = RequestMethod.GET)
+	public ResponseBase findAllShare(@PathVariable(name = "userAccountId") Integer userAccountId) {
+		List<UserPostVO> userPostList = new ArrayList<UserPostVO>();
+		userPostList = userPostService.findAllShare(userAccountId);
 		return new ResponseBase(userPostList);
 	}
 

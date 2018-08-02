@@ -1,5 +1,7 @@
 package com.gslab.linkedin.linkedindemo.dao.impl;
 
+import java.util.List;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -52,6 +54,19 @@ public class UserCommentLikeDAOImpl implements UserCommentLikeDAO {
 			return true;
 		else
 			return false;
+	}
+
+	@Override
+	public List<UserCommentLike> findByCommentId(Integer userCommentId) {
+		Session session = sessionFactory.openSession();
+		Transaction tr = session.beginTransaction();
+		Query query = session.createQuery(
+				"from UserCommentLike where user_comment_id = :userCommentId");
+		query.setInteger("userCommentId", userCommentId);
+		List<UserCommentLike> userCommentLikeList = query.list();
+		tr.commit();
+		session.close();
+		return userCommentLikeList;
 	}
 
 }
