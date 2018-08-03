@@ -22,16 +22,25 @@ public class UserPostController {
 	@Autowired
 	private UserPostService userPostService;
 
-//	List all post of user
+//	Pagination
 	@RequestMapping(value = "/{userAccountId}/posts", method = RequestMethod.GET)
-	public ResponseBase findAll(@PathVariable(name = "userAccountId") Integer userAccountId,
-			@RequestParam(name = "filter", required = true) String userpostFilter) {
+	public ResponseBase pagination(@PathVariable(name = "userAccountId") Integer userAccountId,
+			@RequestParam(name = "pageNumber", required = false) Integer pageNumber,
+			@RequestParam(name = "batchSize", required = false) Integer batchSize) {
 		List<UserPostVO> userPostList = new ArrayList<UserPostVO>();
-		if (userpostFilter.equalsIgnoreCase("all")) {
+		if ((pageNumber != null && pageNumber > 0) && (batchSize != null && batchSize > 0)) {
+			userPostList = userPostService.pagination(userAccountId, pageNumber, batchSize);
+		} else {
 			userPostList = userPostService.findAll(userAccountId);
-		} else if (userpostFilter.equalsIgnoreCase("share")) {
-			userPostList = userPostService.findAllShare(userAccountId);
 		}
+		return new ResponseBase(userPostList);
+	}
+
+//	List all post of user
+	@RequestMapping(value = "/{userAccountId}/posts/share", method = RequestMethod.GET)
+	public ResponseBase findAllShare(@PathVariable(name = "userAccountId") Integer userAccountId) {
+		List<UserPostVO> userPostList = new ArrayList<UserPostVO>();
+		userPostList = userPostService.findAllShare(userAccountId);
 		return new ResponseBase(userPostList);
 	}
 

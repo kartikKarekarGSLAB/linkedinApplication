@@ -12,8 +12,12 @@ public class ResponseBase {
 	private List<? extends BeanBase> payLoadList;
 
 	public ResponseBase() {
-		// TODO Auto-generated constructor stub
 		this.status = new Status();
+	}
+
+	public ResponseBase(Status status) {
+		super();
+		this.status = status;
 	}
 
 	public ResponseBase(List<? extends BeanBase> payLoadList) {

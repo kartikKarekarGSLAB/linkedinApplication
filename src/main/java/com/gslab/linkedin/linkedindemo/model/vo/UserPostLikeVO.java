@@ -2,16 +2,15 @@ package com.gslab.linkedin.linkedindemo.model.vo;
 
 public class UserPostLikeVO extends BeanBase {
 
-	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 6383575708484348838L;
 
 	private int id;
-	
+
 	private String likedUserName;
-	
+
 	private int likedPostId;
 
 	public int getId() {
@@ -37,7 +36,7 @@ public class UserPostLikeVO extends BeanBase {
 	public void setLikedPostId(int likedPostId) {
 		this.likedPostId = likedPostId;
 	}
-	
+
 	public UserPostLikeVO() {
 	}
 
@@ -47,6 +46,5 @@ public class UserPostLikeVO extends BeanBase {
 		this.likedUserName = likedUserName;
 		this.likedPostId = likedPostId;
 	}
-	
-	
+
 }

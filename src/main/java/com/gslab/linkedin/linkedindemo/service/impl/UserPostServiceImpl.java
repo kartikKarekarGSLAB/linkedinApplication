@@ -2,20 +2,26 @@ package com.gslab.linkedin.linkedindemo.service.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gslab.linkedin.linkedindemo.dao.UserAccountDAO;
+import com.gslab.linkedin.linkedindemo.dao.UserCommentDAO;
 import com.gslab.linkedin.linkedindemo.dao.UserFollowDAO;
 import com.gslab.linkedin.linkedindemo.dao.UserPostDAO;
 import com.gslab.linkedin.linkedindemo.dao.UserPostLikeDAO;
 import com.gslab.linkedin.linkedindemo.exception.CRUDOperationFailureException;
 import com.gslab.linkedin.linkedindemo.exception.InvalidUserInputException;
 import com.gslab.linkedin.linkedindemo.model.UserAccount;
+import com.gslab.linkedin.linkedindemo.model.UserComment;
 import com.gslab.linkedin.linkedindemo.model.UserFollow;
 import com.gslab.linkedin.linkedindemo.model.UserPost;
+import com.gslab.linkedin.linkedindemo.model.UserPostLike;
+import com.gslab.linkedin.linkedindemo.model.vo.UserCommentVO;
 import com.gslab.linkedin.linkedindemo.model.vo.UserPostVO;
 import com.gslab.linkedin.linkedindemo.service.UserPostService;
 
@@ -32,6 +38,9 @@ public class UserPostServiceImpl implements UserPostService {
 
 	@Autowired
 	private UserPostLikeDAO userPostLikeDAO;
+
+	@Autowired
+	private UserCommentDAO userCommentDAO;
 
 	@Override
 	public UserPostVO create(Integer userAccountId, UserPostVO userPostVO) {
@@ -65,21 +74,43 @@ public class UserPostServiceImpl implements UserPostService {
 		// this will add all post of user.
 //			user's own post.
 		for (UserPost userPost : userPostDAO.findAll(userAccountId)) {
-
+//			get user's posts like.
+			List<UserPostLike> postLikeList = userPostLikeDAO.findByPostId(userPost.getId());
+			int postLikeCounter = postLikeList.size();
+//			get user's posts comment.
+			List<UserComment> postCommentList = userCommentDAO.findAll(userPost.getId(), 1, 3);
+			List<UserCommentVO> commentList = new ArrayList<UserCommentVO>();
+			for (UserComment userComment : postCommentList) {
+				commentList
+						.add(new UserCommentVO(userComment.getMessage(), userComment.getUserAccount().getUsername()));
+			}
+			int commentCounter = commentList.size();
 			UserPostVO post = new UserPostVO(userPost.getId(), userPost.getDescription(), userPost.getImageAttachment(),
-					userAccount.getUsername());
+					userAccount.getUsername(), postLikeCounter, commentCounter, commentList, userPost.getCreatedOn(),
+					userPost.getUpdatedOn());
 			userPostVOList.add(post);
 		}
-
 //			user's following member's post.
 		for (UserFollow userFollow : userFollowDAO.getFollowingList(userAccountId)) {
 
 			UserAccount followingUserAccount = userAccountDAO.findById(userFollow.getFollowingUserId());
 
 			for (UserPost userPost : userPostDAO.findAll(userFollow.getFollowingUserId())) {
+//				get user's post like counter
+				List<UserPostLike> postLikeList = userPostLikeDAO.findByPostId(userPost.getId());
+				int postLikeCounter = postLikeList.size();
+//				get user's posts comment.
+				List<UserComment> postCommentList = userCommentDAO.findAll(userPost.getId(), 1, 3);
+				List<UserCommentVO> commentList = new ArrayList<UserCommentVO>();
+				for (UserComment userComment : postCommentList) {
+					commentList.add(
+							new UserCommentVO(userComment.getMessage(), userComment.getUserAccount().getUsername()));
+				}
+				int commentCounter = commentList.size();
 
 				UserPostVO post = new UserPostVO(userPost.getId(), userPost.getDescription(),
-						userPost.getImageAttachment(), followingUserAccount.getUsername());
+						userPost.getImageAttachment(), followingUserAccount.getUsername(), postLikeCounter,
+						commentCounter, commentList, userPost.getCreatedOn(), userPost.getUpdatedOn());
 				userPostVOList.add(post);
 			}
 		}
@@ -87,14 +118,48 @@ public class UserPostServiceImpl implements UserPostService {
 //			user's all share post.
 		for (UserPost userPost : userPostDAO.findAllShare(userAccountId)) {
 
+//			get posts's like.
 			UserAccount postUserAccount = userAccountDAO.findById(userPost.getUserAccount().getId());
+			List<UserPostLike> postLikeList = userPostLikeDAO.findByPostId(userPost.getId());
+			int postLikeCounter = postLikeList.size();
+
+//			get user's posts comment.
+			List<UserComment> postCommentList = userCommentDAO.findAll(userPost.getId(), 1, 3);
+			List<UserCommentVO> commentList = new ArrayList<UserCommentVO>();
+			for (UserComment userComment : postCommentList) {
+				commentList
+						.add(new UserCommentVO(userComment.getMessage(), userComment.getUserAccount().getUsername()));
+			}
+			int commentCounter = commentList.size();
 
 			UserPostVO post = new UserPostVO(userPost.getId(), userPost.getDescription(), userPost.getImageAttachment(),
-					postUserAccount.getUsername());
+					postUserAccount.getUsername(), postLikeCounter, commentCounter, commentList,
+					userPost.getCreatedOn(), userPost.getUpdatedOn());
 			userPostVOList.add(post);
 		}
 
+		// sort all post according to updated time.
+		Collections.sort(userPostVOList, new Comparator<UserPostVO>() {
+			@Override
+			public int compare(UserPostVO object1, UserPostVO object2) {
+				return object2.getUpdatedOn().compareTo(object1.getUpdatedOn());
+			}
+		});
 		return userPostVOList;
+	}
+
+	@Override
+	public List<UserPostVO> pagination(Integer userAccountId, Integer pageNumber, Integer batchSize) {
+		List<UserPostVO> userPostVOList = this.findAll(userAccountId);
+		int startIndex = (pageNumber - 1) * batchSize;
+		int endIndex = startIndex + batchSize;
+		if (endIndex > userPostVOList.size()) {
+			endIndex = userPostVOList.size();
+		}
+		if (startIndex > userPostVOList.size()) {
+			startIndex = userPostVOList.size() - 1;
+		}
+		return userPostVOList.subList(startIndex, endIndex);
 	}
 
 	@Override
@@ -150,12 +215,26 @@ public class UserPostServiceImpl implements UserPostService {
 			throw new InvalidUserInputException(
 					"Invalid user account number " + userAccountId + " or postid " + userPostId + " for post");
 		}
+//		get post's like counter
+		List<UserPostLike> postLikeList = userPostLikeDAO.findByPostId(userPostId);
+		int postLikeCounter = postLikeList.size();
+
+//		get user's posts comment.
+		List<UserComment> postCommentList = userCommentDAO.findAll(userPostId, 1, 3);
+		List<UserCommentVO> commentList = new ArrayList<UserCommentVO>();
+		for (UserComment userComment : postCommentList) {
+			commentList.add(new UserCommentVO(userComment.getMessage(), userComment.getUserAccount().getUsername()));
+		}
+		int commentCounter = commentList.size();
+
 		UserPostVO userPostVO = new UserPostVO(existingUserPost.getId(), existingUserPost.getDescription(),
-				existingUserPost.getImageAttachment(), existingUserAccount.getUsername());
+				existingUserPost.getImageAttachment(), existingUserAccount.getUsername(), postLikeCounter,
+				commentCounter, commentList, existingUserPost.getCreatedOn(), existingUserPost.getUpdatedOn());
 		return userPostVO;
 	}
 
 	@Override
+
 	public UserPostVO find(Integer userPostId) {
 		UserPost existingUserPost = userPostDAO.find(userPostId);
 		UserPostVO userPostVO = new UserPostVO();
@@ -200,10 +279,26 @@ public class UserPostServiceImpl implements UserPostService {
 		List<UserPostVO> userSharePostVOList = new ArrayList<UserPostVO>();
 		for (UserPost sharedUserPost : userPostDAO.findAllShare(userAccountId)) {
 			UserAccount postAuthorUserAccount = userAccountDAO.findById(sharedUserPost.getUserAccount().getId());
+
+//			get posts's like counter
+			List<UserPostLike> postLikeList = userPostLikeDAO.findByPostId(sharedUserPost.getId());
+			int postLikeCounter = postLikeList.size();
+
+//			get user's posts comment.
+			List<UserComment> postCommentList = userCommentDAO.findAll(sharedUserPost.getId(), 1, 3);
+			List<UserCommentVO> commentList = new ArrayList<UserCommentVO>();
+			for (UserComment userComment : postCommentList) {
+				commentList
+						.add(new UserCommentVO(userComment.getMessage(), userComment.getUserAccount().getUsername()));
+			}
+			int commentCounter = commentList.size();
+
 			UserPostVO post = new UserPostVO(sharedUserPost.getId(), sharedUserPost.getDescription(),
-					sharedUserPost.getImageAttachment(), postAuthorUserAccount.getUsername());
+					sharedUserPost.getImageAttachment(), postAuthorUserAccount.getUsername(), postLikeCounter,
+					commentCounter, commentList, sharedUserPost.getCreatedOn(), sharedUserPost.getUpdatedOn());
 			userSharePostVOList.add(post);
 		}
 		return userSharePostVOList;
 	}
+
 }

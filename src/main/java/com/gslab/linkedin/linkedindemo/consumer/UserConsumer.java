@@ -47,6 +47,8 @@ public class UserConsumer implements MessageListener {
 			LOGGER.error(e.getMessage(), e);
 		} catch (CRUDOperationFailureException e) {
 			LOGGER.error(e.getMessage(), e);
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
 		}
 	}
 

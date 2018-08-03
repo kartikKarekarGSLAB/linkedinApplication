@@ -10,7 +10,7 @@ public interface UserCommentDAO {
 
 	public UserComment findById(Integer userCommentId);
 
-	public List<UserComment> findAll(Integer userPost);
+	public List<UserComment> findAll(Integer userPost, Integer limit, Integer offset);
 
 	public UserComment update(Integer userAccountId, Integer commentId, UserComment userComment);
 

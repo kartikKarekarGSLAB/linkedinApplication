@@ -28,11 +28,13 @@ public class UserCommentDAOImpl implements UserCommentDAO {
 	}
 
 	@Override
-	public List<UserComment> findAll(Integer postId) {
+	public List<UserComment> findAll(Integer postId, Integer limit, Integer offset) {
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
 		Query query = session.createQuery("from UserComment where user_post_id= :postId order by created_on desc");
 		query.setInteger("postId", postId);
+		query.setFirstResult(offset);
+		query.setMaxResults(limit);
 		List<UserComment> userCommentList = query.list();
 		tr.commit();
 		session.close();

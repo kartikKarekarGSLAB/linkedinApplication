@@ -16,14 +16,14 @@ public class UserCommentLikeController {
 	@Autowired
 	private UserCommentLikeService userCommentLikeService;
 
-	@RequestMapping(value = "/{userAccountId}/posts/comment/{userComentId}/like", method = RequestMethod.POST)
+	@RequestMapping(value = "/{userAccountId}/posts/comments/{userComentId}/like", method = RequestMethod.POST)
 	public ResponseBase like(@PathVariable(name = "userAccountId") Integer userAccountId,
 			@PathVariable(name = "userComentId") Integer userComentId) {
 		;
 		return new ResponseBase(userCommentLikeService.create(userAccountId, userComentId));
 	}
 
-	@RequestMapping(value = "/{userAccountId}/posts/comment/{userComentId}/like", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/{userAccountId}/posts/comments/{userComentId}/like", method = RequestMethod.DELETE)
 	public ResponseBase unlike(@PathVariable(name = "userAccountId") Integer userAccountId,
 			@PathVariable(name = "userComentId") Integer userComentId) {
 		;

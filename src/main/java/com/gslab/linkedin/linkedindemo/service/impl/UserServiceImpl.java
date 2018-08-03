@@ -30,8 +30,8 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private FileStorageService fileStorageService;
 
-	@Override
-	public UserVO create(UserVO userVO) {
+	public void validateUserVO(UserVO userVO) {
+
 		if (userVO.getUsername() == null || userVO.getPassword() == null) {
 			throw new InvalidUserInputException("Empty username/password is not allowed for create profile.");
 		}
@@ -68,6 +68,13 @@ public class UserServiceImpl implements UserService {
 		if (existingUserProfileInfo != null) {
 			throw new InvalidUserInputException(userVO.getEmail() + "email already exists.");
 		}
+	}
+
+	@Override
+	public UserVO create(UserVO userVO) {
+
+		validateUserVO(userVO); // validation for userVO creation.
+
 		UserAccount userAccount = new UserAccount(userVO.getUsername(), userVO.getPassword());
 		UserProfileInfo userProfileInfo = new UserProfileInfo(userVO.getUsername(), userVO.getProfilePictureUrl(),
 				userVO.getEmail(), userVO.getCompanyName(), userVO.getDesignation());
@@ -104,6 +111,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserVO update(Integer userId, UserVO userVO) {
+
 		UserProfileInfo userProfileInfo = new UserProfileInfo(userVO.getUsername(), userVO.getProfilePictureUrl(),
 				userVO.getEmail(), userVO.getCompanyName(), userVO.getDesignation());
 		UserAccount userAccount = new UserAccount(userVO.getUsername(), userVO.getPassword());

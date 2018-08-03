@@ -13,6 +13,8 @@ public interface UserPostService {
 
 	public List<UserPostVO> findAll(Integer userAccountId);
 
+	public List<UserPostVO> pagination(Integer userAccountId, Integer pageNumber, Integer batchSize);
+
 	public List<UserPostVO> findAllShare(Integer userAccountId);
 
 	public UserPostVO update(Integer userAccountId, Integer userPostId, UserPostVO userPostVO);
