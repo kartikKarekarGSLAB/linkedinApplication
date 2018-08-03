@@ -6,7 +6,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class UserPostVO extends BeanBase{
+public class UserPostVO extends BeanBase {
 
 	/**
 	 * serialVersionUID for UserPostVO
@@ -20,17 +20,17 @@ public class UserPostVO extends BeanBase{
 	private String imageAttachment;
 
 	private String authorName;
-	
+
 	private int postLikeCounter;
-	
+
 	private int commentCounter;
-	
+
 	private List<UserCommentVO> postCommentsList;
-	
+
 	private Date createdOn;
-	
+
 	private Date updatedOn;
-	
+
 	public Integer getId() {
 		return id;
 	}
@@ -62,7 +62,7 @@ public class UserPostVO extends BeanBase{
 	public void setImageAttachment(String imageAttachment) {
 		this.imageAttachment = imageAttachment;
 	}
-		
+
 	public int getPostLikeCounter() {
 		return postLikeCounter;
 	}
@@ -120,8 +120,8 @@ public class UserPostVO extends BeanBase{
 		this.updatedOn = updatedOn;
 	}
 
-	public UserPostVO(Integer id, String description, String imageAttachment, int postLikeCounter,
-			int commentCounter, List<UserCommentVO> postCommentsList, Date createdOn, Date updatedOn) {
+	public UserPostVO(Integer id, String description, String imageAttachment, int postLikeCounter, int commentCounter,
+			List<UserCommentVO> postCommentsList, Date createdOn, Date updatedOn) {
 		super();
 		this.id = id;
 		this.description = description;
@@ -133,5 +133,4 @@ public class UserPostVO extends BeanBase{
 		this.updatedOn = updatedOn;
 	}
 
-	
 }

@@ -31,9 +31,9 @@ public class UserCommentServiceImpl implements UserCommentService {
 
 	@Autowired
 	private UserCommentDAO userCommentDAO;
-	
+
 	@Autowired
-	private UserCommentLikeDAO userCommentLikeDAO; 
+	private UserCommentLikeDAO userCommentLikeDAO;
 
 	@Override
 	public UserCommentVO create(Integer userAccountId, Integer userPostId, UserCommentVO userCommentVO) {
@@ -61,27 +61,35 @@ public class UserCommentServiceImpl implements UserCommentService {
 		userComment.setCreatedOn(date);
 		userComment.setUpdatedOn(date);
 		Integer newCommentId = userCommentDAO.create(userComment);
+		userCommentVO.setCommentorUserName(existingUserAccount.getUsername());
 		return userCommentVO;
 	}
 
 	@Override
-	public List<UserCommentVO> findAll(Integer userPostId) {
+	public List<UserCommentVO> findAll(Integer userPostId, Integer pageNumber, Integer batchSize) {
 		UserPost userPost = userPostDAO.find(userPostId);
 		if (userPost == null) {
 			throw new InvalidUserInputException("Invalid post id for listing comments " + userPostId);
 		}
-		List<UserComment> userCommentList = userCommentDAO.findAll(userPostId);
+		int offset = 0, limit = batchSize;
+		if (pageNumber > 0 && batchSize > 0) {
+			offset = (pageNumber - 1) * batchSize;
+			limit = batchSize;
+		}
+		System.out.println("value : offset : " + offset + " limit : " + limit);
+		List<UserComment> userCommentList = userCommentDAO.findAll(userPostId, limit, offset);
 		List<UserCommentVO> userCommentVOList = new ArrayList<UserCommentVO>();
 		for (UserComment userComment : userCommentList) {
-			
 //			get user comment like counter and list.
-			List<UserCommentLike> userCommentLikeList = userCommentLikeDAO.findByCommentId(userComment.getId()) ;
+			List<UserCommentLike> userCommentLikeList = userCommentLikeDAO.findByCommentId(userComment.getId());
 			int userCommentLikeCounter = userCommentLikeList.size();
 			List<UserCommentLikeVO> userCommentLikeVOList = new ArrayList<UserCommentLikeVO>();
-			for (UserCommentLike userCommentLike : userCommentLikeList) {				
-				userCommentLikeVOList.add(new UserCommentLikeVO(userCommentLike.getUserAccount().getId(), userCommentLike.getUserCommnet().getId()));
+			for (UserCommentLike userCommentLike : userCommentLikeList) {
+				userCommentLikeVOList.add(new UserCommentLikeVO(userCommentLike.getUserAccount().getId(),
+						userCommentLike.getUserCommnet().getId()));
 			}
-			UserCommentVO comment = new UserCommentVO(userComment.getMessage(),userComment.getUserAccount().getUsername(),userCommentLikeCounter,userCommentLikeVOList);
+			UserCommentVO comment = new UserCommentVO(userComment.getMessage(),
+					userComment.getUserAccount().getUsername(), userCommentLikeCounter, userCommentLikeVOList);
 			userCommentVOList.add(comment);
 		}
 		return userCommentVOList;

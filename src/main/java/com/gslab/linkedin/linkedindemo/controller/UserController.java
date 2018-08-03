@@ -25,12 +25,13 @@ public class UserController {
 	private UserService userService;
 
 	// Display All records
-	@RequestMapping(value="/",method = RequestMethod.GET)
+	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ResponseBase displayAll() {
 		List<UserVO> userList = new ArrayList<UserVO>();
 		userList = userService.findAll();
 		return new ResponseBase(userList);
-	}	
+	}
+
 	// Display Searched records
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseBase search(@RequestParam(name = "query") String query) {

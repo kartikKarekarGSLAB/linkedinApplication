@@ -1,5 +1,6 @@
 package com.gslab.linkedin.linkedindemo.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gslab.linkedin.linkedindemo.model.vo.ResponseBase;
@@ -21,8 +23,15 @@ public class UserCommentController {
 	private UserCommentService userCommentService;
 
 	@RequestMapping(value = "/posts/{userPostId}/comments", method = RequestMethod.GET)
-	public ResponseBase findAll(@PathVariable(name = "userPostId") Integer userPostId) {
-		List<UserCommentVO> userPostList = userCommentService.findAll(userPostId);
+	public ResponseBase findAll(@PathVariable(name = "userPostId") Integer userPostId,
+			@RequestParam(name = "pageNumber", required = false) Integer pageNumber,
+			@RequestParam(name = "batchSize", required = false) Integer batchSize) {
+		List<UserCommentVO> userPostList = new ArrayList<UserCommentVO>();
+		if ((pageNumber != null && pageNumber > 0) && (batchSize != null && batchSize > 0)) {
+			userPostList = userCommentService.findAll(userPostId, pageNumber, batchSize);
+		} else {
+			userPostList = userCommentService.findAll(userPostId, 1, 3);
+		}
 		return new ResponseBase(userPostList);
 	}
 

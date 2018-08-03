@@ -60,8 +60,7 @@ public class UserCommentLikeDAOImpl implements UserCommentLikeDAO {
 	public List<UserCommentLike> findByCommentId(Integer userCommentId) {
 		Session session = sessionFactory.openSession();
 		Transaction tr = session.beginTransaction();
-		Query query = session.createQuery(
-				"from UserCommentLike where user_comment_id = :userCommentId");
+		Query query = session.createQuery("from UserCommentLike where user_comment_id = :userCommentId");
 		query.setInteger("userCommentId", userCommentId);
 		List<UserCommentLike> userCommentLikeList = query.list();
 		tr.commit();

@@ -15,30 +15,28 @@ public class FileUserVO extends BeanBase {
 	private static final long serialVersionUID = 6520209764403058172L;
 
 	private Integer id;
-	
+
 	private String username;
-	
+
 	@JsonProperty(access = Access.WRITE_ONLY)
 	private String password;
-	
+
 	@JsonProperty(access = Access.WRITE_ONLY)
 	private MultipartFile profilePicture;
-	
+
 	private String profilePictureURL;
-	
+
 	private String email;
-	
+
 	private String companyName;
-	
+
 	private String designation;
 
 	public FileUserVO() {
 	}
-	
-	
-	
-	public FileUserVO(String username, String password, MultipartFile profilePicture, String email,
-			String companyName, String designation) {
+
+	public FileUserVO(String username, String password, MultipartFile profilePicture, String email, String companyName,
+			String designation) {
 		super();
 		this.username = username;
 		this.password = password;
@@ -47,8 +45,6 @@ public class FileUserVO extends BeanBase {
 		this.companyName = companyName;
 		this.designation = designation;
 	}
-
-
 
 	public Integer getId() {
 		return id;
@@ -86,13 +82,9 @@ public class FileUserVO extends BeanBase {
 		return profilePictureURL;
 	}
 
-
-
 	public void setProfilePictureURL(String profilePictureURL) {
 		this.profilePictureURL = profilePictureURL;
 	}
-
-
 
 	public String getEmail() {
 		return email;
@@ -124,6 +116,5 @@ public class FileUserVO extends BeanBase {
 				+ profilePicture + ", email=" + email + ", companyName=" + companyName + ", designation=" + designation
 				+ "]";
 	}
-	
-	
+
 }

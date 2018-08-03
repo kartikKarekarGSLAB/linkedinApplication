@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gslab.linkedin.linkedindemo.model.vo.ResponseBase;
@@ -21,10 +22,17 @@ public class UserPostController {
 	@Autowired
 	private UserPostService userPostService;
 
+//	Pagination
 	@RequestMapping(value = "/{userAccountId}/posts", method = RequestMethod.GET)
-	public ResponseBase findAll(@PathVariable(name = "userAccountId") Integer userAccountId) {
+	public ResponseBase pagination(@PathVariable(name = "userAccountId") Integer userAccountId,
+			@RequestParam(name = "pageNumber", required = false) Integer pageNumber,
+			@RequestParam(name = "batchSize", required = false) Integer batchSize) {
 		List<UserPostVO> userPostList = new ArrayList<UserPostVO>();
-		userPostList = userPostService.findAll(userAccountId);
+		if ((pageNumber != null && pageNumber > 0) && (batchSize != null && batchSize > 0)) {
+			userPostList = userPostService.pagination(userAccountId, pageNumber, batchSize);
+		} else {
+			userPostList = userPostService.findAll(userAccountId);
+		}
 		return new ResponseBase(userPostList);
 	}
 

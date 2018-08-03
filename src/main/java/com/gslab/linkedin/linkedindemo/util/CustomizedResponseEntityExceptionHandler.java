@@ -14,7 +14,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.gslab.linkedin.linkedindemo.exception.CRUDOperationFailureException;
 import com.gslab.linkedin.linkedindemo.exception.InvalidUserInputException;
-import com.gslab.linkedin.linkedindemo.model.vo.ErrorBase;
+import com.gslab.linkedin.linkedindemo.model.vo.ResponseBase;
+import com.gslab.linkedin.linkedindemo.model.vo.Status;
 
 @ControllerAdvice
 @RestController
@@ -24,26 +25,27 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 	private MessageSource messageSource;
 
 	@ExceptionHandler(InvalidUserInputException.class)
-	public final ResponseEntity<ErrorBase> handleUserNotFoundException(InvalidUserInputException ex,
+	public final ResponseEntity<ResponseBase> handleUserNotFoundException(InvalidUserInputException ex,
 			WebRequest request) {
-		ErrorBase errorDetails = new ErrorBase(406, ex.getMessage(),
-				messageSource.getMessage("exception.invaliduserinput", null, Locale.US));
-		return new ResponseEntity<>(errorDetails, HttpStatus.NOT_ACCEPTABLE);
+		ResponseBase errorResponseBase = new ResponseBase(new Status(406, ex.getMessage(),
+				messageSource.getMessage("exception.invaliduserinput", null, Locale.US)));
+		return new ResponseEntity<>(errorResponseBase, HttpStatus.NOT_ACCEPTABLE);
 	}
 
 	@ExceptionHandler(CRUDOperationFailureException.class)
-	public final ResponseEntity<ErrorBase> handleCRUDOperationFailureException(CRUDOperationFailureException ex,
+	public final ResponseEntity<ResponseBase> handleCRUDOperationFailureException(CRUDOperationFailureException ex,
 			WebRequest request) {
-		ErrorBase errorDetails = new ErrorBase(406, ex.getMessage(),
-				messageSource.getMessage("exception.invalidcrudoperation", null, Locale.US));
-		return new ResponseEntity<>(errorDetails, HttpStatus.NOT_ACCEPTABLE);
+		ResponseBase errorResponseBase = new ResponseBase(new Status(406, ex.getMessage(),
+				messageSource.getMessage("exception.invalidcrudoperation", null, Locale.US)));
+		return new ResponseEntity<>(errorResponseBase, HttpStatus.NOT_ACCEPTABLE);
 	}
 
 	@ExceptionHandler(Exception.class)
-	public final ResponseEntity<ErrorBase> handleAllExceptions(Exception ex, WebRequest request) {
+	public final ResponseEntity<ResponseBase> handleAllExceptions(Exception ex, WebRequest request) {
 		ex.printStackTrace();
-		ErrorBase errorDetails = new ErrorBase(500, ex.getMessage(), ex.getStackTrace().toString());
-		return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
+		ResponseBase errorResponseBase = new ResponseBase(
+				new Status(500, ex.getMessage(), ex.getStackTrace().toString()));
+		return new ResponseEntity<>(errorResponseBase, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 }

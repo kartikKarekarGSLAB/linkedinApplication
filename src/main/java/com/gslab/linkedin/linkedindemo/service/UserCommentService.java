@@ -7,7 +7,7 @@ import com.gslab.linkedin.linkedindemo.model.vo.UserCommentVO;
 public interface UserCommentService {
 	public UserCommentVO create(Integer userAccountId, Integer userPostId, UserCommentVO userCommentVO);
 
-	public List<UserCommentVO> findAll(Integer userPostId);
+	public List<UserCommentVO> findAll(Integer userPostId, Integer pageNumber, Integer batchSize);
 
 	public boolean delete(Integer userAccountId, Integer commentId);
 
